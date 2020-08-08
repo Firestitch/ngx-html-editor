@@ -155,7 +155,7 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
         },
         'image.beforeUpload': (images) => {
 
-          if (this.config.image?.upload) {
+          if (this.config.image.upload) {
 
             this.config.image.upload(images[0])
               .pipe(

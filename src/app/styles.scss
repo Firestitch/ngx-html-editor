@@ -1,3 +1,97 @@
 // @import "~froala-editor/css/plugins/colors.css";
 @import "~froala-editor/css/froala_editor.pkgd.min.css";
 @import "~froala-editor/css/froala_style.min.css";
+
+
+@mixin fs-html-editor($theme) {
+  $primary: mat-palette($theme);
+
+  fs-editor-rich-text.focused {
+    .bottom-line {
+      border-color: mat-color($primary);
+    }
+  }
+}
+
+
+fs-editor-rich-text {
+  position: relative;
+  display: block;
+
+  &.focused {
+    .bottom-line {
+      opacity: 1;
+      display: block;
+      transform: scaleX(1);
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.1s cubic-bezier(0.25, 0.8, 0.25, 1),
+        background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+  }
+}
+
+
+.fs-html-editor-default {
+  p,
+  ol,
+  ul,
+  pre,
+  blockquote,
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 10px 0;
+    padding: 0;
+    line-height: normal;
+  }
+
+  h1 {
+    margin: 15px 0;
+  }
+
+  h2 {
+    margin: 10px 0;
+  }
+
+  h3 {
+    margin: 5px 0;
+  }
+
+  h4 {
+    margin: 5px 0;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background-color: #d5d5d5;
+  }
+
+  blockquote {
+    border-left: 3px solid #ccc;
+    margin: 5px 0;
+    padding: 6px 16px;
+  }
+
+  .ql-syntax {
+    background: #ececec;
+    font-size: 88%;
+    padding: 10px;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  li {
+    margin: 5px 0;
+    margin-left: 50px;
+
+    &::before {
+      display: inline-block;
+      white-space: nowrap;
+    }
+  }
+}
