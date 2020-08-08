@@ -30,7 +30,6 @@ export class KitchenSinkComponent implements OnInit {
     this.config = {
       image: {
         upload: (file: Blob) => {
-          debugger;
           const data = {
             file: file
           };

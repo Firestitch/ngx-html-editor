@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, AfterViewInit, forwardRef, OnDestroy, NgZone, ChangeDetectorRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, AfterViewInit, forwardRef, OnDestroy, NgZone, ChangeDetectorRef, Input, HostBinding } from '@angular/core';
 
 import 'froala-editor/js/plugins/align.min.js';
 import 'froala-editor/js/plugins/colors.min.js';
@@ -54,6 +54,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class FsComponentComponent implements AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
+  @HostBinding('class.focused') classFocused = false;
   @ViewChild('elRef') public elRef: ElementRef;
   @Input() public config: FsHtmlEditorConfig = {};
 
@@ -141,10 +142,14 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
 
   private _createOptions() {
     return {
-      //placeholderText: 'test',
+      placeholderText: this.config.placeholder,
+      linkAlwaysBlank: true,
       events: {
-        focus: (e, editor) => {
-
+        focus: () => {
+          this.classFocused = true;
+        },
+        blur: () => {
+          this.classFocused = false;
         },
         contentChanged: () => {
           this._ngZone.runOutsideAngular(() => {
@@ -155,7 +160,7 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
         },
         'image.beforeUpload': (images) => {
 
-          if (this.config.image.upload) {
+          if (this.config.image && this.config.image.upload) {
 
             this.config.image.upload(images[0])
               .pipe(
@@ -176,8 +181,11 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
         }
       },
       toolbarButtons: {
+
         moreText: {
           buttons: [
+
+            'paragraphFormat',
             'bold',
             'italic',
             'table',
@@ -201,7 +209,6 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
             'formatOLSimple',
             'alignRight', 'alignJustify',
             'formatOL', 'formatUL',
-            'paragraphFormat',
             'paragraphStyle',
             'lineHeight',
             'outdent',
