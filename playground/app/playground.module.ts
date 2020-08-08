@@ -1,3 +1,5 @@
+import { FsApiModule } from '@firestitch/api';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -8,6 +10,7 @@ import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
 import { FsComponentModule } from '@firestitch/package';
 import { FsLabelModule } from '@firestitch/label';
+import { FsFormModule } from '@firestitch/form';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppMaterialModule } from './material.module';
@@ -30,8 +33,11 @@ const routes: Routes = [
     BrowserAnimationsModule,
     AppMaterialModule,
     FormsModule,
+    CommonModule,
     FsLabelModule,
+    FsFormModule,
     FsExampleModule.forRoot(),
+    FsApiModule.forRoot(),
     FsMessageModule.forRoot(),
     ToastrModule.forRoot({ preventDuplicates: true }),
     RouterModule.forRoot(routes),

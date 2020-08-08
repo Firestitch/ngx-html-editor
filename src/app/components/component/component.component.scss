@@ -1,0 +1,16 @@
+:host ::ng-deep {
+  .fr-toolbar.fr-top {
+    border: 0;
+  }
+
+  .fr-box.fr-basic .fr-wrapper {
+    border: 0;
+    border-bottom: 2px solid #444;
+  }
+
+  /* Stop from sliding down */
+  .fr-toolbar .fr-command.fr-btn.fr-open {
+    border-radius: 4px;
+    margin: 4px 2px;
+  }
+}

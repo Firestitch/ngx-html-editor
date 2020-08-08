@@ -26,7 +26,6 @@
             "styles": [
               "playground/styles.scss"
             ],
-            "scripts": [],
             "allowedCommonJsDependencies": [
               "highlight.js"
             ]

@@ -1,1 +1,19 @@
-<fs-component></fs-component>
+
+<form fsForm [submit]="save" [dirtyConfirm]="false">
+  <fs-component
+    [(ngModel)]="content"
+    [config]="config"
+    (ngModelChange)="change($event)"
+    name="content">
+  </fs-component>
+
+  <ng-container *ngIf="content">
+    <fieldset>
+      <legend>HTML</legend>
+      <div [innerHtml]="content"></div>
+    </fieldset>
+  </ng-container>
+
+  <button mat-raised-button color="primary">Save</button>
+  <!-- <button mat-raised-button type="button" (click)="set()">Set Content</button> -->
+</form>
