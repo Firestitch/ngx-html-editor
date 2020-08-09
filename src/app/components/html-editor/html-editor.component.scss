@@ -4,6 +4,7 @@
   }
 
   .fr-box.fr-basic {
+
     .fr-wrapper {
       border: 0;
       border-bottom: 1px solid #949494;
@@ -11,6 +12,10 @@
 
     .fr-element {
       padding: 10px;
+      font-family: inherit;
+      color: inherit;
+      font-size: inherit;
+      line-height: inherit;
     }
   }
 
@@ -20,9 +25,16 @@
     }
 
     /* Stop from sliding down */
-    .fr-command.fr-btn.fr-open {
-      border-radius: 4px;
-      margin: 4px 2px;
+    .fr-command.fr-btn {
+
+      &.fr-dropdown-menu .fr-dropdown-wrapper {
+        transition: none;
+      }
+
+      &.fr-open {
+        border-radius: 4px;
+        margin: 4px 2px;
+      }
     }
   }
 }

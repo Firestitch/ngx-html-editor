@@ -1,12 +1,12 @@
 // @import "~froala-editor/css/plugins/colors.css";
-@import "~froala-editor/css/froala_editor.pkgd.min.css";
-@import "~froala-editor/css/froala_style.min.css";
+@import "~froala-editor/css/froala_editor.pkgd.css";
+@import "~froala-editor/css/froala_style.css";
 
 
 @mixin fs-html-editor($theme) {
   $primary: mat-palette($theme);
 
-  fs-component.focused {
+  fs-html-editor.focused {
     .bottom-line {
       border-color: mat-color($primary);
     }
@@ -14,7 +14,7 @@
 }
 
 
-fs-component {
+fs-html-editor {
   position: relative;
   display: block;
 
@@ -67,18 +67,23 @@ fs-component {
     background-color: #d5d5d5;
   }
 
+  table {
+    th, td {
+      padding: 5px;
+    }
+  }
+
   blockquote {
     border-left: 3px solid #ccc;
     margin: 5px 0;
     padding: 6px 16px;
   }
 
-  .ql-syntax {
-    background: #ececec;
-    font-size: 88%;
-    padding: 10px;
-    border-radius: 3px;
+  code {
     font-family: monospace;
+    background: #eaeaea;
+    padding: 10px;
+    border-radius: 5px;
   }
 
   img {
@@ -92,6 +97,33 @@ fs-component {
     &::before {
       display: inline-block;
       white-space: nowrap;
+    }
+  }
+
+  ul.checklist {
+    list-style: none;
+    ul {
+      list-style: none;
+    }
+
+    li {
+
+      &:before {
+        content: url('data:image/svg+xml;utf8,<svg enable-background="new 0 0 408 408" version="1.1" viewBox="0 0 408 408" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"><path d="M357,0H51C22.95,0,0,22.95,0,51v306c0,28.05,22.95,51,51,51h306c28.05,0,51-22.95,51-51V51C408,22.95,385.05,0,357,0z M357,357H51V51h306V357z"/></svg>');
+        cursor: pointer;
+        height: 1em;
+        margin-left: -1.5em;
+        margin-top: .125em;
+        position: absolute;
+        width: 1em;
+      }
+
+      &.checked {
+        text-decoration: line-through;
+        &:before {
+          content: url('data:image/svg+xml;utf8,<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve"><g><g id="check-box-outline"><path d="M124.95,181.05l-35.7,35.7L204,331.5l255-255l-35.7-35.7L204,260.1L124.95,181.05z M408,408H51V51h255V0H51C22.95,0,0,22.95,0,51v357c0,28.05,22.95,51,51,51h357c28.05,0,51-22.95,51-51V204h-51V408z"/></g></g></svg>');
+        }
+      }
     }
   }
 }

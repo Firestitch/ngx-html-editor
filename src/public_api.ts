@@ -2,6 +2,7 @@
  * Public API Surface of fs-menu
  */
 
-export { FsComponentModule } from './app/fs-component.module';
+export { FsHtmlEditorModule } from './app/fs-html-editor.module';
 
-export { FsComponentComponent } from './app/components/component/component.component';
+export { FsHtmlEditorComponent } from './app/components/html-editor/html-editor.component';
+export { FsHtmlRendererComponent } from './app/components/html-renderer/html-renderer.component';

@@ -24,10 +24,12 @@ import 'froala-editor/js/plugins/lists.min.js';
 import 'froala-editor/js/plugins/table.min.js';
 import 'froala-editor/js/plugins/url.min.js';
 import 'froala-editor/js/plugins/video.min.js';
+
+import '../../plugins/checklist';
 // import 'froala-editor/js/plugins/word_paste.min.js';
 // import 'src/assets/js/html2pdf.bundle.min.js';
 
-import { FsHtmlEditorConfig } from './../../interfaces';
+import { FsHtmlEditorConfig } from '../../interfaces';
 
 import FroalaEditor from 'froala-editor';
 import { NG_VALIDATORS, NG_VALUE_ACCESSOR, AbstractControl, ValidationErrors, Validator, ControlValueAccessor } from '@angular/forms';
@@ -35,30 +37,31 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'fs-component',
-  templateUrl: 'component.component.html',
-  styleUrls: ['component.component.scss'],
+  selector: 'fs-html-editor',
+  templateUrl: 'html-editor.component.html',
+  styleUrls: ['html-editor.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FsComponentComponent),
+      useExisting: forwardRef(() => FsHtmlEditorComponent),
       multi: true
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => FsComponentComponent),
+      useExisting: forwardRef(() => FsHtmlEditorComponent),
       multi: true
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FsComponentComponent implements AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
+export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   @HostBinding('class.focused') classFocused = false;
   @ViewChild('elRef') public elRef: ElementRef;
   @Input() public config: FsHtmlEditorConfig = {};
 
   private _editor: FroalaEditor;
+  private _html: string;
   private _destroy$ = new Subject();
 
   public model;
@@ -85,32 +88,39 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
 
   public validate(control: AbstractControl): ValidationErrors | null {
 
-    if (!this._editor) {
-      return null
-    }
-
     const err: any = {};
-    // if (this.options.maxLength && isArray(this.ngModel)) {
-    //   const length = JSON.stringify(this.ngModel).length;
-    //   const maxLength = this.options.maxLength;
-    //   if (length > maxLength) {
-    //     err.maxLengthError = `Must be ${maxLength} characters or fewer. You entered ${length} characters.`;
-    //   }
-    // }
+    if (this.config.maxLength && this._html) {
+      const maxLength = this.config.maxLength;
+      const length = this._html.length;
+      if (length > maxLength) {
+        err.maxLengthError = `Must be ${maxLength} characters or fewer. You entered ${length} characters.`;
+      }
+    }
 
     return Object.keys(err).length ? err : null;
   }
 
   public focus() {
-    //this._richTextService.quill.focus();
+    this.editor.events.focus();
   }
 
   public clear() {
-    //this.writeValue('');
+    this.writeValue('');
   }
 
-  public writeValue(data: any): void {
+  public disable() {
+    this.editor.edit.off();
+  }
 
+  public setHtml(html) {
+    this.writeValue(html);
+  }
+
+  public writeValue(html: string): void {
+    this._html = html;
+    if (this._editor && this._editor.html) {
+      this._editor.html.set(html);
+    }
   }
 
   public registerOnChange(fn: (data: any) => void): void {
@@ -126,6 +136,7 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
     this._destroy$.complete();
     this.destroy();
   }
+
 
   public destroy() {
 
@@ -144,6 +155,7 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
     return {
       placeholderText: this.config.placeholder,
       linkAlwaysBlank: true,
+      tabSpaces: 2,
       events: {
         focus: () => {
           this.classFocused = true;
@@ -152,14 +164,9 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
           this.classFocused = false;
         },
         contentChanged: () => {
-          this._ngZone.runOutsideAngular(() => {
-            console.log('onchagne');
-            this.onChange(this._editor.html.get());
-            //this._cdRef.markForCheck();
-          });
+          this.onChange(this._editor.html.get());
         },
         'image.beforeUpload': (images) => {
-
           if (this.config.image && this.config.image.upload) {
 
             this.config.image.upload(images[0])
@@ -174,17 +181,28 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
           return false;
         },
         initialized: () => {
+          if (this._editor) {
+            this._editor.html.set(this._html);
+          }
           this.el.querySelector('.second-toolbar').remove();
         },
         keydown: (e) => {
 
         }
       },
+      paragraphFormat: {
+        N: 'Normal',
+        H1: 'Heading 1',
+        H2: 'Heading 2',
+        H3: 'Heading 3',
+        H4: 'Heading 4',
+        CODE: 'Code'
+      },
+      paragraphFormatSelection: true,
       toolbarButtons: {
 
         moreText: {
           buttons: [
-
             'paragraphFormat',
             'bold',
             'italic',
@@ -200,21 +218,26 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
             'inlineClass',
             'inlineStyle',
             'clearFormatting',
-          ]
+          ],
+          buttonsVisible: 2,
         },
         moreParagraph: {
           buttons: [
             'alignLeft',
             'alignCenter',
             'formatOLSimple',
-            'alignRight', 'alignJustify',
-            'formatOL', 'formatUL',
+            'checklist',
+            'alignRight',
+            'alignJustify',
+            'formatOL',
+            'formatUL',
             'paragraphStyle',
             'lineHeight',
             'outdent',
             'indent',
             'quote'
-          ]
+          ],
+          buttonsVisible: 4,
         },
         moreRich: {
           buttons: [
@@ -229,9 +252,8 @@ export class FsComponentComponent implements AfterViewInit, ControlValueAccessor
             'insertFile',
             'insertHR',
           ],
-          buttonsVisible: 10
+          buttonsVisible: 10,
         },
-
       }
     };
   }
