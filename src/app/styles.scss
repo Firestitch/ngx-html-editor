@@ -1,7 +1,5 @@
-// @import "~froala-editor/css/plugins/colors.css";
-@import "~froala-editor/css/froala_editor.pkgd.css";
-@import "~froala-editor/css/froala_style.css";
-
+// @import "./../app/froala/css/froala_editor.pkgd";
+// @import "./../app/froala/css/froala_style";
 
 @mixin fs-html-editor($theme) {
   $primary: mat-palette($theme);
@@ -77,13 +75,15 @@ fs-html-editor {
     border-left: 3px solid #ccc;
     margin: 5px 0;
     padding: 6px 16px;
+    color: #6b6b6b;
   }
 
-  code {
+  p.code {
     font-family: monospace;
     background: #eaeaea;
     padding: 10px;
     border-radius: 5px;
+    white-space: pre-wrap;
   }
 
   img {
@@ -97,6 +97,25 @@ fs-html-editor {
     &::before {
       display: inline-block;
       white-space: nowrap;
+    }
+  }
+
+  ol {
+    list-style-type: decimal;
+    ol {
+      list-style-type: lower-alpha;
+      ol {
+        list-style-type: lower-roman;
+        ol {
+          list-style-type: decimal;
+          ol {
+            list-style-type: lower-alpha;
+            ol {
+              list-style-type: lower-roman;
+            }
+          }
+        }
+      }
     }
   }
 

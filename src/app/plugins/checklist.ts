@@ -1,8 +1,5 @@
+//import FroalaEditor from '../froala/js/froala_editor.pkgd.js';
 import FroalaEditor from 'froala-editor';
-
-FroalaEditor.DEFAULTS = Object.assign(FroalaEditor.DEFAULTS, {
-  myOption: false
-});
 
 FroalaEditor.DefineIcon('checkbox', {
   NAME: 'checkbox',
@@ -29,8 +26,6 @@ FroalaEditor.RegisterCommand('checklist', {
 FroalaEditor.PLUGINS.checklist = function (editor) {
   return {
     _init: () => {
-      console.log(editor.opts.myOption);
-
       editor.events.on('click', (e) => {
         const li = e.target;
         if (li.nodeName === 'LI' && e.offsetX < 0) {

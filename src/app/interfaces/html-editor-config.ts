@@ -9,6 +9,8 @@ export interface FsHtmlEditorConfig {
   placeholder?: string;
   maxLength?: number;
   autofocus?: boolean;
+  froalaConfig?: any;
+  activationKey?: any;
 }
 
 export interface FsHtmlEditorUploadConfig {

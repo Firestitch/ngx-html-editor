@@ -2,7 +2,11 @@
 @import '~@firestitch/message/styles';
 @import "~@firestitch/drawer/styles";
 @import "~@firestitch/form/styles";
+@import "~@firestitch/scrollbar/styles";
 @import '../src/app/styles.scss';
+
+@import "~froala-editor/css/froala_editor.pkgd";
+@import "~froala-editor/css/froala_style";
 
 @include fs-form($mat-blue);
 @include fs-drawer($mat-blue);

@@ -25,7 +25,8 @@
             ],
             "styles": [
               "playground/styles.scss"
-            ]
+            ],
+            "scripts": []
           },
           "configurations": {
             "production": {

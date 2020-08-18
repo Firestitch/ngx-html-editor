@@ -11,6 +11,7 @@ import { FsMessageModule } from '@firestitch/message';
 import { FsHtmlEditorModule } from '@firestitch/package';
 import { FsLabelModule } from '@firestitch/label';
 import { FsFormModule } from '@firestitch/form';
+import { FsScrollbarModule } from '@firestitch/scrollbar';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppMaterialModule } from './material.module';
@@ -25,12 +26,27 @@ const routes: Routes = [
   { path: '', component: ExamplesComponent },
 ];
 
+import 'froala-editor/js/plugins/align.min.js';
+import 'froala-editor/js/plugins/colors.min.js';
+import 'froala-editor/js/plugins/image.min.js';
+import 'froala-editor/js/plugins/link.min.js';
+import 'froala-editor/js/plugins/lists.min.js';
+import 'froala-editor/js/plugins/paragraph_format.min.js';
+import 'froala-editor/js/plugins/table.min.js';
+import 'froala-editor/js/plugins/url.min.js';
+import 'froala-editor/js/plugins/video.min.js';
+
+
 @NgModule({
   bootstrap: [ AppComponent ],
   imports: [
     BrowserModule,
-    FsHtmlEditorModule.forRoot(),
+    FsHtmlEditorModule.forRoot({
+      activationKey: 'DUA2yE1G2E1A5B5B3pZGCTRSAPJWTLPLZHTQQe1JGZxC4B3A3C2B5A1C2E4F1A1==',
+      froalaConfig: { initOnClick: true },
+    }),
     BrowserAnimationsModule,
+    FsScrollbarModule.forRoot(),
     AppMaterialModule,
     FormsModule,
     CommonModule,

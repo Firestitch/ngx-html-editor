@@ -1,40 +1,32 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, AfterViewInit, forwardRef, OnDestroy, NgZone, ChangeDetectorRef, Input, HostBinding } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, ElementRef, ViewChild,
+  AfterViewInit, forwardRef, OnDestroy, Input, HostBinding, ChangeDetectorRef, Optional, Inject
+} from '@angular/core';
 
-import 'froala-editor/js/plugins/align.min.js';
-import 'froala-editor/js/plugins/colors.min.js';
-// import 'froala-editor/js/plugins/code_beautifier.min.js';
-// import 'froala-editor/js/plugins/code_view.min.js';
-// import 'froala-editor/js/plugins/draggable.min.js';
-// import 'froala-editor/js/plugins/emoticons.min.js';
-// import 'froala-editor/js/plugins/file.min.js';
-// import 'froala-editor/js/plugins/font_size.min.js';
-// import 'froala-editor/js/plugins/fullscreen.min.js';
-import 'froala-editor/js/plugins/image.min.js';
-// import 'froala-editor/js/plugins/image_manager.min.js';
-// import 'froala-editor/js/third_party/image_tui.min.js';
-// import 'froala-editor/js/plugins/inline_class.min.js';
-// import 'froala-editor/js/plugins/line_breaker.min.js';
-import 'froala-editor/js/plugins/link.min.js';
-import 'froala-editor/js/plugins/lists.min.js';
- //import 'froala-editor/js/plugins/paragraph_style.min.js';
- import 'froala-editor/js/plugins/paragraph_format.min.js'
-// import 'froala-editor/js/plugins/print.min.js';
-// import 'froala-editor/js/plugins/quick_insert.min.js';
-// import 'froala-editor/js/plugins/quote.min.js';
-import 'froala-editor/js/plugins/table.min.js';
-import 'froala-editor/js/plugins/url.min.js';
-import 'froala-editor/js/plugins/video.min.js';
+// import FroalaEditor from '../../froala/js/froala_editor.pkgd';
 
-import '../../plugins/checklist';
-// import 'froala-editor/js/plugins/word_paste.min.js';
-// import 'src/assets/js/html2pdf.bundle.min.js';
-
-import { FsHtmlEditorConfig } from '../../interfaces';
+// import '../../froala/js/plugins/align';
+// import '../../froala/js/plugins/colors';
+// import '../../froala/js/plugins/image';
+// import '../../froala/js/plugins/link';
+// import '../../froala/js/plugins/lists';
+// import '../../froala/js/plugins/paragraph_format'
+// import '../../froala/js/plugins/table';
+// import '../../froala/js/plugins/url';
+// import '../../froala/js/plugins/video';
 
 import FroalaEditor from 'froala-editor';
+
+import '../../plugins/checklist';
+import '../../plugins/code';
+
+import { FsHtmlEditorConfig } from '../../interfaces';
+import { FS_HTML_EDITOR_CONFIG } from '../../injects';
+
 import { NG_VALIDATORS, NG_VALUE_ACCESSOR, AbstractControl, ValidationErrors, Validator, ControlValueAccessor } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { merge } from 'lodash-es';
 
 @Component({
   selector: 'fs-html-editor',
@@ -59,6 +51,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   @HostBinding('class.focused') classFocused = false;
   @ViewChild('elRef') public elRef: ElementRef;
   @Input() public config: FsHtmlEditorConfig = {};
+  @Input() public ngModel: string;
 
   private _editor: FroalaEditor;
   private _html: string;
@@ -67,9 +60,9 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   public model;
 
   constructor(
-    private _ngZone: NgZone,
+    @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
     private _cdRef: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   public onChange = (data: any) => {};
   public onTouched = () => {};
@@ -83,7 +76,79 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   }
 
   public ngAfterViewInit(): void {
-    this._editor = new FroalaEditor(this.el, this._createOptions());
+    this.el.innerHTML = this.ngModel || '';
+    this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
+
+      const config = this._createConfig();
+
+      if (config.froalaConfig.events) {
+
+        Object.keys(config.froalaConfig.events).forEach((name) => {
+          this._editor.events.on(name, () => {
+            config.events[name]();
+          });
+        });
+
+        if (config.froalaConfig.events.initialized) {
+          config.froalaConfig.events.initialized();
+        }
+      }
+
+      this._editor.events.on('focus', () => {
+        this.classFocused = true;
+        this._cdRef.markForCheck();
+      });
+
+      this._editor.events.on('blur', () => {
+        this.classFocused = false;
+        this._cdRef.markForCheck();
+      });
+
+      this._editor.events.on('contentChanged', () => {
+        this.onChange(this._editor.html.get());
+      });
+
+      this._editor.events.on('paste.afterCleanup', (html) => {
+        var div = document.createElement('div');
+        div.innerHTML = html;
+        div.querySelectorAll('*')
+          .forEach((el) => {
+            for (var i = 0; i < el.attributes.length; i++) {
+              const name = el.attributes[0].name;
+              if (name !== 'href') {
+                el.removeAttribute(name);
+              }
+            }
+          });
+        return div.innerHTML;
+      });
+
+      this._editor.events.on('keydown', () => {
+        this.onTouched();
+      });
+
+      if (this.config.image && this.config.image.upload) {
+        this._editor.events.on('image.beforeUpload', (images) => {
+
+          this.config.image.upload(images[0])
+            .pipe(
+              takeUntil(this._destroy$),
+            )
+            .subscribe((url) => {
+              this.editor.image.insert(url, null, null, this.editor.image.get());
+            });
+
+          return false;
+        });
+      }
+
+      this.el.querySelector('.second-toolbar').remove();
+    });
+  }
+
+  public updateSize() {
+    // Hack: To trigger the toolbar button size modes
+    window.dispatchEvent(new Event('resize'));
   }
 
   public validate(control: AbstractControl): ValidationErrors | null {
@@ -117,9 +182,11 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   }
 
   public writeValue(html: string): void {
-    this._html = html;
+    this._html = html || '';
     if (this._editor && this._editor.html) {
-      this._editor.html.set(html);
+      try {
+        this._editor.html.set(this._html);
+      } catch (e) {}
     }
   }
 
@@ -137,124 +204,99 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     this.destroy();
   }
 
+  public destroy() { }
 
-  public destroy() {
-
-    // if (this._richTextService.quill) {
-    //   this._richTextService.quill.off('text-change', this._textChange);
-    //   this._richTextService.quill.root.removeEventListener('blur', this._blured);
-    //   this._richTextService.quill.root.removeEventListener('focus', this._focused);
-    // }
-
-    // this._richTextService.destroy();
-    // this.destroyed.emit();
-    // this._cdRef.markForCheck();
+  private _createConfig() {
+    return merge({ froalaConfig: {} }, this._defaultConfig, this.config);
   }
 
   private _createOptions() {
-    return {
-      placeholderText: this.config.placeholder,
-      linkAlwaysBlank: true,
-      tabSpaces: 2,
-      events: {
-        focus: () => {
-          this.classFocused = true;
-        },
-        blur: () => {
-          this.classFocused = false;
-        },
-        contentChanged: () => {
-          this.onChange(this._editor.html.get());
-        },
-        'image.beforeUpload': (images) => {
-          if (this.config.image && this.config.image.upload) {
+    const config = this._createConfig();
+    const textButtons = [
+      'paragraphFormat',
+      'bold',
+      'italic',
+      'table',
+      'underline',
+      'strikeThrough',
+      'subscript',
+      'superscript',
+      'fontFamily',
+      'fontSize',
+      'textColor',
+      'backgroundColor',
+      'inlineClass',
+      'inlineStyle',
+      'clearFormatting',
+    ];
 
-            this.config.image.upload(images[0])
-              .pipe(
-                takeUntil(this._destroy$),
-              )
-              .subscribe((url) => {
-                this.editor.image.insert(url, null, null, this.editor.image.get());
-              });
-          }
+    const paragraphButtons = [
+      'formatOL',
+      'formatUL',
+      'checklist',
+      'align',
+      'outdent',
+      'indent',
+      'quote',
+      'lineHeight',
+    ];
 
-          return false;
-        },
-        initialized: () => {
-          if (this._editor) {
-            this._editor.html.set(this._html);
-          }
-          this.el.querySelector('.second-toolbar').remove();
-        },
-        keydown: (e) => {
+    const richButtons = [
+      'insertTable',
+      'insertImage',
+      'code',
+      'insertLink',
+      'insertVideo',
+    ];
 
-        }
+    return merge({
+        key: config.activationKey,
+        placeholderText: config.placeholder,
+        linkAlwaysBlank: true,
+        tabSpaces: 2,
+        typingTimer: 250,
+        tooltips: false,
+        imageDefaultWidth: 0,
+        imageDefaultAlign: 'left',
+        paragraphDefaultSelection: 'Format',
+        paragraphFormat: {
+          N: 'Normal',
+          H1: 'Heading 1',
+          H2: 'Heading 2',
+          H3: 'Heading 3',
+          H4: 'Heading 4'
+        },
+        paragraphFormatSelection: true,
+        toolbarButtonsXS: {
+          moreText: {
+            buttons: textButtons,
+            buttonsVisible: 1,
+          },
+          moreParagraph: {
+            buttons: paragraphButtons,
+            buttonsVisible: 2,
+          },
+          moreRich: {
+            buttons: richButtons,
+            buttonsVisible: 0,
+          },
+        },
+        toolbarButtons: {
+          moreText: {
+            buttons: textButtons,
+            buttonsVisible: 2,
+          },
+          moreParagraph: {
+            buttons: paragraphButtons,
+            buttonsVisible: 3,
+          },
+          moreRich: {
+            buttons: richButtons,
+            buttonsVisible: 5,
+          },
+        },
       },
-      paragraphFormat: {
-        N: 'Normal',
-        H1: 'Heading 1',
-        H2: 'Heading 2',
-        H3: 'Heading 3',
-        H4: 'Heading 4',
-        CODE: 'Code'
-      },
-      paragraphFormatSelection: true,
-      toolbarButtons: {
-
-        moreText: {
-          buttons: [
-            'paragraphFormat',
-            'bold',
-            'italic',
-            'table',
-            'underline',
-            'strikeThrough',
-            'subscript',
-            'superscript',
-            'fontFamily',
-            'fontSize',
-            'textColor',
-            'backgroundColor',
-            'inlineClass',
-            'inlineStyle',
-            'clearFormatting',
-          ],
-          buttonsVisible: 2,
-        },
-        moreParagraph: {
-          buttons: [
-            'alignLeft',
-            'alignCenter',
-            'formatOLSimple',
-            'checklist',
-            'alignRight',
-            'alignJustify',
-            'formatOL',
-            'formatUL',
-            'paragraphStyle',
-            'lineHeight',
-            'outdent',
-            'indent',
-            'quote'
-          ],
-          buttonsVisible: 4,
-        },
-        moreRich: {
-          buttons: [
-            'insertLink',
-            'insertImage',
-            'insertVideo',
-            'insertTable',
-            'emoticons',
-            'fontAwesome',
-            'specialCharacters',
-            'embedly',
-            'insertFile',
-            'insertHR',
-          ],
-          buttonsVisible: 10,
-        },
-      }
-    };
+      config.froalaConfig,
+    );
   }
 }
