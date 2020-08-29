@@ -1,7 +1,12 @@
+import { RichButtons } from './../../consts/rich-buttons.const';
+import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
+import { TextButtons } from './../../consts/text-buttons.const';
 import {
   ChangeDetectionStrategy, Component, ElementRef, ViewChild,
   AfterViewInit, forwardRef, OnDestroy, Input, HostBinding, ChangeDetectorRef, Optional, Inject
 } from '@angular/core';
+
+import Tribute, { TributeItem } from 'tributejs';
 
 // import FroalaEditor from '../../froala/js/froala_editor.pkgd';
 
@@ -17,8 +22,9 @@ import {
 
 import FroalaEditor from 'froala-editor';
 
-import '../../plugins/checklist';
-import '../../plugins/code';
+import { registerPluginChecklist } from '../../plugins/checklist';
+import { registerPluginCode } from '../../plugins/code';
+import { registerPluginMention } from '../../plugins/mention';
 
 import { FsHtmlEditorConfig } from '../../interfaces';
 import { FS_HTML_EDITOR_CONFIG } from '../../injects';
@@ -26,7 +32,7 @@ import { FS_HTML_EDITOR_CONFIG } from '../../injects';
 import { NG_VALIDATORS, NG_VALUE_ACCESSOR, AbstractControl, ValidationErrors, Validator, ControlValueAccessor } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { merge } from 'lodash-es';
+import { debounce, merge } from 'lodash-es';
 
 @Component({
   selector: 'fs-html-editor',
@@ -53,11 +59,12 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   @Input() public config: FsHtmlEditorConfig = {};
   @Input() public ngModel: string;
 
+  public model;
+
   private _editor: FroalaEditor;
   private _html: string;
   private _destroy$ = new Subject();
-
-  public model;
+  private _tributes = {};
 
   constructor(
     @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
@@ -77,15 +84,26 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
   public ngAfterViewInit(): void {
     this.el.innerHTML = this.ngModel || '';
-    this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
+    const config = this._createConfig();
+    this._initPlugins();
+    this._initMentions(config);
 
-      const config = this._createConfig();
+    this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
+      (config.mentions || []).forEach((mention) => {
+        const tribute = this._tributes[mention.name];
+        tribute.attach(this._editor.el);
+        this._editor.events.on('keydown', function (e) {
+          if (e.which == FroalaEditor.KEYCODE.ENTER &&  tribute.isActive) {
+            return false;
+          }
+        }, true);
+      });
 
       if (config.froalaConfig.events) {
 
         Object.keys(config.froalaConfig.events).forEach((name) => {
-          this._editor.events.on(name, () => {
-            config.events[name]();
+          this._editor.events.on(name, (event) => {
+            config.froalaConfig.events[name](event);
           });
         });
 
@@ -210,44 +228,60 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     return merge({ froalaConfig: {} }, this._defaultConfig, this.config);
   }
 
+  private _loadValues(mention, keyword, cb) {
+    return mention.fetch(keyword)
+              .subscribe((data) => {
+                cb(data);
+              });
+  }
+
+  private _initPlugins() {
+    registerPluginChecklist();
+    registerPluginCode();
+  }
+
+  private _initMentions(config) {
+    (config.mentions || []).forEach((mention) => {
+      const tribute = new Tribute({
+        values: debounce(this._loadValues.bind(this, mention), 200),
+        searchOpts: {
+          pre: '',
+          post: '',
+          skip: true
+        },
+        containerClass: `fs-html-editor-mention-container ${mention.containerClass || ''}`,
+        itemClass: `fs-html-editor-mention-menu-item ${mention.menuItemClass || ''}`,
+        trigger: mention.trigger,
+        allowSpaces: true,
+        menuItemTemplate: (item: TributeItem<any>) => {
+          return mention.menuItemTemplate(item.original);
+        },
+        selectTemplate: (item: TributeItem<any>) => {
+          const template = mention.selectedTemplate(item.original);
+
+          let p = document.createElement('p');
+          p.innerHTML = template;
+
+          let node = p.firstElementChild;
+          if (!node) {
+            node = document.createElement('span');
+            node.innerHTML = template;
+          }
+
+          node.setAttribute('contenteditable', 'false');
+          node.classList.add('fr-deletable');
+
+          return node.outerHTML;
+        },
+      });
+
+      this._tributes[mention.name] = tribute;
+      registerPluginMention(mention, tribute);
+    });
+  }
+
   private _createOptions() {
     const config = this._createConfig();
-    const textButtons = [
-      'paragraphFormat',
-      'bold',
-      'italic',
-      'table',
-      'underline',
-      'strikeThrough',
-      'subscript',
-      'superscript',
-      'fontFamily',
-      'fontSize',
-      'textColor',
-      'backgroundColor',
-      'inlineClass',
-      'inlineStyle',
-      'clearFormatting',
-    ];
-
-    const paragraphButtons = [
-      'formatOL',
-      'formatUL',
-      'checklist',
-      'align',
-      'outdent',
-      'indent',
-      'quote',
-      'lineHeight',
-    ];
-
-    const richButtons = [
-      'insertTable',
-      'insertImage',
-      'code',
-      'insertLink',
-      'insertVideo',
-    ];
 
     return merge({
         key: config.activationKey,
@@ -269,29 +303,29 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
         paragraphFormatSelection: true,
         toolbarButtonsXS: {
           moreText: {
-            buttons: textButtons,
+            buttons: TextButtons,
             buttonsVisible: 1,
           },
           moreParagraph: {
-            buttons: paragraphButtons,
+            buttons: ParagraphButtons,
             buttonsVisible: 2,
           },
           moreRich: {
-            buttons: richButtons,
+            buttons: RichButtons,
             buttonsVisible: 0,
           },
         },
         toolbarButtons: {
           moreText: {
-            buttons: textButtons,
+            buttons: TextButtons,
             buttonsVisible: 2,
           },
           moreParagraph: {
-            buttons: paragraphButtons,
+            buttons: ParagraphButtons,
             buttonsVisible: 3,
           },
           moreRich: {
-            buttons: richButtons,
+            buttons: RichButtons,
             buttonsVisible: 5,
           },
         },

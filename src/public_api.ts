@@ -9,4 +9,5 @@ export { FsHtmlRendererComponent } from './app/components/html-renderer/html-ren
 
 export { FS_HTML_EDITOR_CONFIG } from './app/injects/config.inject';
 
-export { FsHtmlEditorConfig } from './app/interfaces/html-editor-config';
+export * from './app/interfaces';
+export * from './app/consts';

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'fs-html-renderer',
@@ -8,6 +9,12 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class FsHtmlRendererComponent {
 
-  @Input() public html: string;
+  @Input('html') public set setHtml(html) {
+    this.trustedHtml = this.sanitized.bypassSecurityTrustHtml(html);
+  }
+
+  public trustedHtml: SafeHtml;
+
+  public constructor(private sanitized: DomSanitizer) {}
 
 }

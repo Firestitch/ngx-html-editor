@@ -9,3 +9,11 @@
 fieldset {
   white-space: normal;
 }
+
+:host ::ng-deep {
+  .mention {
+    background: #CAD9E4;
+    padding: 2px 3px;
+    border-radius: 3px;
+  }
+}

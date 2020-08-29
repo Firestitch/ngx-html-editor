@@ -1,0 +1,17 @@
+export const TextButtons = [
+      'paragraphFormat',
+      'bold',
+      'italic',
+      'table',
+      'underline',
+      'strikeThrough',
+      'subscript',
+      'superscript',
+      'fontFamily',
+      'fontSize',
+      'textColor',
+      'backgroundColor',
+      'inlineClass',
+      'inlineStyle',
+      'clearFormatting',
+    ];

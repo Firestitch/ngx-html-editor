@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { MentionConfig } from './mention-config';
 
 export interface FsHtmlEditorConfig {
   image?: FsHtmlEditorUploadConfig;
@@ -11,6 +12,8 @@ export interface FsHtmlEditorConfig {
   autofocus?: boolean;
   froalaConfig?: any;
   activationKey?: any;
+  mentions?: MentionConfig[],
+  tooltip?: string;
 }
 
 export interface FsHtmlEditorUploadConfig {
