@@ -112,4 +112,8 @@ export class KitchenSinkComponent implements OnInit {
     this.htmlEditor.disable();
   }
 
+  public destroy() {
+    this.htmlEditor.destroy();
+  }
+
 }

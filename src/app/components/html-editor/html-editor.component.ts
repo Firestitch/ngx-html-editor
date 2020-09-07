@@ -100,13 +100,6 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
       });
 
       if (config.froalaConfig.events) {
-
-        Object.keys(config.froalaConfig.events).forEach((name) => {
-          this._editor.events.on(name, (event) => {
-            config.froalaConfig.events[name](event);
-          });
-        });
-
         if (config.froalaConfig.events.initialized) {
           config.froalaConfig.events.initialized();
         }
@@ -222,7 +215,9 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     this.destroy();
   }
 
-  public destroy() { }
+  public destroy() {
+    this._editor.destroy();
+  }
 
   private _createConfig() {
     return merge({ froalaConfig: {} }, this._defaultConfig, this.config);
