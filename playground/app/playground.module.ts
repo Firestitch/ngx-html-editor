@@ -43,7 +43,7 @@ import 'froala-editor/js/plugins/video.min.js';
     BrowserModule,
     FsHtmlEditorModule.forRoot({
       activationKey: 'DUA2yE1G2E1A5B5B3pZGCTRSAPJWTLPLZHTQQe1JGZxC4B3A3C2B5A1C2E4F1A1==',
-      froalaConfig: { initOnClick: true },
+      froalaConfig: { },
     }),
     BrowserAnimationsModule,
     FsScrollbarModule.forRoot(),

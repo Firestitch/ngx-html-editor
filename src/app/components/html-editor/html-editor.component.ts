@@ -59,12 +59,13 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   @Input() public config: FsHtmlEditorConfig = {};
   @Input() public ngModel: string;
 
-  public model;
+  public initialized = false;
 
   private _editor: FroalaEditor;
   private _html: string;
   private _destroy$ = new Subject();
   private _tributes = {};
+  private _initializedSelection: { node?: any, offset?: number } = {};
 
   constructor(
     @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
@@ -78,17 +79,32 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     return this.elRef.nativeElement;
   }
 
+  public get html(): string  {
+    return this._html;
+  }
+
   public get editor(): any  {
     return this._editor;
   }
 
   public ngAfterViewInit(): void {
-    this.el.innerHTML = this.ngModel || '';
+    this._html = this.ngModel || '';
+    if (!this.config.initOnClick) {
+      this.initialize();
+    }
+  }
+
+  public initialize(): void {
     const config = this._createConfig();
     this._initPlugins();
     this._initMentions(config);
-
     this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
+      try {
+        this._editor.html.set(this.html);
+      } catch (e) {}
+
+      this.initialized = true;
+      this._cdRef.markForCheck();
       (config.mentions || []).forEach((mention) => {
         const tribute = this._tributes[mention.name];
         tribute.attach(this._editor.el);
@@ -116,7 +132,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
       });
 
       this._editor.events.on('contentChanged', () => {
-        this.onChange(this._editor.html.get());
+        this._change(this._editor.html.get());
       });
 
       this._editor.events.on('paste.afterCleanup', (html) => {
@@ -154,7 +170,48 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
       }
 
       this.el.querySelector('.second-toolbar').remove();
+
+      const walk = document.createTreeWalker(this.el.querySelector('.fr-element'), NodeFilter.SHOW_TEXT, null, false);
+      let node;
+      while (node = walk.nextNode()) {
+        if (this._initializedSelection.node === node.textContent) {
+          const range = document.createRange();
+          const sel = window.getSelection();
+
+          range.setStart(node, this._initializedSelection.offset);
+          range.collapse(true)
+
+          sel.removeAllRanges();
+          sel.addRange(range);
+          break;
+        }
+      }
     });
+  }
+
+  public uninitializedClick(event: UIEvent): void {
+    if (this.config.initClick) {
+      this.config.initClick(event);
+    }
+
+    if (!event.defaultPrevented) {
+      const target: any = event.target;
+      if (target && target.nodeName === 'A' && target.getAttribute('href')) {
+        target.setAttribute('target', '_blank');
+        setTimeout(() => {
+          target.removeAttribute('target');
+        });
+      } else {
+        const selection: any = window.getSelection();
+        if (selection.baseNode) {
+          this._initializedSelection = {
+            node: selection.baseNode.nodeValue,
+            offset: selection.baseOffset,
+          };
+        }
+        this.initialize();
+      }
+    }
   }
 
   public updateSize() {
@@ -194,9 +251,10 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
   public writeValue(html: string): void {
     this._html = html || '';
-    if (this._editor && this._editor.html) {
+    this._cdRef.markForCheck();
+    if (this.editor && this.editor.html) {
       try {
-        this._editor.html.set(this._html);
+        this.editor.html.set(this._html);
       } catch (e) {}
     }
   }
@@ -216,11 +274,22 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   }
 
   public destroy() {
-    this._editor.destroy();
+    if (this.editor) {
+      this.editor.destroy();
+    }
+    this.initialized = false;
+    this._initializedSelection = {};
+    this._cdRef.markForCheck();
+    this.el.innerHTML = '';
   }
 
   private _createConfig() {
     return merge({ froalaConfig: {} }, this._defaultConfig, this.config);
+  }
+
+  private _change(html): void {
+    this._html = html;
+    this.onChange(html);
   }
 
   private _loadValues(mention, keyword, cb) {

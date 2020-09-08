@@ -66,8 +66,20 @@ fs-html-editor {
   }
 
   table {
+    border: none;
+    border-collapse: collapse;
+    empty-cells: show;
+    max-width: 100%;
+
     th, td {
       padding: 5px;
+      border: 1px solid #DDD;
+      min-width: 5px;
+    }
+
+    th {
+      background: #ececec;
+      text-align: center;
     }
   }
 

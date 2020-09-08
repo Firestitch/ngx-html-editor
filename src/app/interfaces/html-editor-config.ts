@@ -7,6 +7,7 @@ export interface FsHtmlEditorConfig {
   hint?: string;
   change?: Function;
   initOnClick?: boolean;
+  initClick?: (event?: UIEvent) => void;
   placeholder?: string;
   maxLength?: number;
   autofocus?: boolean;

@@ -1,4 +1,9 @@
 <div class="fs-html-editor-default">
-  <div #elRef [innerHTML]="model"></div>
+  <fs-html-renderer
+    *ngIf="!initialized"
+    [html]="html"
+    (click)="uninitializedClick($event)">
+  </fs-html-renderer>
+  <div #elRef></div>
   <div class="bottom-line"></div>
 </div>
