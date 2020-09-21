@@ -340,7 +340,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
       });
 
       this._tributes[mention.name] = tribute;
-      registerPluginMention(mention, tribute);
+      registerPluginMention(mention, tribute, this._tributes);
     });
   }
 

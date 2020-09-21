@@ -1,6 +1,6 @@
 import FroalaEditor from 'froala-editor';
 
-export function registerPluginMention(mention, tribute) {
+export function registerPluginMention(mention, tribute, tributes: any = {}) {
   if (mention.iconPath) {
     FroalaEditor.DefineIcon(mention.name, {
       NAME: mention.name,
@@ -15,11 +15,20 @@ export function registerPluginMention(mention, tribute) {
       showOnMobile: true,
       refreshAfterCallback: true,
       callback: function () {
+        closeAll(tributes);
         tribute.showMenuForCollection(this.el);
       },
 
       refresh: function ($btn) {
       }
     });
+  }
+}
+
+function closeAll(tributes) {
+  for (let key in tributes) {
+    if (tributes[key].menu) {
+      tributes[key].hideMenu();
+    }
   }
 }
