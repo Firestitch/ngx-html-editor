@@ -362,6 +362,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
         imageDefaultWidth: 0,
         imageDefaultAlign: 'left',
         paragraphDefaultSelection: 'Format',
+        videoUpload: false,
         paragraphFormat: {
           N: 'Normal',
           H1: 'Heading 1',
