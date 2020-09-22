@@ -96,6 +96,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
   public initialize(): void {
     const config = this._createConfig();
+
     this._initPlugins();
     this._initMentions(config);
     this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
@@ -347,7 +348,11 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   private _createOptions() {
     const config = this._createConfig();
 
-    return merge({
+    return merge(
+      // For some reason editor store somewhere pointer on default config object and dublicate options each time on init
+      // Extra merge level fixed this problem and allow to init config properly without legacy data
+      {},
+      {
         key: config.activationKey,
         placeholderText: config.placeholder,
         linkAlwaysBlank: true,
