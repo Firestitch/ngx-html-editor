@@ -1,13 +1,13 @@
+import { PluginConfig } from './../../interfaces/plugin-config';
 import { Observable } from 'rxjs';
 
-export interface MentionConfig {
+export interface MentionPluginConfig extends PluginConfig {
   trigger?: string;
   menuItemTemplate?: (data: any) => string;
   selectedTemplate?: (data: any) => string;
   fetch: (keyord?: string) => Observable<any>;
   containerClass?: string;
   menuItemClass?: string;
-  name: string;
-  iconPath?: string;
   tooltip?: string;
+  iconPath?: string;
 }

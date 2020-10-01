@@ -1,3 +1,4 @@
+import { PluginButton } from './../../interfaces/plugin-button';
 import { RichButtons } from './../../consts/rich-buttons.const';
 import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
 import { TextButtons } from './../../consts/text-buttons.const';
@@ -6,7 +7,6 @@ import {
   AfterViewInit, forwardRef, OnDestroy, Input, HostBinding, ChangeDetectorRef, Optional, Inject
 } from '@angular/core';
 
-import Tribute, { TributeItem } from 'tributejs';
 
 // import FroalaEditor from '../../froala/js/froala_editor.pkgd';
 
@@ -22,17 +22,14 @@ import Tribute, { TributeItem } from 'tributejs';
 
 import FroalaEditor from 'froala-editor';
 
-import { registerPluginChecklist } from '../../plugins/checklist';
-import { registerPluginCode } from '../../plugins/code';
-import { registerPluginMention } from '../../plugins/mention';
-
 import { FsHtmlEditorConfig } from '../../interfaces';
 import { FS_HTML_EDITOR_CONFIG } from '../../injects';
 
 import { NG_VALIDATORS, NG_VALUE_ACCESSOR, AbstractControl, ValidationErrors, Validator, ControlValueAccessor } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { debounce, merge } from 'lodash-es';
+import { merge } from 'lodash-es';
+import { Plugin } from './../../classes/plugin';
 
 @Component({
   selector: 'fs-html-editor',
@@ -64,7 +61,6 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   private _editor: FroalaEditor;
   private _html: string;
   private _destroy$ = new Subject();
-  private _tributes = {};
   private _initializedSelection: { node?: any, offset?: number } = {};
 
   constructor(
@@ -89,7 +85,11 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
   public ngAfterViewInit(): void {
     this._html = this.ngModel || '';
-    if (!this.config.initOnClick) {
+
+    const el = document.createElement('div');
+    el.innerHTML = this._html;
+
+    if (!this.config.initOnClick || !el.innerText.length) {
       this.initialize();
     }
   }
@@ -97,8 +97,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   public initialize(): void {
     const config = this._createConfig();
 
-    this._initPlugins();
-    this._initMentions(config);
+    this._initPlugins(config);
     this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
       try {
         this._editor.html.set(this.html);
@@ -106,14 +105,9 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
       this.initialized = true;
       this._cdRef.markForCheck();
-      (config.mentions || []).forEach((mention) => {
-        const tribute = this._tributes[mention.name];
-        tribute.attach(this._editor.el);
-        this._editor.events.on('keydown', function (e) {
-          if (e.which == FroalaEditor.KEYCODE.ENTER &&  tribute.isActive) {
-            return false;
-          }
-        }, true);
+
+      (config.plugins || []).forEach((plugin) => {
+        plugin.initialize(this._editor);
       });
 
       if (config.froalaConfig.events) {
@@ -293,55 +287,42 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     this.onChange(html);
   }
 
-  private _loadValues(mention, keyword, cb) {
-    return mention.fetch(keyword)
-              .subscribe((data) => {
-                cb(data);
-              });
-  }
+  private _initPlugins(config) {
 
-  private _initPlugins() {
-    registerPluginChecklist();
-    registerPluginCode();
-  }
+    (config.plugins || []).forEach((plugin: Plugin) => {
+      FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
+        return {
+          _init: () => {
+          },
+        };
+      };
 
-  private _initMentions(config) {
-    (config.mentions || []).forEach((mention) => {
-      const tribute = new Tribute({
-        values: debounce(this._loadValues.bind(this, mention), 200),
-        searchOpts: {
-          pre: '',
-          post: '',
-          skip: true
-        },
-        containerClass: `fs-html-editor-mention-container ${mention.containerClass || ''}`,
-        itemClass: `fs-html-editor-mention-menu-item ${mention.menuItemClass || ''}`,
-        trigger: mention.trigger,
-        allowSpaces: true,
-        menuItemTemplate: (item: TributeItem<any>) => {
-          return mention.menuItemTemplate(item.original);
-        },
-        selectTemplate: (item: TributeItem<any>) => {
-          const template = mention.selectedTemplate(item.original);
+      (plugin.config.buttons || []).forEach((button: PluginButton) => {
+        FroalaEditor.DefineIcon(button.name, {
+          NAME: button.name,
+          PATH: button.svgPath,
+        });
 
-          let p = document.createElement('p');
-          p.innerHTML = template;
-
-          let node = p.firstElementChild;
-          if (!node) {
-            node = document.createElement('span');
-            node.innerHTML = template;
+        FroalaEditor.RegisterCommand(button.name, {
+          icon: button.name,
+          title: button.tooltip,
+          undo: button.undo,
+          focus: button.focus,
+          showOnMobile: button.showOnMobile,
+          refreshAfterCallback: button.refreshAfterCallback,
+          callback: function () {
+            if (button.click) {
+              button.click(this);
+            }
+          },
+          refresh: function (button) {
+            if (button.refresh) {
+              button.refresh(this, button);
+            }
           }
-
-          node.setAttribute('contenteditable', 'false');
-          node.classList.add('fr-deletable');
-
-          return node.outerHTML;
-        },
+        });
       });
 
-      this._tributes[mention.name] = tribute;
-      registerPluginMention(mention, tribute, this._tributes);
     });
   }
 

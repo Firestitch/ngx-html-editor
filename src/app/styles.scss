@@ -29,34 +29,8 @@ fs-html-editor {
 
 
 .fs-html-editor-default {
-  p,
-  ol,
-  ul,
-  pre,
-  blockquote,
-  h1,
-  h2,
-  h3,
-  h4 {
+  p {
     margin: 10px 0;
-    padding: 0;
-    line-height: normal;
-  }
-
-  h1 {
-    margin: 15px 0;
-  }
-
-  h2 {
-    margin: 10px 0;
-  }
-
-  h3 {
-    margin: 5px 0;
-  }
-
-  h4 {
-    margin: 5px 0;
   }
 
   hr {
@@ -110,6 +84,10 @@ fs-html-editor {
       display: inline-block;
       white-space: nowrap;
     }
+  }
+
+  ol, ul {
+    padding: 0;
   }
 
   ol {
