@@ -5,7 +5,9 @@ export { FsHtmlRendererComponent } from './app/components/html-renderer/html-ren
 
 export { FS_HTML_EDITOR_CONFIG } from './app/injects/config.inject';
 
-export { ParagraphButtons, TextButtons, RichButtons } from './app/consts';
+export { ParagraphButtons } from './app/consts/paragraph-buttons.const';
+export { TextButtons } from './app/consts/text-buttons.const';
+export { RichButtons } from './app/consts/rich-buttons.const';
 
 export { MentionPlugin } from './app/plugins/mention.plugin';
 export { ChecklistPlugin } from './app/plugins/checklist.plugin';

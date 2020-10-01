@@ -1,34 +1,40 @@
-import { PluginButton } from './../../interfaces/plugin-button';
-import { RichButtons } from './../../consts/rich-buttons.const';
-import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
-import { TextButtons } from './../../consts/text-buttons.const';
 import {
-  ChangeDetectionStrategy, Component, ElementRef, ViewChild,
-  AfterViewInit, forwardRef, OnDestroy, Input, HostBinding, ChangeDetectorRef, Optional, Inject
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  HostBinding,
+  Inject,
+  Input,
+  OnDestroy,
+  Optional,
+  ViewChild
 } from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator
+} from '@angular/forms';
 
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-// import FroalaEditor from '../../froala/js/froala_editor.pkgd';
-
-// import '../../froala/js/plugins/align';
-// import '../../froala/js/plugins/colors';
-// import '../../froala/js/plugins/image';
-// import '../../froala/js/plugins/link';
-// import '../../froala/js/plugins/lists';
-// import '../../froala/js/plugins/paragraph_format'
-// import '../../froala/js/plugins/table';
-// import '../../froala/js/plugins/url';
-// import '../../froala/js/plugins/video';
+import { merge } from 'lodash-es';
 
 import FroalaEditor from 'froala-editor';
 
-import { FsHtmlEditorConfig } from '../../interfaces';
-import { FS_HTML_EDITOR_CONFIG } from '../../injects';
+import { PluginButton } from './../../interfaces/plugin-button';
+import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
+import { RichButtons } from './../../consts/rich-buttons.const';
+import { TextButtons } from './../../consts/text-buttons.const';
+import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
 
-import { NG_VALIDATORS, NG_VALUE_ACCESSOR, AbstractControl, ValidationErrors, Validator, ControlValueAccessor } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { merge } from 'lodash-es';
+import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { Plugin } from './../../classes/plugin';
 
 @Component({
@@ -66,20 +72,23 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   constructor(
     @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
     private _cdRef: ChangeDetectorRef,
-  ) { }
+  ) {
+  }
 
-  public onChange = (data: any) => {};
-  public onTouched = () => {};
+  public onChange = (data: any) => {
+  };
+  public onTouched = () => {
+  };
 
-  public get el(): any  {
+  public get el(): any {
     return this.elRef.nativeElement;
   }
 
-  public get html(): string  {
+  public get html(): string {
     return this._html;
   }
 
-  public get editor(): any  {
+  public get editor(): any {
     return this._editor;
   }
 
@@ -101,7 +110,8 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
       try {
         this._editor.html.set(this.html);
-      } catch (e) {}
+      } catch (e) {
+      }
 
       this.initialized = true;
       this._cdRef.markForCheck();
@@ -250,7 +260,8 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     if (this.editor && this.editor.html) {
       try {
         this.editor.html.set(this._html);
-      } catch (e) {}
+      } catch (e) {
+      }
     }
   }
 
