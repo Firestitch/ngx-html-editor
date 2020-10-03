@@ -1,7 +1,6 @@
 import FroalaEditor from 'froala-editor';
-
 import { Plugin } from "../classes/plugin";
-import { ScreenRecordPluginConfig } from "./configs";
+import { ScreenRecordPluginConfig } from "./configs/screen-record-plugin.config";
 
 declare var MediaRecorder: any;
 
