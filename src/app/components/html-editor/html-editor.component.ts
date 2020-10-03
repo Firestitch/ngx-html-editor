@@ -106,10 +106,6 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
       this.initialized = true;
       this._cdRef.markForCheck();
 
-      (config.plugins || []).forEach((plugin) => {
-        plugin.initialize(this._editor);
-      });
-
       if (config.froalaConfig.events) {
         if (config.froalaConfig.events.initialized) {
           config.froalaConfig.events.initialized();
@@ -291,10 +287,9 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
     (config.plugins || []).forEach((plugin: Plugin) => {
       FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
-        return {
-          _init: () => {
-          },
-        };
+        plugin.editor = editor;
+        plugin.initialize();
+        return plugin;
       };
 
       (plugin.config.buttons || []).forEach((button: PluginButton) => {

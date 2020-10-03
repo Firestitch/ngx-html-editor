@@ -21,8 +21,8 @@ export class ChecklistPlugin extends Plugin {
     };
   }
 
-  public initialize(editor) {
-    editor.events.on('click', (e) => {
+  public initialize() {
+    this.editor.events.on('click', (e) => {
       const li = e.target;
       if (li.nodeName === 'LI' && e.offsetX < 0) {
 

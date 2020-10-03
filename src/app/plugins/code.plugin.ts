@@ -27,10 +27,10 @@ export class CodePlugin extends Plugin {
     };
   }
 
-  public initialize(editor) {
-    editor.events.on('keydown', (e) => {
+  public initialize() {
+    this.editor.events.on('keydown', (e) => {
       if (e.keyCode === 13) {
-        const selection = editor.selection.get();
+        const selection = this.editor.selection.get();
 
         if (selection && this._getCodeEl(selection.baseNode)) {
           e.preventDefault();
@@ -50,7 +50,7 @@ export class CodePlugin extends Plugin {
             }
           }
 
-          editor.html.insert(br);
+          this.editor.html.insert(br);
           return false;
         }
       }

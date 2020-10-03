@@ -61,9 +61,9 @@ export class MentionPlugin extends Plugin {
     MentionPlugin._tributes.push(this._tribute);
   }
 
-  public initialize(editor) {
-    this._tribute.attach(editor.el);
-    editor.events.on('keydown', (e) => {
+  public initialize() {
+    this._tribute.attach(this.editor.el);
+    this.editor.events.on('keydown', (e) => {
       if (e.key === 'Enter' &&  this._tribute.isActive) {
         return false;
       }

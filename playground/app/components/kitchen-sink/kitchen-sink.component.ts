@@ -45,7 +45,7 @@ export class KitchenSinkComponent implements OnInit {
       froalaConfig: {
         toolbarButtons: {
           moreRich: {
-            buttons: [ ...RichButtons, 'mention' ],
+            buttons: [ ...RichButtons, 'mention', 'screenRecord' ],
           }
         }
       },
