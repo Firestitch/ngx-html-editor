@@ -35,6 +35,7 @@ import 'froala-editor/js/plugins/paragraph_format.min.js';
 import 'froala-editor/js/plugins/table.min.js';
 import 'froala-editor/js/plugins/url.min.js';
 import 'froala-editor/js/plugins/video.min.js';
+import 'froala-editor/js/plugins/quote.min.js';
 
 
 @NgModule({

@@ -1,3 +1,4 @@
+import { FsHtmlEditorConfig } from './../../../../src/app/interfaces/html-editor-config';
 import { MentionPlugin } from './../../../../src/app/plugins/mention.plugin';
 import { ChecklistPlugin } from './../../../../src/app/plugins/checklist.plugin';
 import { ScreenRecordPlugin } from './../../../../src/app/plugins/screen-record.plugin';
@@ -10,7 +11,6 @@ import { KitchenSinkConfigureComponent } from '../kitchen-sink-configure';
 import { FsExampleComponent } from '@firestitch/example';
 import { FsApi } from '@firestitch/api';
 import { FsMessage } from '@firestitch/message';
-import { FsHtmlEditorConfig } from './../../../../src/app/interfaces';
 import { of } from 'rxjs';
 
 
@@ -49,7 +49,7 @@ export class KitchenSinkComponent implements OnInit {
           }
         }
       },
-      initOnClick: true,
+      initOnClick: false,
       initClick: (event: UIEvent) => {
         //event.preventDefault();
       },
@@ -128,7 +128,12 @@ export class KitchenSinkComponent implements OnInit {
   }
 
   public destroy() {
-    this.htmlEditor.destroy();
+
+    if (!this.htmlEditor.hasContent()) {
+      this.message.error('Cannot destroy because there is no content')
+    } else {
+      this.htmlEditor.destroy();
+    }
   }
 
 }

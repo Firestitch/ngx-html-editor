@@ -32,15 +32,17 @@
     border-radius: 0;
 
     .fr-btn-grp {
-      margin: 0 10px 0 10px;
+      margin: 0 20px 0 0;
+      position: relative;
 
-      &:before {
+      &:nth-child(1):after,
+      &:nth-child(2):after {
         content: '';
         position: absolute;
-        top: 25%;
-        height: 50%;
+        top: 9px;
+        height: 30px;
         border-left: 1px solid #e5e5e5;
-        margin-left: -10px;
+        margin-left: 10px;
       }
     }
 

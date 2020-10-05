@@ -136,10 +136,16 @@ fs-html-editor {
     }
   }
 
-  .fr-screen-record {
-    video {
-      width: 100%;
+  blockquote,
+  blockquote blockquote {
+    background: #f9f9f9;
+    p {
+      display: inline;
     }
+  }
+
+  video {
+    width: 100%;
   }
 }
 

@@ -67,7 +67,6 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   private _editor: FroalaEditor;
   private _html: string;
   private _destroy$ = new Subject();
-  private _initializedSelection: { node?: any, offset?: number } = {};
 
   constructor(
     @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
@@ -75,10 +74,8 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   ) {
   }
 
-  public onChange = (data: any) => {
-  };
-  public onTouched = () => {
-  };
+  public onChange = (data: any) => {}
+  public onTouched = () => {}
 
   public get el(): any {
     return this.elRef.nativeElement;
@@ -95,15 +92,23 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   public ngAfterViewInit(): void {
     this._html = this.ngModel || '';
 
-    const el = document.createElement('div');
-    el.innerHTML = this._html;
-
-    if (!this.config.initOnClick || !el.innerText.length) {
+    if (!this.config.initOnClick || !this.hasContent()) {
       this.initialize();
     }
   }
 
-  public initialize(): void {
+  public hasContent() {
+    const el = document.createElement('div');
+
+    if (el.querySelector('img')) {
+      return true;
+    }
+
+    el.innerHTML = this._html;
+    return !!el.innerText.length;
+  }
+
+  public initialize(options: any = {}): void {
     const config = this._createConfig();
 
     this._initPlugins(config);
@@ -172,22 +177,41 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
       this.el.querySelector('.second-toolbar').remove();
 
-      const walk = document.createTreeWalker(this.el.querySelector('.fr-element'), NodeFilter.SHOW_TEXT, null, false);
-      let node;
-      while (node = walk.nextNode()) {
-        if (this._initializedSelection.node === node.textContent) {
+      const selection = options.selection;
+
+      if (selection) {
+        const node: any = Array.from(this.el.querySelectorAll('.fr-element *')).find((node: any) => {
+          return selection.node === node.textContent;
+        });
+
+        if (node) {
           const range = document.createRange();
           const sel = window.getSelection();
 
-          range.setStart(node, this._initializedSelection.offset);
+          range.setStart(this._getTextNode(node), selection.offset);
           range.collapse(true)
 
           sel.removeAllRanges();
           sel.addRange(range);
-          break;
+        } else {
+          this.focus();
         }
+      } else if (this.config.autofocus !== false) {
+        this.focus();
       }
+
     });
+  }
+
+  private _getTextNode(node) {
+    if (node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node;
+      }
+      if (node.childNodes) {
+        return this._getTextNode(node.childNodes[0]);
+      }
+    }
   }
 
   public uninitializedClick(event: UIEvent): void {
@@ -204,13 +228,14 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
         });
       } else {
         const selection: any = window.getSelection();
+        const options: any = {};
         if (selection.baseNode) {
-          this._initializedSelection = {
+           options.selection = {
             node: selection.baseNode.nodeValue,
             offset: selection.baseOffset,
           };
         }
-        this.initialize();
+        this.initialize(options);
       }
     }
   }
@@ -234,8 +259,21 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     return Object.keys(err).length ? err : null;
   }
 
-  public focus() {
-    this.editor.events.focus();
+  public focus(options?: { cursorPosition?: 'start' | 'end' }) {
+    options = options ? options : {};
+
+    if (options.cursorPosition === 'end') {
+      this.editor.selection.setAtEnd(this.editor.$el.get(0));
+    } else {
+      this.editor.selection.setAtStart(this.editor.$el.get(0));
+    }
+
+    this.editor.selection.restore();
+
+    const elSelection = this.editor.selection.element();
+    if (elSelection) {
+      elSelection.scrollIntoView({ block: 'center' });
+    }
   }
 
   public clear() {
@@ -280,7 +318,6 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
       this.editor.destroy();
     }
     this.initialized = false;
-    this._initializedSelection = {};
     this._cdRef.markForCheck();
     this.el.innerHTML = '';
   }
