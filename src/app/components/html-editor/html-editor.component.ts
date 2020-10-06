@@ -91,7 +91,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
 
   public ngAfterViewInit(): void {
     this._html = this.ngModel || '';
-
+    //this.el.innerHTML = this._html;
     if (!this.config.initOnClick || !this.hasContent()) {
       this.initialize();
     }
@@ -112,11 +112,8 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     const config = this._createConfig();
 
     this._initPlugins(config);
+    this.el.innerHTML = this._html;
     this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
-      try {
-        this._editor.html.set(this.html);
-      } catch (e) {
-      }
 
       this.initialized = true;
       this._cdRef.markForCheck();
@@ -383,6 +380,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
         tabSpaces: 2,
         typingTimer: 250,
         tooltips: false,
+        wordPasteModal: false,
         imageDefaultWidth: 0,
         imageDefaultAlign: 'left',
         paragraphDefaultSelection: 'Format',
