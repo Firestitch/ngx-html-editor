@@ -383,6 +383,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
         wordPasteModal: false,
         imageDefaultWidth: 0,
         imageDefaultAlign: 'left',
+        quickInsertEnabled: false,
         paragraphDefaultSelection: 'Format',
         videoUpload: false,
         paragraphFormat: {
