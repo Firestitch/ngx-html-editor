@@ -1,3 +1,4 @@
+import { RealtimePlugin } from './../../../../src/app/plugins/realtime.plugin';
 import { FsHtmlEditorConfig } from './../../../../src/app/interfaces/html-editor-config';
 import { MentionPlugin } from './../../../../src/app/plugins/mention.plugin';
 import { ChecklistPlugin } from './../../../../src/app/plugins/checklist.plugin';
@@ -66,32 +67,33 @@ export class KitchenSinkComponent implements OnInit {
         }
       },
       plugins: [
-        new ScreenRecordPlugin({
-          maxWidth: '800px',
-          upload: (file: Blob) => {
-            return of('http://dl5.webmfiles.org/big-buck-bunny_trailer.webm');
-          }
-        }),
-        new CodePlugin(),
-        new ChecklistPlugin(),
-        new MentionPlugin({
-          trigger: '@',
-          name: 'mention',
-          tooltip: 'Mention',
-          iconPath: `M16.2,15.3c-0.8,0-1.5,0.3-2,0.8l-7.3-4.2C7,11.7,7,11.4,7,11.2s0-0.5-0.1-0.7l7.2-4.2c0.5,0.5,1.3,0.8,2.1,0.8c1.7,0,3.1-1.4,3.1-3.1S17.8,1,16.2,1c-1.7,0-3.1,1.4-3.1,3.1c0,0.2,0,0.5,0.1,0.7L6,8.9C5.5,8.4,4.7,8.1,3.9,8.1c-1.7,0-3.1,1.4-3.1,3.1s1.4,3.1,3.1,3.1c0.8,0,1.5-0.3,2.1-0.8l7.3,4.2c-0.1,0.2-0.1,0.4-0.1,0.7c0,1.6,1.3,3,3,3c1.6,0,3-1.3,3-3C19.1,16.7,17.8,15.3,16.2,15.3z`,
-          menuItemTemplate: (data) => {
-            return `<span class="item">${data.name}</span>`;
-          },
-          selectedTemplate: (data) => {
-            return `<span class="mention">@${data.name}</span>`;
-          },
-          fetch: (keyword) => {
-            return this._api.get('https://boilerplate.firestitch.com/api/dummy', { keyword })
-            .pipe(
-              map((response) => response.data.objects),
-            );
-          },
-        }),
+        new RealtimePlugin(),
+        // new ScreenRecordPlugin({
+        //   maxWidth: '800px',
+        //   upload: (file: Blob) => {
+        //     return of('http://dl5.webmfiles.org/big-buck-bunny_trailer.webm');
+        //   }
+        // }),
+        // new CodePlugin(),
+        // new ChecklistPlugin(),
+        // new MentionPlugin({
+        //   trigger: '@',
+        //   name: 'mention',
+        //   tooltip: 'Mention',
+        //   iconPath: `M16.2,15.3c-0.8,0-1.5,0.3-2,0.8l-7.3-4.2C7,11.7,7,11.4,7,11.2s0-0.5-0.1-0.7l7.2-4.2c0.5,0.5,1.3,0.8,2.1,0.8c1.7,0,3.1-1.4,3.1-3.1S17.8,1,16.2,1c-1.7,0-3.1,1.4-3.1,3.1c0,0.2,0,0.5,0.1,0.7L6,8.9C5.5,8.4,4.7,8.1,3.9,8.1c-1.7,0-3.1,1.4-3.1,3.1s1.4,3.1,3.1,3.1c0.8,0,1.5-0.3,2.1-0.8l7.3,4.2c-0.1,0.2-0.1,0.4-0.1,0.7c0,1.6,1.3,3,3,3c1.6,0,3-1.3,3-3C19.1,16.7,17.8,15.3,16.2,15.3z`,
+        //   menuItemTemplate: (data) => {
+        //     return `<span class="item">${data.name}</span>`;
+        //   },
+        //   selectedTemplate: (data) => {
+        //     return `<span class="mention">@${data.name}</span>`;
+        //   },
+        //   fetch: (keyword) => {
+        //     return this._api.get('https://boilerplate.firestitch.com/api/dummy', { keyword })
+        //     .pipe(
+        //       map((response) => response.data.objects),
+        //     );
+        //   },
+        // }),
       ],
     };
   }
