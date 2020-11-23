@@ -1,8 +1,10 @@
-import { MentionPluginConfig } from './configs/mention-plugin.config';
+import { debounce } from 'lodash-es';
 import Tribute, { TributeItem } from 'tributejs';
 
-import { Plugin } from "../classes/plugin";
-import { debounce } from 'lodash-es';
+import { MentionPluginConfig } from './configs/mention-plugin.config';
+
+import { Plugin } from '../classes/plugin';
+
 
 export class MentionPlugin extends Plugin {
 

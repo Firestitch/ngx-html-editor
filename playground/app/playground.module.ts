@@ -26,16 +26,16 @@ const routes: Routes = [
   { path: '', component: ExamplesComponent },
 ];
 
-import 'froala-editor/js/plugins/align.min.js';
-import 'froala-editor/js/plugins/colors.min.js';
-import 'froala-editor/js/plugins/image.min.js';
-import 'froala-editor/js/plugins/link.min.js';
-import 'froala-editor/js/plugins/lists.min.js';
-import 'froala-editor/js/plugins/paragraph_format.min.js';
-import 'froala-editor/js/plugins/table.min.js';
-import 'froala-editor/js/plugins/url.min.js';
-import 'froala-editor/js/plugins/video.min.js';
-import 'froala-editor/js/plugins/quote.min.js';
+// import 'froala-editor/js/plugins/align.min.js';
+// import 'froala-editor/js/plugins/colors.min.js';
+// import 'froala-editor/js/plugins/image.min.js';
+// import 'froala-editor/js/plugins/link.min.js';
+// import 'froala-editor/js/plugins/lists.min.js';
+// import 'froala-editor/js/plugins/paragraph_format.min.js';
+// import 'froala-editor/js/plugins/table.min.js';
+// import 'froala-editor/js/plugins/url.min.js';
+// import 'froala-editor/js/plugins/video.min.js';
+// import 'froala-editor/js/plugins/quote.min.js';
 
 
 @NgModule({

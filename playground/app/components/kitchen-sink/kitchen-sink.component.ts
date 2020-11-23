@@ -74,7 +74,7 @@ export class KitchenSinkComponent implements OnInit {
         //     return of('http://dl5.webmfiles.org/big-buck-bunny_trailer.webm');
         //   }
         // }),
-        // new CodePlugin(),
+        new CodePlugin(),
         // new ChecklistPlugin(),
         // new MentionPlugin({
         //   trigger: '@',

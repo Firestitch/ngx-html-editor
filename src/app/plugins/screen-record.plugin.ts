@@ -1,6 +1,7 @@
-import FroalaEditor from 'froala-editor';
-import { Plugin } from "../classes/plugin";
-import { ScreenRecordPluginConfig } from "./configs/screen-record-plugin.config";
+import { ScreenRecordPluginConfig } from './configs/screen-record-plugin.config';
+import { Plugin } from '../classes/plugin';
+import { normalizeCommonJSImport } from '../utils/normalize-common-js-import';
+
 
 declare var MediaRecorder: any;
 
@@ -57,7 +58,13 @@ export class ScreenRecordPlugin extends Plugin {
     };
   }
 
-  public initialize() {
+  public async initialize() {
+
+    const importChart = normalizeCommonJSImport(
+      import(/* webpackChunkName: "froala-editor" */ '@firestitch/froala'),
+    );
+
+    const FroalaEditor = await importChart;
 
     this.editor.events.on('mouseup', (e) => {
       const el = this._getEl(e.target);
@@ -108,7 +115,6 @@ export class ScreenRecordPlugin extends Plugin {
   }
 
   private _getEl(el) {
-
     if (el && el.classList) {
       if (el.classList.contains('fr-screen-record'))
         return el;

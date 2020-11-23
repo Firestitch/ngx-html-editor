@@ -1,6 +1,7 @@
+import { Plugin } from '../classes/plugin';
+
 import { PluginConfig } from './../interfaces/plugin-config';
 
-import { Plugin } from "../classes/plugin";
 
 export class ChecklistPlugin extends Plugin {
 

@@ -1,5 +1,8 @@
 import { Observable } from 'rxjs';
+
 import { Plugin } from '../classes/plugin';
+import { DefaultPlugin } from '../enums/default-plugin.enum';
+
 
 export interface FsHtmlEditorConfig {
   image?: FsHtmlEditorUploadConfig;
@@ -15,6 +18,7 @@ export interface FsHtmlEditorConfig {
   activationKey?: any;
   tooltip?: string;
   plugins?: Plugin[];
+  defaultPlugins?: DefaultPlugin[];
 }
 
 export interface FsHtmlEditorUploadConfig {

@@ -1,6 +1,7 @@
 import { PluginConfig } from '../interfaces/plugin-config';
 
-import { Plugin } from "../classes/plugin";
+import { Plugin } from '../classes/plugin';
+
 
 export class RealtimePlugin extends Plugin {
 

@@ -21,12 +21,12 @@ import {
   Validator
 } from '@angular/forms';
 
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { merge } from 'lodash-es';
 
-import FroalaEditor from 'froala-editor';
+// import FroalaEditor from 'froala-editor';
 
 import { PluginButton } from './../../interfaces/plugin-button';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
@@ -36,6 +36,10 @@ import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
 
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { Plugin } from './../../classes/plugin';
+
+
+import { FsFroalaLoaderService } from '../../services/froala-loader.service';
+
 
 @Component({
   selector: 'fs-html-editor',
@@ -62,17 +66,18 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   @Input() public config: FsHtmlEditorConfig = {};
   @Input() public ngModel: string;
 
+  public firstClick = false;
   public initialized = false;
 
-  private _editor: FroalaEditor;
+  private _editor: any;
   private _html: string;
   private _destroy$ = new Subject();
 
   constructor(
     @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
     private _cdRef: ChangeDetectorRef,
-  ) {
-  }
+    private _fr: FsFroalaLoaderService,
+  ) {}
 
   public onChange = (data: any) => {}
   public onTouched = () => {}
@@ -89,7 +94,11 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     return this._editor;
   }
 
-  public ngAfterViewInit(): void {
+  public get froalaReady$(): Observable<boolean> {
+    return this._fr.ready$;
+  }
+
+  public ngAfterViewInit() {
     this._html = this.ngModel || '';
     //this.el.innerHTML = this._html;
     if (!this.config.initOnClick || !this.hasContent()) {
@@ -108,12 +117,13 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     return !!el.innerText.length;
   }
 
-  public initialize(options: any = {}): void {
+  public async initialize(options: any = {}) {
     const config = this._createConfig();
 
     this._initPlugins(config);
     this.el.innerHTML = this._html;
-    this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
+
+    this._editor = new this._fr.FroalaEditor(this.el, this._createOptions(), () => {
 
       this.initialized = true;
       this._cdRef.markForCheck();
@@ -172,7 +182,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
         });
       }
 
-      this.el.querySelector('.second-toolbar').remove();
+      // this.el.querySelector('.second-toolbar').remove();
 
       const selection = options.selection;
 
@@ -212,6 +222,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   }
 
   public uninitializedClick(event: UIEvent): void {
+    this.firstClick = true;
     if (this.config.initClick) {
       this.config.initClick(event);
     }
@@ -331,19 +342,19 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   private _initPlugins(config) {
 
     (config.plugins || []).forEach((plugin: Plugin) => {
-      FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
+      this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
         plugin.editor = editor;
         plugin.initialize();
         return plugin;
       };
 
       (plugin.config.buttons || []).forEach((button: PluginButton) => {
-        FroalaEditor.DefineIcon(button.name, {
+        this._fr.FroalaEditor.DefineIcon(button.name, {
           NAME: button.name,
           PATH: button.svgPath,
         });
 
-        FroalaEditor.RegisterCommand(button.name, {
+        this._fr.FroalaEditor.RegisterCommand(button.name, {
           icon: button.name,
           title: button.tooltip,
           undo: button.undo,
