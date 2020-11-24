@@ -19,6 +19,8 @@ export interface FsHtmlEditorConfig {
   tooltip?: string;
   plugins?: Plugin[];
   defaultPlugins?: DefaultPlugin[];
+  assetsJSPath?: string;
+  assetsCSSPath?: string;
 }
 
 export interface FsHtmlEditorUploadConfig {

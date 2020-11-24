@@ -1,6 +1,6 @@
 import { ScreenRecordPluginConfig } from './configs/screen-record-plugin.config';
 import { Plugin } from '../classes/plugin';
-import { normalizeCommonJSImport } from '../utils/normalize-common-js-import';
+import { ResourceLoader } from '../utils/loader';
 
 
 declare var MediaRecorder: any;
@@ -59,12 +59,10 @@ export class ScreenRecordPlugin extends Plugin {
   }
 
   public async initialize() {
+    await ResourceLoader.loadStyles('froala')
+      .toPromise();
 
-    const importChart = normalizeCommonJSImport(
-      import(/* webpackChunkName: "froala-editor" */ '@firestitch/froala'),
-    );
-
-    const FroalaEditor = await importChart;
+    const FroalaEditor = (window as any).FroalaEditor;
 
     this.editor.events.on('mouseup', (e) => {
       const el = this._getEl(e.target);

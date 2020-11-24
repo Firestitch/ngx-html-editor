@@ -26,6 +26,11 @@
                 "glob": "froala_editor.pkgd.min.css",
                 "input": "node_modules/@firestitch/froala/css/",
                 "output": "assets/css/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@firestitch/froala/js/",
+                "output": "assets/js/froala/"
               }
             ],
             "styles": [

@@ -5,8 +5,8 @@ import { concatMap, map, shareReplay, tap } from 'rxjs/operators';
 
 import { FS_HTML_EDITOR_CONFIG } from '../injects/config.inject';
 import { FsHtmlEditorConfig } from '../interfaces/html-editor-config';
-import { loadScriptChunks } from '../utils/load-script-chunks';
-import { loadStyles } from '../utils/load-styles';
+
+import { ResourceLoader } from '../utils/loader';
 
 
 @Injectable({
@@ -30,8 +30,17 @@ export class FsFroalaLoaderService {
   constructor(
     @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig: FsHtmlEditorConfig,
   ) {
+    if (this._defaultConfig) {
+      if (this._defaultConfig.assetsJSPath) {
+        ResourceLoader.setResourceBase(this._defaultConfig.assetsJSPath)
+      }
+
+      if (this._defaultConfig.assetsCSSPath) {
+        ResourceLoader.setStylesBase(this._defaultConfig.assetsCSSPath)
+      }
+    }
+
     this._load();
-    // this._loadPlugins();
   }
 
   public get ready$(): Observable<boolean> {
@@ -48,14 +57,12 @@ export class FsFroalaLoaderService {
 
   private _load() {
     combineLatest([
-      loadScriptChunks(
-        import(/* webpackChunkName: "froala-editor" */ '@firestitch/froala')
-      ),
-      loadStyles('/assets/css/froala_editor.pkgd.min.css')
+      ResourceLoader.loadResource('froala'),
+      ResourceLoader.loadStyles('froala')
     ])
       .pipe(
-        tap(([editor]) => {
-          this._FroalaEditor = editor;
+        tap(() => {
+          this._FroalaEditor = (window as any).FroalaEditor;
           this._froalaDone();
         }),
         concatMap(() => {
@@ -72,9 +79,7 @@ export class FsFroalaLoaderService {
     const imports = this._defaultConfig
       .defaultPlugins
       .reduce((acc, pluginName) => {
-        const import$ = loadScriptChunks(
-          import(/* webpackChunkName: "froala-plugins" */ '@firestitch/froala/js/plugins/' + pluginName + '.min.js'),
-        );
+        const import$ = ResourceLoader.loadResource(pluginName);
 
         acc.push(import$);
 
