@@ -59,6 +59,7 @@
     "@firestitch/prompt": "^8.4.3",
     "@firestitch/scroll-picker": "^8.0.0",
     "@firestitch/scrollbar": "^7.0.4",
+    "@firestitch/skeleton": "^8.1.4",
     "codelyzer": "^6.0.0",
     "cpx": "^1.5.0",
     "date-fns": "^2.15.0",

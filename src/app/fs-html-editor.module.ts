@@ -1,6 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { FsSkeletonModule } from '@firestitch/skeleton';
 
 import { FsHtmlEditorComponent } from './components/html-editor/html-editor.component';
 import { FsHtmlRendererComponent } from './components/html-renderer/html-renderer.component';
@@ -8,10 +9,11 @@ import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
 import { FS_HTML_EDITOR_CONFIG, FS_HTML_EDITOR_DEFAULT_CONFIG } from './injects/config.inject';
 import { DefaultPlugin } from './enums/default-plugin.enum';
 
+
 @NgModule({
   imports: [
     CommonModule,
-    MatProgressSpinnerModule,
+    FsSkeletonModule,
   ],
   exports: [
     FsHtmlEditorComponent,

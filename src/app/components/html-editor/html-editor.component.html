@@ -1,13 +1,15 @@
 <div class="fs-html-editor-default">
+  <ng-container *ngIf="initialized">
+    <ng-container *fsSkeleton="(froalaReady$ | async) !== false">
+    </ng-container>
+  </ng-container>
+
   <div #elRef></div>
+
   <div class="bottom-line"></div>
   <fs-html-renderer
     *ngIf="!initialized"
     [html]="html"
     (click)="uninitializedClick($event)">
   </fs-html-renderer>
-
-  <div class="fs-html-editor-default__loading" *ngIf="firstClick && (froalaReady$ | async) === false">
-    <mat-spinner [diameter]="35"></mat-spinner> Loading...
-  </div>
 </div>

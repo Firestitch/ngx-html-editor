@@ -9,6 +9,7 @@ import {
   Inject,
   Input,
   OnDestroy,
+  OnInit,
   Optional,
   ViewChild
 } from '@angular/core';
@@ -21,8 +22,8 @@ import {
   Validator
 } from '@angular/forms';
 
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 
 import { merge } from 'lodash-es';
 
@@ -59,18 +60,18 @@ import { FsFroalaLoaderService } from '../../services/froala-loader.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
+export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   @HostBinding('class.focused') classFocused = false;
   @ViewChild('elRef') public elRef: ElementRef;
   @Input() public config: FsHtmlEditorConfig = {};
   @Input() public ngModel: string;
 
-  public firstClick = false;
   public initialized = false;
 
   private _editor: any;
   private _html: string;
+  private _initialize$ = new ReplaySubject();
   private _destroy$ = new Subject();
 
   constructor(
@@ -98,6 +99,10 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     return this._fr.ready$;
   }
 
+  public ngOnInit(): void {
+    this._listenLazyInit();
+  }
+
   public ngAfterViewInit() {
     this._html = this.ngModel || '';
     //this.el.innerHTML = this._html;
@@ -117,15 +122,13 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
     return !!el.innerText.length;
   }
 
-  public async initialize(options: any = {}) {
+  public initialize(options: any = {}) {
     const config = this._createConfig();
 
     this._initPlugins(config);
     this.el.innerHTML = this._html;
 
     this._editor = new this._fr.FroalaEditor(this.el, this._createOptions(), () => {
-
-      this.initialized = true;
       this._cdRef.markForCheck();
 
       if (config.froalaConfig.events) {
@@ -182,7 +185,9 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
         });
       }
 
-      // this.el.querySelector('.second-toolbar').remove();
+      if (this.el.querySelector('.fr-second-toolbar')) {
+        this.el.querySelector('.fr-second-toolbar').remove();
+      }
 
       const selection = options.selection;
 
@@ -222,7 +227,6 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   }
 
   public uninitializedClick(event: UIEvent): void {
-    this.firstClick = true;
     if (this.config.initClick) {
       this.config.initClick(event);
     }
@@ -235,17 +239,11 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
           target.removeAttribute('target');
         });
       } else {
-        const selection: any = window.getSelection();
-        const options: any = {};
-        if (selection.baseNode) {
-           options.selection = {
-            node: selection.baseNode.nodeValue,
-            offset: selection.baseOffset,
-          };
-        }
-        this.initialize(options);
+        this._initialize$.next();
       }
     }
+
+    this.initialized = true;
   }
 
   public updateSize() {
@@ -316,6 +314,7 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
   }
 
   public ngOnDestroy() {
+    this._initialize$.complete();
     this._destroy$.next();
     this._destroy$.complete();
     this.destroy();
@@ -436,5 +435,24 @@ export class FsHtmlEditorComponent implements AfterViewInit, ControlValueAccesso
       },
       config.froalaConfig,
     );
+  }
+
+  private _listenLazyInit() {
+    this.froalaReady$
+      .pipe(
+        filter((ready) => ready),
+        switchMap(() => this._initialize$)
+      )
+      .subscribe(() => {
+        const selection: any = window.getSelection();
+        const options: any = {};
+        if (selection.baseNode) {
+          options.selection = {
+            node: selection.baseNode.nodeValue,
+            offset: selection.baseOffset,
+          };
+        }
+        this.initialize(options);
+      });
   }
 }

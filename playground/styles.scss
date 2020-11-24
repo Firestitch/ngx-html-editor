@@ -7,6 +7,7 @@
 
 //@import "~froala-editor/css/froala_editor.pkgd";
 //@import "~froala-editor/css/froala_style";
+@import "~@firestitch/skeleton/styles";
 
 @include fs-form($mat-blue);
 @include fs-drawer($mat-blue);
