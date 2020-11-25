@@ -23,7 +23,7 @@ import {
 } from '@angular/forms';
 
 import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { merge } from 'lodash-es';
 
@@ -171,16 +171,27 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       });
 
       if (this.config.image && this.config.image.upload) {
-        this._editor.events.on('image.beforeUpload', (images) => {
+        this._editor.events.on('image.beforePasteUpload', (image) => {
 
-          this.config.image.upload(images[0])
-            .pipe(
-              takeUntil(this._destroy$),
-            )
-            .subscribe((url) => {
-              this.editor.image.insert(url, null, null, this.editor.image.get());
+          fetch(image.getAttribute('src'))
+            .then((res) => {
+              res.blob()
+                .then((blob) => {
+                  this._processImageUpload(blob)
+                    .subscribe((url) => {
+                      image.setAttribute('src', url);
+                      image.removeAttribute('data-fr-image-pasted');
+                    });
+                });
             });
 
+          return false;
+        });
+
+        this._editor.events.on('image.beforeUpload', (blobs) => {
+          this._processImageUpload(blobs[0]).subscribe((url) => {
+            this.editor.image.insert(url, null, null, this.editor.image.get());
+          });
           return false;
         });
       }
@@ -213,6 +224,13 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       }
 
     });
+  }
+
+  private _processImageUpload(blob) {
+    return this.config.image.upload(blob)
+      .pipe(
+        takeUntil(this._destroy$),
+      );
   }
 
   private _getTextNode(node) {

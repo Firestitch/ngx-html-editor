@@ -60,7 +60,7 @@ export class KitchenSinkComponent implements OnInit {
           const data = {
             file: file
           };
-          return this._api.post('https://boilerplate.firestitch.com/api/dummy/upload', data)
+          return this._api.post('https://specify.dev.firestitch.com/api/dummy/upload', data)
             .pipe(
               map((response) => response.data.url),
             );
