@@ -23,11 +23,9 @@ import {
 } from '@angular/forms';
 
 import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 
 import { merge } from 'lodash-es';
-
-// import FroalaEditor from 'froala-editor';
 
 import { PluginButton } from './../../interfaces/plugin-button';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
@@ -37,7 +35,6 @@ import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
 
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { Plugin } from './../../classes/plugin';
-
 
 import { FsFroalaLoaderService } from '../../services/froala-loader.service';
 
@@ -100,12 +97,12 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   public ngOnInit(): void {
+    this.initialized = !this.config.initOnClick;
     this._listenLazyInit();
   }
 
   public ngAfterViewInit() {
     this._html = this.ngModel || '';
-    //this.el.innerHTML = this._html;
     if (!this.config.initOnClick || !this.hasContent()) {
       this._initialize$.next();
     }
