@@ -242,23 +242,26 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   public uninitializedClick(event: UIEvent): void {
-    if (this.config.initClick) {
-      this.config.initClick(event);
-    }
-
     if (!event.defaultPrevented) {
       const target: any = event.target;
       if (target && target.nodeName === 'A' && target.getAttribute('href')) {
+        const targetTarget = target.getAttribute('target');
         target.setAttribute('target', '_blank');
         setTimeout(() => {
-          target.removeAttribute('target');
+          if (targetTarget) {
+            target.setAttribute('target', targetTarget);
+          } else {
+            target.removeAttribute('target');
+          }
         });
       } else {
+        if (this.config.initClick) {
+          this.config.initClick(event);
+        }
         this._initialize$.next();
+        this.initialized = true;
       }
     }
-
-    this.initialized = true;
   }
 
   public updateSize() {
