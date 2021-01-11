@@ -1,10 +1,8 @@
 export const ParagraphButtons = [
+  'align',
   'formatOL',
   'formatUL',
   'checklist',
-  'align',
-  'outdent',
   'indent',
-  'quote',
-  'lineHeight',
+  'outdent',
 ];

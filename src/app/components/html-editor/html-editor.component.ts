@@ -419,7 +419,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
           H1: 'Heading 1',
           H2: 'Heading 2',
           H3: 'Heading 3',
-          H4: 'Heading 4'
+          H4: 'Heading 4',
         },
         paragraphFormatSelection: true,
         toolbarButtonsXS: {
@@ -439,15 +439,15 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         toolbarButtons: {
           moreText: {
             buttons: TextButtons,
-            buttonsVisible: 2,
+            buttonsVisible: 4,
           },
           moreParagraph: {
             buttons: ParagraphButtons,
-            buttonsVisible: 3,
+            buttonsVisible: 5,
           },
           moreRich: {
             buttons: RichButtons,
-            buttonsVisible: 5,
+            buttonsVisible: 3,
           },
         },
       },

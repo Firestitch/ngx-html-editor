@@ -18,6 +18,7 @@ export class MentionPlugin extends Plugin {
       buttons: [
         {
           name: config.name,
+          tooltip: config.tooltip,
           svgPath: config.iconPath,
           click: (editor) => {
             this._closeAll();
