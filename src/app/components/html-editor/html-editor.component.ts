@@ -420,6 +420,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
           H2: 'Heading 2',
           H3: 'Heading 3',
           H4: 'Heading 4',
+          BLOCKQUOTE: 'Quote',
         },
         paragraphFormatSelection: true,
         toolbarButtonsXS: {
