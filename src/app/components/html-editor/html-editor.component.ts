@@ -440,7 +440,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         toolbarButtons: {
           moreText: {
             buttons: TextButtons,
-            buttonsVisible: 4,
+            buttonsVisible: 3,
           },
           moreParagraph: {
             buttons: ParagraphButtons,

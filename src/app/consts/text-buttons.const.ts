@@ -1,10 +1,8 @@
 export const TextButtons = [
       'paragraphFormat',
-      'quote',
       'code',
       'bold',
       'italic',
-      'table',
       'underline',
       'strikeThrough',
       'subscript',
@@ -16,4 +14,5 @@ export const TextButtons = [
       'inlineClass',
       'inlineStyle',
       'clearFormatting',
-    ];
+      'quote',
+];
