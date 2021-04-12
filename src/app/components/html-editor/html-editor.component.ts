@@ -104,6 +104,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   public ngAfterViewInit() {
     this._html = this.ngModel || '';
     if (!this.config.initOnClick || !this.hasContent()) {
+      this.initialized = true;
       this._initialize$.next();
     }
   }
