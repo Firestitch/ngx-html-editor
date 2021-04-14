@@ -97,6 +97,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   public ngOnInit(): void {
+    this.config = this.config || {};
+    this.config.autofocus = this.config.autofocus !== false;
     this.initialized = !this.config.initOnClick;
     this._listenLazyInit();
   }
@@ -214,10 +216,10 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
           sel.removeAllRanges();
           sel.addRange(range);
-        } else {
+        } else if (this.config.autofocus) {
           this.focus();
         }
-      } else if (this.config.autofocus !== false) {
+      } else if (this.config.autofocus) {
         this.focus();
       }
 
