@@ -15,6 +15,7 @@ export interface FsHtmlEditorConfig {
   maxLength?: number;
   autofocus?: boolean;
   froalaConfig?: any;
+  disabled?: boolean;
   activationKey?: any;
   tooltip?: string;
   plugins?: Plugin[];
