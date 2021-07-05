@@ -78,7 +78,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
     private _cdRef: ChangeDetectorRef,
     private _fr: FsFroalaLoaderService,
-  ) {}
+  ) { }
 
   public onChange = (data: any) => {}
   public onTouched = () => {}

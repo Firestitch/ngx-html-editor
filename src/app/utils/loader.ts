@@ -20,6 +20,7 @@ function resourceLoaderFactory() {
     url: 'plugins/url.min.js',
     video: 'plugins/video.min.js',
     quote: 'plugins/quote.min.js',
+    draggable: 'plugins/draggable.min.js',
   }
 
   const stylesPaths = {

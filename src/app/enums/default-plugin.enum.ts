@@ -9,4 +9,5 @@ export const enum DefaultPlugin {
   Url = 'url',
   Video = 'video',
   Quote = 'quote',
+  Draggable = 'draggable',
 }

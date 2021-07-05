@@ -53,6 +53,7 @@ export function FsHtmlEditorConfigFactory(config: FsHtmlEditorConfig) {
       DefaultPlugin.Table,
       DefaultPlugin.Url,
       DefaultPlugin.Video,
+      DefaultPlugin.Draggable,
     ],
     ...config
   };

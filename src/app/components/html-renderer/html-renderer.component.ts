@@ -1,6 +1,7 @@
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ChangeDetectionStrategy, Component, Input, ChangeDetectorRef } from '@angular/core';
 
+
 @Component({
   selector: 'fs-html-renderer',
   templateUrl: 'html-renderer.component.html',
