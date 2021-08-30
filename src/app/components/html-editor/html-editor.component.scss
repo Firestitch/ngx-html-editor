@@ -1,7 +1,6 @@
 :host {
 
   ::ng-deep {
-
     .fr-box.fr-basic {
       .fr-wrapper {
         border: 0;
@@ -95,6 +94,12 @@
           border-radius: 4px;
           margin: 4px 2px;
         }
+      }
+    }
+
+    .fr-view {
+      ol, ul {
+        list-style-position: unset;  
       }
     }
   }
