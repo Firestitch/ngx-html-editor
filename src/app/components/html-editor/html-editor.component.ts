@@ -65,7 +65,6 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   @ViewChild('elRef') public elRef: ElementRef;
 
   @Input() public config: FsHtmlEditorConfig = {};
-  @Input() public ngModel: string;
 
   public initialized = false;
 
@@ -107,7 +106,6 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   public ngAfterViewInit() {
-    this._html = this.ngModel || '';
     if (!this.config.initOnClick || !this.hasContent()) {
       this.initialized = true;
       this._initialize$.next();
