@@ -33,26 +33,26 @@ export class KitchenSinkComponent implements OnInit {
   public width;
 
   constructor(
-    private exampleComponent: FsExampleComponent,
+    // private exampleComponent: FsExampleComponent,
     private message: FsMessage,
     private _message: FsMessage,
     private _api: FsApi,
     private renderer: Renderer2,
   ) {
-    exampleComponent.setConfigureComponent(KitchenSinkConfigureComponent, { config: this.config });
+    // exampleComponent.setConfigureComponent(KitchenSinkConfigureComponent, { config: this.config });
   }
 
   public ngOnInit() {
     this.config = {
-      froalaConfig: {
-        toolbarButtons: {
-          moreRich: {
-            buttons: [ ...RichButtons, 'screenRecord', 'relateMention', 'accountMention' ],
-          }
-        }
-      },
+      // froalaConfig: {
+      //   toolbarButtons: {
+      //     moreRich: {
+      //       buttons: [ ...RichButtons, 'screenRecord', 'relateMention', 'accountMention' ],
+      //     }
+      //   }
+      // },
       disabled: false,
-      initOnClick: true,
+      // initOnClick: true,
       initClick: (event: UIEvent) => {
         //event.preventDefault();
       },

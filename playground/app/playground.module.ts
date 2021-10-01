@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
@@ -12,12 +13,14 @@ import { FsHtmlEditorModule } from '@firestitch/package';
 import { FsLabelModule } from '@firestitch/label';
 import { FsFormModule } from '@firestitch/form';
 import { FsScrollbarModule } from '@firestitch/scrollbar';
+import { FsDialogModule } from '@firestitch/dialog';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppMaterialModule } from './material.module';
 import {
   KitchenSinkComponent,
-  ExamplesComponent
+  ExamplesComponent,
+  DialogComponent,
 } from './components';
 import { AppComponent } from './app.component';
 import { KitchenSinkConfigureComponent } from './components/kitchen-sink-configure';
@@ -42,6 +45,7 @@ const routes: Routes = [
   bootstrap: [ AppComponent ],
   imports: [
     BrowserModule,
+    MatDialogModule,
     FsHtmlEditorModule.forRoot({
       activationKey: 'DUA2yE1G2E1A5B5B3pZGCTRSAPJWTLPLZHTQQe1JGZxC4B3A3C2B5A1C2E4F1A1==',
       froalaConfig: { },
@@ -53,6 +57,7 @@ const routes: Routes = [
     CommonModule,
     FsLabelModule,
     FsFormModule,
+    FsDialogModule,
     FsExampleModule.forRoot(),
     FsApiModule.forRoot(),
     FsMessageModule.forRoot(),
@@ -63,6 +68,7 @@ const routes: Routes = [
     AppComponent,
     ExamplesComponent,
     KitchenSinkComponent,
+    DialogComponent,
     KitchenSinkConfigureComponent
   ],
 })

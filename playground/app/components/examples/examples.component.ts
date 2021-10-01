@@ -1,10 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { MatDialog } from '@angular/material/dialog';
+
 import { environment } from '@env';
+
+import { DialogComponent } from '../dialog';
 
 
 @Component({
   templateUrl: 'examples.component.html'
 })
-export class ExamplesComponent {
+export class ExamplesComponent implements OnInit {
   public config = environment;
+
+  constructor(
+    private _dialog: MatDialog,
+  ) { }
+
+  public ngOnInit(): void {
+
+  }
+
+  public openDialog(): void {
+    this._dialog.open(DialogComponent);
+  }
 }

@@ -321,13 +321,21 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
   public writeValue(html: string): void {
     this._html = html || '';
+
     this._cdRef.markForCheck();
-    if (this.editor && this.editor.html) {
-      try {
-        this.editor.html.set(this._html);
-      } catch (e) {
+    // SP-T2298 timeout needed for the case, when froala was already initated and
+    // second instance opened in dialog/drawer. In this case init step pass much faster, writeValue trigger
+    // after init and froala ignore new html. At the same time froala was initied but editor not yet, and next
+    // code doesn't work without timeout. We've got time range when too late for initiate value, and to early
+    // for change event.
+    setTimeout(() => {
+      if (this.editor && this.editor.html) {
+        try {
+          this.editor.html.set(this._html);
+        } catch (e) {
+        }
       }
-    }
+    });
   }
 
   public registerOnChange(fn: (data: any) => void): void {
