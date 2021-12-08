@@ -152,7 +152,11 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       });
 
       this._editor.events.on('contentChanged', () => {
-        this._change(this._editor.html.get());
+        const editorHTML = this._editor.html.get();
+
+        if (this.html !== editorHTML) {
+          this._change(editorHTML);
+        }
       });
 
       this._editor.events.on('paste.afterCleanup', (html) => {
