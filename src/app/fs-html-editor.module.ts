@@ -54,6 +54,7 @@ export function FsHtmlEditorConfigFactory(config: FsHtmlEditorConfig) {
       DefaultPlugin.Url,
       DefaultPlugin.Video,
       DefaultPlugin.Draggable,
+      DefaultPlugin.FontSize,
     ],
     ...config
   };

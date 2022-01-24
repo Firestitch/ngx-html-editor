@@ -10,4 +10,5 @@ export const enum DefaultPlugin {
   Video = 'video',
   Quote = 'quote',
   Draggable = 'draggable',
+  FontSize = 'font_size',
 }

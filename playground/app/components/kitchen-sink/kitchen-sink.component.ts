@@ -44,13 +44,15 @@ export class KitchenSinkComponent implements OnInit {
 
   public ngOnInit() {
     this.config = {
-      // froalaConfig: {
+      froalaConfig: {
       //   toolbarButtons: {
       //     moreRich: {
       //       buttons: [ ...RichButtons, 'screenRecord', 'relateMention', 'accountMention' ],
       //     }
       //   }
-      // },
+        // fontSize: ['5', '10', '12', '14', '18', '30', '60', '96'],
+        // fontSizeUnit: 'pt'
+      },
       disabled: false,
       // initOnClick: true,
       initClick: (event: UIEvent) => {
