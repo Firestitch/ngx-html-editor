@@ -22,6 +22,8 @@ import {
   Validator
 } from '@angular/forms';
 
+import { FileProcessor, FsFile } from '@firestitch/file';
+
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -186,6 +188,9 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
               res.blob()
                 .then((blob) => {
                   this._processImageUpload(blob)
+                    .pipe(
+                      takeUntil(this._destroy$),
+                    )
                     .subscribe((url) => {
                       image.setAttribute('src', url);
                       image.removeAttribute('data-fr-image-pasted');
@@ -197,9 +202,14 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         });
 
         this._editor.events.on('image.beforeUpload', (blobs) => {
-          this._processImageUpload(blobs[0]).subscribe((url) => {
-            this.editor.image.insert(url, null, null, this.editor.image.get());
-          });
+          this._processImageUpload(blobs[0])
+            .pipe(
+              takeUntil(this._destroy$),
+            )
+            .subscribe((url) => {
+              this.editor.image.insert(url, null, null, this.editor.image.get());
+            });
+
           return false;
         });
       }
@@ -235,9 +245,14 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   private _processImageUpload(blob) {
-    return this.config.image.upload(blob)
+    const processor = new FileProcessor();
+    const file = new FsFile(blob);
+
+    return processor.process([file], this.config.image)
       .pipe(
-        takeUntil(this._destroy$),
+        switchMap((img: FsFile) => {
+          return this.config.image.upload(img.file)
+        }),
       );
   }
 

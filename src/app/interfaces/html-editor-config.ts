@@ -25,5 +25,11 @@ export interface FsHtmlEditorConfig {
 }
 
 export interface FsHtmlEditorUploadConfig {
+  width?: number | undefined;
+  height?: number | undefined;
+  quality?: number | undefined;
+  format?: string | undefined;
+  minWidth?: number;
+  minHeight?: number;
   upload?: (file: Blob) => Observable<string>;
 }
