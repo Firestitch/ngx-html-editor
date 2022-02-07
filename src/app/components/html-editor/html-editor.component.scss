@@ -35,7 +35,7 @@
 
       .fr-btn-grp {
         margin: 0 20px 0 0;
-        position: relative;
+        //position: relative;
 
         &:nth-child(1):after,
         &:nth-child(2):after {
@@ -95,7 +95,7 @@
 
     .fr-view {
       ol, ul {
-        list-style-position: unset;  
+        list-style-position: unset;
       }
     }
   }
