@@ -154,11 +154,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       });
 
       this._editor.events.on('contentChanged', () => {
-        const editorHTML = this._editor.html.get();
-
-        if (this.html !== editorHTML) {
-          this._change(editorHTML);
-        }
+        this._contentChanged();
       });
 
       this._editor.events.on('paste.afterCleanup', (html) => {
@@ -194,6 +190,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
                     .subscribe((url) => {
                       image.setAttribute('src', url);
                       image.removeAttribute('data-fr-image-pasted');
+
+                      this._contentChanged();
                     });
                 });
             });
@@ -507,5 +505,13 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         }
         this.initialize(options);
       });
+  }
+
+  private _contentChanged(): void {
+    const editorHTML = this._editor.html.get();
+
+    if (this.html !== editorHTML) {
+      this._change(editorHTML);
+    }
   }
 }
