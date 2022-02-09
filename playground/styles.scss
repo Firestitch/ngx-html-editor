@@ -9,7 +9,7 @@
 //@import "~froala-editor/css/froala_style";
 @import "~@firestitch/skeleton/styles";
 
-@include fs-form($mat-blue);
+//@include fs-form({});
 @include fs-drawer($mat-blue);
 @include fs-html-editor($mat-blue);
 

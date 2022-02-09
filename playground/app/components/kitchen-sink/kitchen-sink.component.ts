@@ -122,6 +122,8 @@ export class KitchenSinkComponent implements OnInit {
 
   public save = () => {
     this._message.success('Saved Changes');
+
+    return of();
   }
 
   public change(content) {
