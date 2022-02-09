@@ -250,8 +250,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
     return processor.process([file], this.config.image)
       .pipe(
-        switchMap((img: FsFile) => {
-          return this.config.image.upload(img.file)
+        switchMap(([f]: FsFile[]) => {
+          return this.config.image.upload(f.file)
         }),
       );
   }
