@@ -24,8 +24,8 @@ import {
 
 import { FileProcessor, FsFile } from '@firestitch/file';
 
-import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { merge } from 'lodash-es';
 
@@ -73,6 +73,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   private _editor: any;
   private _html: string;
   private _initialize$ = new ReplaySubject();
+  private _froalaReady$ = new BehaviorSubject(null);
   private _destroy$ = new Subject();
 
   constructor(
@@ -96,8 +97,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     return this._editor;
   }
 
-  public get froalaReady$(): Observable<boolean> {
-    return this._fr.ready$;
+  public get froalaLoaded$(): Observable<boolean> {
+    return this._fr.loaded$;
   }
 
   public ngOnInit(): void {
@@ -129,116 +130,10 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     const config = this._createConfig();
 
     this._initPlugins(config);
-    this.el.innerHTML = this._html;
+    // this.el.innerHTML = this._html || '';
 
     this._editor = new this._fr.FroalaEditor(this.el, this._createOptions(), () => {
-      this._cdRef.markForCheck();
-      if (config.disabled) {
-        this.disable();
-      }
-
-      if (config.froalaConfig.events) {
-        if (config.froalaConfig.events.initialized) {
-          config.froalaConfig.events.initialized();
-        }
-      }
-
-      this._editor.events.on('focus', () => {
-        this.classFocused = true;
-        this._cdRef.markForCheck();
-      });
-
-      this._editor.events.on('blur', () => {
-        this.classFocused = false;
-        this._cdRef.markForCheck();
-      });
-
-      this._editor.events.on('contentChanged', () => {
-        this._contentChanged();
-      });
-
-      this._editor.events.on('paste.afterCleanup', (html) => {
-        var div = document.createElement('div');
-        div.innerHTML = html;
-        div.querySelectorAll('*')
-          .forEach((el) => {
-            for (var i = 0; i < el.attributes.length; i++) {
-              const name = el.attributes[0].name;
-              if (name !== 'href') {
-                el.removeAttribute(name);
-              }
-            }
-          });
-        return div.innerHTML;
-      });
-
-      this._editor.events.on('keydown', () => {
-        this.onTouched();
-      });
-
-      if (this.config.image && this.config.image.upload) {
-        this._editor.events.on('image.beforePasteUpload', (image) => {
-
-          fetch(image.getAttribute('src'))
-            .then((res) => {
-              res.blob()
-                .then((blob) => {
-                  this._processImageUpload(blob)
-                    .pipe(
-                      takeUntil(this._destroy$),
-                    )
-                    .subscribe((url) => {
-                      image.setAttribute('src', url);
-                      image.removeAttribute('data-fr-image-pasted');
-
-                      this._contentChanged();
-                    });
-                });
-            });
-
-          return false;
-        });
-
-        this._editor.events.on('image.beforeUpload', (blobs) => {
-          this._processImageUpload(blobs[0])
-            .pipe(
-              takeUntil(this._destroy$),
-            )
-            .subscribe((url) => {
-              this.editor.image.insert(url, null, null, this.editor.image.get());
-            });
-
-          return false;
-        });
-      }
-
-      if (this.el.querySelector('.fr-second-toolbar')) {
-        this.el.querySelector('.fr-second-toolbar').remove();
-      }
-
-      const selection = options.selection;
-
-      if (selection) {
-        const node: any = Array.from(this.el.querySelectorAll('.fr-element *')).find((node: any) => {
-          return selection.node === node.textContent;
-        });
-
-        if (node) {
-          const range = document.createRange();
-          const sel = window.getSelection();
-
-          range.setStart(this._getTextNode(node), selection.offset);
-          range.collapse(true)
-
-          sel.removeAllRanges();
-          sel.addRange(range);
-        } else if (this.config.autofocus) {
-          this.focus();
-        }
-      } else if (this.config.autofocus) {
-        this.focus();
-      }
-
+      this._froalaReady$.next({ config, options });
     });
   }
 
@@ -339,20 +234,14 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   public writeValue(html: string): void {
     this._html = html || '';
 
-    this._cdRef.markForCheck();
-    // SP-T2298 timeout needed for the case, when froala was already initated and
-    // second instance opened in dialog/drawer. In this case init step pass much faster, writeValue trigger
-    // after init and froala ignore new html. At the same time froala was initied but editor not yet, and next
-    // code doesn't work without timeout. We've got time range when too late for initiate value, and to early
-    // for change event.
-    setTimeout(() => {
-      if (this.editor && this.editor.html) {
-        try {
-          this.editor.html.set(this._html);
-        } catch (e) {
-        }
+    if (this.editor && this.editor.html) {
+      try {
+        this.editor.html.set(this._html);
+      } catch (e) {
       }
-    });
+    }
+
+    this._cdRef.markForCheck();
   }
 
   public registerOnChange(fn: (data: any) => void): void {
@@ -384,7 +273,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   private _change(html): void {
-    this._html = html;
+    // this._html = html;
     this.onChange(html);
   }
 
@@ -489,22 +378,28 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   private _listenLazyInit() {
-    this.froalaReady$
+    this.froalaLoaded$
       .pipe(
         filter((ready) => ready),
-        switchMap(() => this._initialize$)
+        switchMap(() => this._initialize$),
+        tap(() => {
+          const selection: any = window.getSelection();
+          const options: any = {};
+          if (selection.baseNode) {
+            options.selection = {
+              node: selection.baseNode.nodeValue,
+              offset: selection.baseOffset,
+            };
+          }
+          this.initialize(options);
+        }),
+        switchMap(() => this._froalaReady$),
+        filter((data) => !!data),
+        tap(({ config, options }) => {
+          this._setupFroala(config, options);
+        })
       )
-      .subscribe(() => {
-        const selection: any = window.getSelection();
-        const options: any = {};
-        if (selection.baseNode) {
-          options.selection = {
-            node: selection.baseNode.nodeValue,
-            offset: selection.baseOffset,
-          };
-        }
-        this.initialize(options);
-      });
+      .subscribe();
   }
 
   private _contentChanged(): void {
@@ -512,6 +407,118 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
     if (this.html !== editorHTML) {
       this._change(editorHTML);
+    }
+  }
+
+  private _setupFroala(config: FsHtmlEditorConfig, options: any): void {
+    this._cdRef.markForCheck();
+
+    this.setHtml(this._html);
+
+    if (config.disabled) {
+      this.disable();
+    }
+
+    if (config.froalaConfig.events) {
+      if (config.froalaConfig.events.initialized) {
+        config.froalaConfig.events.initialized();
+      }
+    }
+
+    this._editor.events.on('focus', () => {
+      this.classFocused = true;
+      this._cdRef.markForCheck();
+    });
+
+    this._editor.events.on('blur', () => {
+      this.classFocused = false;
+      this._cdRef.markForCheck();
+    });
+
+    this._editor.events.on('contentChanged', () => {
+      this._contentChanged();
+    });
+
+    this._editor.events.on('paste.afterCleanup', (html) => {
+      var div = document.createElement('div');
+      div.innerHTML = html;
+      div.querySelectorAll('*')
+        .forEach((el) => {
+          for (var i = 0; i < el.attributes.length; i++) {
+            const name = el.attributes[0].name;
+            if (name !== 'href') {
+              el.removeAttribute(name);
+            }
+          }
+        });
+      return div.innerHTML;
+    });
+
+    this._editor.events.on('keydown', () => {
+      this.onTouched();
+    });
+
+    if (this.config.image && this.config.image.upload) {
+      this._editor.events.on('image.beforePasteUpload', (image) => {
+
+        fetch(image.getAttribute('src'))
+          .then((res) => {
+            res.blob()
+              .then((blob) => {
+                this._processImageUpload(blob)
+                  .pipe(
+                    takeUntil(this._destroy$),
+                  )
+                  .subscribe((url) => {
+                    image.setAttribute('src', url);
+                    image.removeAttribute('data-fr-image-pasted');
+
+                    this._contentChanged();
+                  });
+              });
+          });
+
+        return false;
+      });
+
+      this._editor.events.on('image.beforeUpload', (blobs) => {
+        this._processImageUpload(blobs[0])
+          .pipe(
+            takeUntil(this._destroy$),
+          )
+          .subscribe((url) => {
+            this.editor.image.insert(url, null, null, this.editor.image.get());
+          });
+
+        return false;
+      });
+    }
+
+    if (this.el.querySelector('.fr-second-toolbar')) {
+      this.el.querySelector('.fr-second-toolbar').remove();
+    }
+
+    const selection = options.selection;
+
+    if (selection) {
+      const node: any = Array.from(this.el.querySelectorAll('.fr-element *')).find((node: any) => {
+        return selection.node === node.textContent;
+      });
+
+      if (node) {
+        const range = document.createRange();
+        const sel = window.getSelection();
+
+        range.setStart(this._getTextNode(node), selection.offset);
+        range.collapse(true)
+
+        sel.removeAllRanges();
+        sel.addRange(range);
+      } else if (this.config.autofocus) {
+        this.focus();
+      }
+    } else if (this.config.autofocus) {
+      this.focus();
     }
   }
 }

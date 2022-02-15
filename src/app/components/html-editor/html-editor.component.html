@@ -1,6 +1,6 @@
 <div class="fs-html-editor-default">
   <ng-container *ngIf="initialized">
-    <ng-container *fsSkeleton="(froalaReady$ | async) !== false">
+    <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false">
     </ng-container>
   </ng-container>
 

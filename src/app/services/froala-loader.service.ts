@@ -19,7 +19,7 @@ export class FsFroalaLoaderService {
   private _froalaLoaded = new BehaviorSubject(false);
   private _defaultPluginsLoaded = new BehaviorSubject(false);
 
-  private _ready$ = combineLatest([this._froalaLoaded, this._defaultPluginsLoaded])
+  private _loaded$ = combineLatest([this._froalaLoaded, this._defaultPluginsLoaded])
     .pipe(
       map(([FroalaReady, pluginsRead]) => {
         return pluginsRead && FroalaReady;
@@ -43,8 +43,8 @@ export class FsFroalaLoaderService {
     this._load();
   }
 
-  public get ready$(): Observable<boolean> {
-    return this._ready$;
+  public get loaded$(): Observable<boolean> {
+    return this._loaded$;
   }
 
   public get ready(): boolean {
