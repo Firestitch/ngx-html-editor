@@ -24,8 +24,8 @@ import {
 
 import { FileProcessor, FsFile } from '@firestitch/file';
 
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, fromEventPattern, Observable, ReplaySubject, Subject } from 'rxjs';
+import { distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { merge } from 'lodash-es';
 
@@ -435,9 +435,29 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       this._cdRef.markForCheck();
     });
 
-    this._editor.events.on('contentChanged', () => {
-      this._contentChanged();
-    });
+
+    fromEventPattern(
+      (handler) => {
+        this._editor.events.on('contentChanged', handler);
+      },
+      () => {}
+    )
+      .pipe(
+        startWith(this._html),
+        map(() => this.editor.html.get()),
+        distinctUntilChanged(),
+        skip(1),
+      )
+      .subscribe(() => {
+        this._contentChanged();
+      });
+
+    // this._editor.events.on('contentChanged', () => {
+    //   console.log('test');
+    //   if (!this._firstChange) {
+    //     this._contentChanged();
+    //   }
+    // });
 
     this._editor.events.on('paste.afterCleanup', (html) => {
       var div = document.createElement('div');
