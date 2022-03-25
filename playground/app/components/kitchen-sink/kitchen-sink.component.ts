@@ -8,8 +8,6 @@ import { FsHtmlEditorComponent } from './../../../../src/app/components/html-edi
 import { CodePlugin } from './../../../../src/app/plugins/code.plugin';
 import { map } from 'rxjs/operators';
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { KitchenSinkConfigureComponent } from '../kitchen-sink-configure';
-import { FsExampleComponent } from '@firestitch/example';
 import { FsApi } from '@firestitch/api';
 import { FsMessage } from '@firestitch/message';
 import { of } from 'rxjs';
@@ -97,6 +95,9 @@ export class KitchenSinkComponent implements OnInit {
                 map((response) => response.data.objects),
               );
           },
+          selected: (item) => {
+            console.log(item);
+          }
         }),
         new MentionPlugin({
           name: 'relateMention',
@@ -114,6 +115,9 @@ export class KitchenSinkComponent implements OnInit {
             .pipe(
               map((response) => response.data.objects),
             );
+          },
+          selected: (item) => {
+            console.log(item);
           },
         }),
       ],

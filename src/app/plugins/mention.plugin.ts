@@ -5,11 +5,15 @@ import { MentionPluginConfig } from './configs/mention-plugin.config';
 
 import { Plugin } from '../classes/plugin';
 
+import { guid } from '@firestitch/common';
+
 
 export class MentionPlugin extends Plugin {
 
+  private static _currentGuid = null;
   private static _tributes = [];
   private _tribute;
+  private _guid = guid();
 
   public constructor(public config: MentionPluginConfig) {
     super();
@@ -71,9 +75,22 @@ export class MentionPlugin extends Plugin {
         return false;
       }
     }, true);
+
+    
+    this.editor.el.addEventListener("tribute-replaced", this.selected);
   }
 
-  public destroy() {}
+  public selected = (event) => {
+    if(this.config.selected) {
+      if(MentionPlugin._currentGuid === this._guid) {
+        this.config.selected(event.detail.item.original);
+      }
+    }
+  }
+
+  public destroy() {
+    this.editor.el.removeEventListener("tribute-replaced", this.selected);
+  }
 
   private _closeAll() {
     MentionPlugin._tributes.forEach((tribute) => {
@@ -84,6 +101,7 @@ export class MentionPlugin extends Plugin {
   }
 
   private _loadValues(keyword, cb) {
+    MentionPlugin._currentGuid = this._guid;
     return this.config.fetch(keyword)
               .subscribe((data) => {
                 cb(data);

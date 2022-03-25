@@ -10,4 +10,5 @@ export interface MentionPluginConfig extends PluginConfig {
   menuItemClass?: string;
   tooltip?: string;
   iconPath?: string;
+  selected?: (item: any) => void;
 }
