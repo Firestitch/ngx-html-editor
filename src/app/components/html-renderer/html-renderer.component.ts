@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, Input, ChangeDetectorRef } from '@a
 export class FsHtmlRendererComponent {
 
   @Input('html') public set setHtml(html) {
-    this.trustedHtml = this.sanitized.bypassSecurityTrustHtml(html);
+    this.trustedHtml = this.sanitized.bypassSecurityTrustHtml(html || '');
     this._cdRef.markForCheck();
   }
 
