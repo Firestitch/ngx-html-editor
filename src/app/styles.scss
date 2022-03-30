@@ -1,12 +1,13 @@
 // @import "./../app/froala/css/froala_editor.pkgd";
+@use '~@angular/material' as mat;
 // @import "./../app/froala/css/froala_style";
 
 @mixin fs-html-editor($theme) {
-  $primary: mat-palette($theme);
+  $primary: mat.define-palette($theme);
 
   fs-html-editor.focused {
     .bottom-line {
-      border-color: mat-color($primary);
+      border-color: mat.get-color-from-palette($primary);
     }
   }
 }

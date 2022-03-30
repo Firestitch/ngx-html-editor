@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @import '../tools/assets/playground.scss';
 @import '~@firestitch/message/styles';
 @import "~@firestitch/drawer/styles";
@@ -10,8 +11,8 @@
 @import "~@firestitch/skeleton/styles";
 
 //@include fs-form({});
-@include fs-drawer($mat-blue);
-@include fs-html-editor($mat-blue);
+@include fs-drawer(mat.$blue-palette);
+@include fs-html-editor(mat.$blue-palette);
 
 h1 {
   margin: 15px 0;
