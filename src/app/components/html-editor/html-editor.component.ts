@@ -323,6 +323,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       // Extra merge level fixed this problem and allow to init config properly without legacy data
       {},
       {
+        shortcutsEnabled: ['show', 'bold', 'italic', 'underline', 'indent', 'outdent', 'undo', 'redo', 'insertImage', 'createLink'],
         key: config.activationKey,
         placeholderText: config.placeholder,
         linkAlwaysBlank: true,

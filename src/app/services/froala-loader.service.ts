@@ -74,7 +74,7 @@ export class FsFroalaLoaderService {
       )
       .subscribe();
   }
-
+  
   private _loadPlugins(): Observable<unknown> {
     const imports = this._defaultConfig
       .defaultPlugins
