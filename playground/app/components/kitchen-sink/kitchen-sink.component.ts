@@ -3,7 +3,6 @@ import { FsHtmlEditorConfig } from './../../../../src/app/interfaces/html-editor
 import { MentionPlugin } from './../../../../src/app/plugins/mention.plugin';
 import { ChecklistPlugin } from './../../../../src/app/plugins/checklist.plugin';
 import { ScreenRecordPlugin } from './../../../../src/app/plugins/screen-record.plugin';
-import { RichButtons } from './../../../../src/app/consts/rich-buttons.const';
 import { FsHtmlEditorComponent } from './../../../../src/app/components/html-editor/html-editor.component';
 import { CodePlugin } from './../../../../src/app/plugins/code.plugin';
 import { map } from 'rxjs/operators';
@@ -12,6 +11,7 @@ import { FsApi } from '@firestitch/api';
 import { FsMessage } from '@firestitch/message';
 import { of } from 'rxjs';
 import { guid } from '@firestitch/common';
+import { RichButtons } from '../../../../src/app/consts/rich-buttons.const';
 
 
 @Component({
@@ -42,14 +42,25 @@ export class KitchenSinkComponent implements OnInit {
 
   public ngOnInit() {
     this.config = {
+      buttons: [
+        {
+          name: 'pageBreak',
+          svgKey: 'pageBreaker',
+          title: 'Insert Page Break',
+          click: (editor) => {
+            editor.html.insert('<div contenteditable="false" class="page-break"></div>', true);
+          }
+        }
+      ],
       froalaConfig: {
-      //   toolbarButtons: {
-      //     moreRich: {
-      //       buttons: [ ...RichButtons, 'screenRecord', 'relateMention', 'accountMention' ],
-      //     }
-      //   }
-        // fontSize: ['5', '10', '12', '14', '18', '30', '60', '96'],
-        // fontSizeUnit: 'pt'
+        toolbarButtons: {
+          moreRich: {
+            buttons: [ 
+              'pageBreak',
+              ...RichButtons,
+             ],
+          }
+        },
       },
       disabled: false,
       // initOnClick: true,

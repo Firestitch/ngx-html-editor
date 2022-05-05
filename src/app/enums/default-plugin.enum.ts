@@ -1,4 +1,4 @@
-export const enum DefaultPlugin {
+export const enum FroalaPlugin {
   Align = 'align',
   Colors = 'colors',
   Image = 'image',
@@ -11,4 +11,5 @@ export const enum DefaultPlugin {
   Quote = 'quote',
   Draggable = 'draggable',
   FontSize = 'font_size',
+  QuickInsert = 'quick_insert',
 }

@@ -17,9 +17,9 @@ export class FsFroalaLoaderService {
   private _FroalaEditor: unknown;
 
   private _froalaLoaded = new BehaviorSubject(false);
-  private _defaultPluginsLoaded = new BehaviorSubject(false);
+  private _froalaPluginsLoaded = new BehaviorSubject(false);
 
-  private _loaded$ = combineLatest([this._froalaLoaded, this._defaultPluginsLoaded])
+  private _loaded$ = combineLatest([this._froalaLoaded, this._froalaPluginsLoaded])
     .pipe(
       map(([FroalaReady, pluginsRead]) => {
         return pluginsRead && FroalaReady;
@@ -48,7 +48,7 @@ export class FsFroalaLoaderService {
   }
 
   public get ready(): boolean {
-    return this._froalaLoaded.getValue() && this._defaultPluginsLoaded.getValue();
+    return this._froalaLoaded.getValue() && this._froalaPluginsLoaded.getValue();
   }
 
   public get FroalaEditor(): any {
@@ -69,7 +69,7 @@ export class FsFroalaLoaderService {
           return this._loadPlugins();
         }),
         tap(() => {
-          this._defaultPluginsDone();
+          this._froalaPluginsDone();
         }),
       )
       .subscribe();
@@ -77,7 +77,7 @@ export class FsFroalaLoaderService {
   
   private _loadPlugins(): Observable<unknown> {
     const imports = this._defaultConfig
-      .defaultPlugins
+      .froalaPlugins
       .reduce((acc, pluginName) => {
         const import$ = ResourceLoader.loadResource(pluginName);
 
@@ -93,7 +93,7 @@ export class FsFroalaLoaderService {
     this._froalaLoaded.next(true);
   }
 
-  private _defaultPluginsDone() {
-    this._defaultPluginsLoaded.next(true);
+  private _froalaPluginsDone() {
+    this._froalaPluginsLoaded.next(true);
   }
 }

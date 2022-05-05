@@ -16,9 +16,25 @@ fieldset {
     padding: 2px 3px;
     border-radius: 3px;
   }
+
   img {
     width: 150px;
     height: 150px;
   }
-  
+    
+
+  .page-break {
+    display: block;
+    padding: 5px 0;
+    text-align: center;
+    background: #eaeaea;
+    border-radius: 5px;
+
+    &:after {
+      content: "Page Break";
+      color: #aeaeae;
+      font-size: 85%;
+    }
+  }
 }
+

@@ -128,10 +128,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
   public initialize(options: any = {}) {
     const config = this._createConfig();
-
     this._initPlugins(config);
-    // this.el.innerHTML = this._html || '';
-
+    this._initButtons(config);
     this._editor = new this._fr.FroalaEditor(this.el, this._createOptions(), () => {
       this._froalaReady$.next({ config, options });
     });
@@ -147,17 +145,6 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
           return this.config.image.upload(f.file)
         }),
       );
-  }
-
-  private _getTextNode(node) {
-    if (node) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        return node;
-      }
-      if (node.childNodes) {
-        return this._getTextNode(node.childNodes[0]);
-      }
-    }
   }
 
   public uninitializedClick(event: UIEvent): void {
@@ -277,8 +264,44 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     this.onChange(html);
   }
 
-  private _initPlugins(config) {
+  private _initButtons(config: FsHtmlEditorConfig) {
+    (config.buttons || [])
+    .forEach((button) => {
+      /*
+        Svg Keys:
+        ["add", "advancedImageEditor", "alignCenter", "alignJustify", "alignLeft", "alignRight", 
+        "anchors", "back", "backgroundColor", "blockquote", "bold", "cellBackground", 
+        "cellBorderColor", "cellOptions", "cellStyle", "clearFormatting", "close", "codeView", 
+        "cogs", "columns", "editLink", "exitFullscreen", "fontAwesome", "fontFamily", 
+        "fontSize", "fullscreen", "help", "horizontalLine", "imageAltText", "imageCaption", 
+        "imageClass", "imageDisplay", "imageManager", "imageSize", "indent", "inlineClass", 
+        "inlineStyle", "insertEmbed", "insertFile", "insertImage", "insertLink", "insertMore", 
+        "insertTable", "insertVideo", "upload", "italic", "search", "lineHeight", "linkStyles", 
+        "mention", "more", "openLink", "orderedList", "outdent", "pageBreaker", 
+        "paragraphFormat", "paragraphMore", "paragraphStyle", "pdfExport", "print", 
+        "redo", "removeTable", "remove", "replaceImage", "row", "selectAll", "smile",
+        "spellcheck", "star", "strikeThrough", "subscript", "superscript", "symbols", "tags",
+        "tableHeader", "tableStyle", "textColor", "textMore", "underline", "undo", "unlink", 
+        "unorderedList", "verticalAlignBottom", "verticalAlignMiddle", "verticalAlignTop"]
+      */
 
+      if(button.svgKey) {
+        this._fr.FroalaEditor.DefineIcon(button.name, { SVG_KEY: button.svgKey });
+      }
+
+      this._fr.FroalaEditor.RegisterCommand(button.name, {
+        title: button.title,
+        focus: button.focus ?? true,
+        undo: button.undo ?? true,
+        refreshAfterCallback: button.refreshAfterCallback ?? true,
+        callback: function () {
+          button.click(this);
+        }
+      });
+    });
+  }
+
+  private _initPlugins(config) {
     (config.plugins || []).forEach((plugin: Plugin) => {
       this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
         plugin.editor = editor;
@@ -540,6 +563,17 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       }
     } else if (this.config.autofocus) {
       this.focus();
+    }
+  }
+
+  private _getTextNode(node) {
+    if (node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node;
+      }
+      if (node.childNodes) {
+        return this._getTextNode(node.childNodes[0]);
+      }
     }
   }
 }

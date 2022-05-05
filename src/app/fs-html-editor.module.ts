@@ -7,7 +7,7 @@ import { FsHtmlEditorComponent } from './components/html-editor/html-editor.comp
 import { FsHtmlRendererComponent } from './components/html-renderer/html-renderer.component';
 import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
 import { FS_HTML_EDITOR_CONFIG, FS_HTML_EDITOR_DEFAULT_CONFIG } from './injects/config.inject';
-import { DefaultPlugin } from './enums/default-plugin.enum';
+import { FroalaPlugin } from './enums/default-plugin.enum';
 
 
 @NgModule({
@@ -42,19 +42,19 @@ export class FsHtmlEditorModule {
 
 export function FsHtmlEditorConfigFactory(config: FsHtmlEditorConfig) {
   return {
-    defaultPlugins: [
-      DefaultPlugin.Align,
-      DefaultPlugin.Colors,
-      DefaultPlugin.Image,
-      DefaultPlugin.Link,
-      DefaultPlugin.Lists,
-      DefaultPlugin.ParagraphFormat,
-      DefaultPlugin.Quote,
-      DefaultPlugin.Table,
-      DefaultPlugin.Url,
-      DefaultPlugin.Video,
-      DefaultPlugin.Draggable,
-      DefaultPlugin.FontSize,
+    froalaPlugins: [
+      FroalaPlugin.Align,
+      FroalaPlugin.Colors,
+      FroalaPlugin.Image,
+      FroalaPlugin.Link,
+      FroalaPlugin.Lists,
+      FroalaPlugin.ParagraphFormat,
+      FroalaPlugin.Quote,
+      FroalaPlugin.Table,
+      FroalaPlugin.Url,
+      FroalaPlugin.Video,
+      FroalaPlugin.Draggable,
+      FroalaPlugin.FontSize,
     ],
     ...config
   };

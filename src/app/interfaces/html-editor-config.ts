@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { Plugin } from '../classes/plugin';
-import { DefaultPlugin } from '../enums/default-plugin.enum';
+import { FroalaPlugin } from '../enums/default-plugin.enum';
 
 
 export interface FsHtmlEditorConfig {
@@ -14,14 +14,23 @@ export interface FsHtmlEditorConfig {
   placeholder?: string;
   maxLength?: number;
   autofocus?: boolean;
-  froalaConfig?: any;
   disabled?: boolean;
   activationKey?: any;
   tooltip?: string;
   plugins?: Plugin[];
-  defaultPlugins?: DefaultPlugin[];
+  froalaPlugins?: FroalaPlugin[];
+  froalaConfig?: any;
   assetsJSPath?: string;
   assetsCSSPath?: string;
+  buttons?: {
+    name: string;
+    svgKey?: string;
+    title?: string;
+    focus?: boolean;
+    undo?: boolean;
+    refreshAfterCallback?: boolean;
+    click: (editor: any) => void;
+  }[];
 }
 
 export interface FsHtmlEditorUploadConfig {
