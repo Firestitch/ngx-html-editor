@@ -260,7 +260,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   private _change(html): void {
-    // this._html = html;
+    this._html = html;
     this.onChange(html);
   }
 
