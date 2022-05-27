@@ -62,12 +62,13 @@ export class KitchenSinkComponent implements OnInit {
           }
         },
       },
-      disabled: true,
-      // initOnClick: true,
+      //disabled: true,
+      initOnClick: true,
       initClick: (event: UIEvent) => {
         //event.preventDefault();
       },
       placeholder: 'You Placeholder...',
+      label: 'Html Editor',
       image: {
         upload: (file: Blob) => {
           const data = {

@@ -1,6 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { FsLabelModule } from '@firestitch/label';
 import { FsSkeletonModule } from '@firestitch/skeleton';
 
 import { FsHtmlEditorComponent } from './components/html-editor/html-editor.component';
@@ -14,6 +15,7 @@ import { FroalaPlugin } from './enums/default-plugin.enum';
   imports: [
     CommonModule,
     FsSkeletonModule,
+    FsLabelModule,
   ],
   exports: [
     FsHtmlEditorComponent,
