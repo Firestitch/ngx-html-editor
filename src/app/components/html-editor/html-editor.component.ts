@@ -359,6 +359,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         quickInsertEnabled: false,
         paragraphDefaultSelection: 'Format',
         videoUpload: false,
+        imagePaste: !!config.image?.upload,
+        imageUpload: !!config.image?.upload,
         paragraphFormat: {
           N: 'Normal',
           H1: 'Heading 1',
