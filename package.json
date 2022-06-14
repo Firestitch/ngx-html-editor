@@ -55,7 +55,7 @@
     "@firestitch/exif-js": "^2.3.0",
     "@firestitch/file": "^12.0.4",
     "@firestitch/form": "^12.0.1",
-    "@firestitch/froala": "^1.0.2",
+    "@firestitch/froala": "^1.0.4",
     "@firestitch/iframe": "^12.0.0",
     "@firestitch/label": "^12.0.0",
     "@firestitch/menu": "^12.0.1",
