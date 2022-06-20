@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from 'playground/environments/environment';
 
-import { environment } from '@env';
 
 import { DialogComponent } from '../dialog';
 

@@ -9,7 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
-import { FsHtmlEditorModule } from '@firestitch/package';
+import { FsHtmlEditorModule } from '@firestitch/html-editor';
 import { FsLabelModule } from '@firestitch/label';
 import { FsFormModule } from '@firestitch/form';
 import { FsScrollbarModule } from '@firestitch/scrollbar';

@@ -2,9 +2,12 @@
   "extends": "./tools/config/tsconfig.cli.json",
   "compilerOptions": {
     "paths": {
-      "fs-package": [
+      "@firestitch/html-editor": [
         "src/public_api.ts"
       ]
     }
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
   }
 }

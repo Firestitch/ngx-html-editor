@@ -62,8 +62,8 @@ export class KitchenSinkComponent implements OnInit {
           }
         },
       },
-      //disabled: true,
-      initOnClick: true,
+      disabled: false,
+      initOnClick: false,
       initClick: (event: UIEvent) => {
         //event.preventDefault();
       },
