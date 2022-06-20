@@ -28,6 +28,18 @@ fs-html-editor {
   }
 }
 
+fs-html-renderer {
+  .fr-view {
+    > p:first-child {
+      margin-top: 0;
+    }
+
+    > p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 
 .fs-html-editor-default {
   position: relative;
