@@ -9,7 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
-import { FsHtmlEditorModule } from '@firestitch/html-editor';
+import { FsHtmlEditorModule, FsHtmlRendererModule } from '@firestitch/html-editor';
 import { FsLabelModule } from '@firestitch/label';
 import { FsFormModule } from '@firestitch/form';
 import { FsScrollbarModule } from '@firestitch/scrollbar';
@@ -50,6 +50,7 @@ const routes: Routes = [
       activationKey: 'DUA2yE1G2E1A5B5B3pZGCTRSAPJWTLPLZHTQQe1JGZxC4B3A3C2B5A1C2E4F1A1==',
       froalaConfig: { },
     }),
+    FsHtmlRendererModule,
     BrowserAnimationsModule,
     FsScrollbarModule.forRoot(),
     AppMaterialModule,

@@ -1,17 +1,19 @@
-import { RealtimePlugin } from './../../../../src/app/plugins/realtime.plugin';
-import { FsHtmlEditorConfig } from './../../../../src/app/interfaces/html-editor-config';
-import { MentionPlugin } from './../../../../src/app/plugins/mention.plugin';
-import { ChecklistPlugin } from './../../../../src/app/plugins/checklist.plugin';
-import { ScreenRecordPlugin } from './../../../../src/app/plugins/screen-record.plugin';
-import { FsHtmlEditorComponent } from './../../../../src/app/components/html-editor/html-editor.component';
-import { CodePlugin } from './../../../../src/app/plugins/code.plugin';
+import { 
+  ScreenRecordPlugin,
+  ChecklistPlugin,
+  MentionPlugin,
+  FsHtmlEditorConfig,
+  RealtimePlugin,
+  RichButtons,
+  FsHtmlEditorComponent,
+} from '@firestitch/html-editor';
+import { CodePlugin } from '@firestitch/html-editor';
 import { map } from 'rxjs/operators';
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { FsApi } from '@firestitch/api';
 import { FsMessage } from '@firestitch/message';
 import { of } from 'rxjs';
 import { guid } from '@firestitch/common';
-import { RichButtons } from '../../../../src/app/consts/rich-buttons.const';
 
 
 @Component({
