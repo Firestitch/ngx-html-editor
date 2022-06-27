@@ -1,12 +1,13 @@
 import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
-function resourceLoaderFactory() {
+export function resourceLoaderFactory(document: Document) {
   let resourceBase = '/assets/js/froala/';
   let stylesBase = '/assets/css/';
 
   const head = document.getElementsByTagName('head')[0];
   const files = new Map<string, Observable<unknown>>();
+  const window = document.defaultView;
 
   const resourcePaths = {
     froala: 'froala_editor.min.js',
@@ -91,6 +92,12 @@ function resourceLoaderFactory() {
       stylesBase = path;
     },
     loadResource: (resourceName: string) => {
+      /*
+       this line must be here for cases when html-editor loaded together with text-editor
+       monaco-editor has it's own loader and it declares "define" variable, so froala tryes to load itself in wrong way
+      */
+      (window as any).define = null;
+
       const path = resourcePaths[resourceName] || resourceName;
 
       return loadResource(resourceBase + path);
@@ -102,6 +109,3 @@ function resourceLoaderFactory() {
     }
   }
 }
-
-
-export const ResourceLoader = resourceLoaderFactory();

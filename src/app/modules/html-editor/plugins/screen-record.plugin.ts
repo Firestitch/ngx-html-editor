@@ -1,6 +1,6 @@
 import { ScreenRecordPluginConfig } from './configs/screen-record-plugin.config';
 import { Plugin } from '../classes/plugin';
-import { ResourceLoader } from '../utils/loader';
+import { resourceLoaderFactory } from '../utils/loader';
 
 
 declare var MediaRecorder: any;
@@ -59,7 +59,7 @@ export class ScreenRecordPlugin extends Plugin {
   }
 
   public async initialize() {
-    await ResourceLoader.loadStyles('froala')
+    await resourceLoaderFactory(document).loadStyles('froala')
       .toPromise();
 
     const FroalaEditor = (window as any).FroalaEditor;
