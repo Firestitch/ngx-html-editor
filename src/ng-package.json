@@ -5,6 +5,7 @@
     "entryFile": "public_api.ts"
   },
   "whitelistedNonPeerDependencies": [
-    "crypto-js"
+    "crypto-js",
+    "tributejs"
   ]
 }
