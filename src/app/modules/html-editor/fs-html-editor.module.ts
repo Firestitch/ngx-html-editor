@@ -57,6 +57,7 @@ export function FsHtmlEditorConfigFactory(config: FsHtmlEditorConfig) {
       FroalaPlugin.Video,
       FroalaPlugin.Draggable,
       FroalaPlugin.FontSize,
+      FroalaPlugin.LineHeight,
     ],
     ...config
   };

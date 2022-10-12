@@ -24,6 +24,7 @@ export function resourceLoaderFactory(document: Document) {
     draggable: 'plugins/draggable.min.js',
     font_size: 'plugins/font_size.min.js',
     quick_insert: 'plugins/quick_insert.min.js',
+    line_height: 'plugins/line_height.min.js'
   }
 
   const stylesPaths = {

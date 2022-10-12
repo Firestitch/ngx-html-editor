@@ -12,4 +12,5 @@ export const enum FroalaPlugin {
   Draggable = 'draggable',
   FontSize = 'font_size',
   QuickInsert = 'quick_insert',
+  LineHeight = 'line_height',
 }
