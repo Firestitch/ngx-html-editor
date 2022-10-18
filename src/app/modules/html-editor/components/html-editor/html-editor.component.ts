@@ -372,6 +372,14 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
           H4: 'Heading 4',
           BLOCKQUOTE: 'Quote',
         },
+        lineHeights: {
+          Default: '',
+          '0.5': '0.5',
+          'Single': '1',
+          '1.15': '1.15',
+          '1.5': '1.5',
+          'Double': '2'
+        },
         paragraphFormatSelection: true,
         toolbarButtonsXS: {
           moreText: {
