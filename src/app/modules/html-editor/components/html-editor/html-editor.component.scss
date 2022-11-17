@@ -26,6 +26,14 @@
       transition: none !important;
     }
 
+    // Dialog jumping TA-T2762
+    .fr-toolbar-open .fr-more-toolbar {
+      display: block;
+    }
+    .fr-more-toolbar {
+      display: none;
+    }
+    ///
 
     .fr-toolbar.fr-top {
       position: sticky;
