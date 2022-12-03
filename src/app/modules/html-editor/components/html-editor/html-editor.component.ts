@@ -220,6 +220,11 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
   public writeValue(html: string): void {
     this._html = html || '';
+
+    if (Array.isArray(this._html)) {
+      this._html = this._html.pop();
+    }
+
     this._html = this._html
       .replace(/<(li)>\s?<(div)>/g, '<li>')
       .replace(/<\/(div)><\/(li)>/g, '</li>');
