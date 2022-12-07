@@ -2,7 +2,7 @@
   "name": "@firestitch/html-editor",
   "title": "HTML Editor",
   "description": "@firestitch/html-editor",
-  "version": "12.5.1",
+  "version": "12.5.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-html-editor"
@@ -53,7 +53,7 @@
     "@firestitch/drawer": "^12.0.0",
     "@firestitch/example": "^12.0.0",
     "@firestitch/exif-js": "^2.3.0",
-    "@firestitch/file": "^12.0.4",
+    "@firestitch/file": "^12.7.2",
     "@firestitch/form": "^12.0.1",
     "@firestitch/froala": "^1.0.6",
     "@firestitch/iframe": "^12.0.0",

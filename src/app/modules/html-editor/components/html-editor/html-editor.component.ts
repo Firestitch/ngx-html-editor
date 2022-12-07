@@ -22,7 +22,7 @@ import {
   Validator
 } from '@angular/forms';
 
-import { FileProcessor, FsFile } from '@firestitch/file';
+import { FileProcessor, FsFile, FsFileProcessConfig } from '@firestitch/file';
 
 import { BehaviorSubject, fromEventPattern, Observable, ReplaySubject, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -139,10 +139,20 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     const processor = new FileProcessor();
     const file = new FsFile(blob);
 
-    return processor.process([file], this.config.image)
+    const config: FsFileProcessConfig = {
+      orientate: true,
+      quality: this.config.image.quality,
+      format: this.config.image.format as any,
+      maxWidth: this.config.image.width,
+      maxHeight: this.config.image.height,
+      minWidth: this.config.image.minWidth,
+      minHeight: this.config.image.minHeight,
+    };
+
+    return processor.processFile(file, config)
       .pipe(
-        switchMap(([f]: FsFile[]) => {
-          return this.config.image.upload(f.file)
+        switchMap((fsFile: FsFile) => {
+          return this.config.image.upload(fsFile.file)
         }),
       );
   }
