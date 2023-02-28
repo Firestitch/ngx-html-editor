@@ -67,6 +67,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   @ViewChild('elRef') public elRef: ElementRef;
 
   @Input() public config: FsHtmlEditorConfig = {};
+  @Input() public hint: string;
 
   public initialized = false;
 
