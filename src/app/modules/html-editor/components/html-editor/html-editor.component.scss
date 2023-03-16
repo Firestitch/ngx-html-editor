@@ -19,6 +19,11 @@
       }
     }
 
+    .fr-toolbar:has(> .fr-active),
+    .fr-btn-wrap:has(> .fr-active) {
+      padding-bottom: 125px;
+    }
+
     .fr-more-toolbar,
     .fr-toolbar,
     .fr-dropdown:after,
@@ -78,6 +83,9 @@
 
       .fr-more-toolbar {
         z-index: auto;
+        display: flex;
+        justify-content: center;
+        padding-left: 0px !important;
       }
 
       /* Stop from sliding down */
@@ -127,6 +135,7 @@
 ::ng-deep {
   .fr-popup {
     z-index: 1001 !important;
+    transform: translateX(-180px);
   }
 
   .fr-video-by-url-layer .fr-checkbox-line {
