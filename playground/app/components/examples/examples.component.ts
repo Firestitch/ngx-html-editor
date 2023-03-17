@@ -22,6 +22,8 @@ export class ExamplesComponent implements OnInit {
   }
 
   public openDialog(): void {
-    this._dialog.open(DialogComponent);
+    this._dialog.open(DialogComponent, {
+      width: '600px',
+    });
   }
 }
