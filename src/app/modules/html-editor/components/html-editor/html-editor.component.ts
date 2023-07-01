@@ -505,13 +505,6 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         this._contentChanged();
       });
 
-    // this._editor.events.on('contentChanged', () => {
-    //   console.log('test');
-    //   if (!this._firstChange) {
-    //     this._contentChanged();
-    //   }
-    // });
-
     this._editor.events.on('paste.afterCleanup', (html) => {
       var div = document.createElement('div');
       div.innerHTML = html;
@@ -527,16 +520,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       return div.innerHTML;
     });
 
-    this._editor.events.on('keydown', (event) => {
-      if(event.key === 'Enter') {
-        const el = this.editor.selection.element();
-        if(el.nodeName === 'LI') {
-          if(el.childNodes[0] && el.childNodes[0].nodeName !== 'P') {
-            el.innerHTML = `<p>${el.innerHTML}</p>`;
-          }
-        }
-      }
-
+    this._editor.events.on('keydown', () => {
       this.onTouched();
     });
 
