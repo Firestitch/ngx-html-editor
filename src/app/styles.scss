@@ -92,9 +92,12 @@ fs-html-renderer {
   li {
     margin: 5px 0;
     margin-left: 40px;
+    display: block;
 
     &::before {
-      display: inline-block;
+      content: ' ';
+      position: absolute;
+      display: list-item;
       white-space: nowrap;
     }
   }
