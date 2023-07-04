@@ -49,25 +49,26 @@ export class FsFroalaLoaderService {
   }
 
   private _load() {
+    const baseDir = '/assets/froala/';
     this._sourceLoader.registerResources({
       froala: [
-        '/assets/js/froala/froala_editor.min.js',
-        '/assets/css/froala_editor.pkgd.min.css',
+        `${baseDir}js/froala_editor.min.js`,
+        `${baseDir}css/froala_editor.pkgd.min.css`,
       ],
-      froala_align: '/assets/js/froala/plugins/align.min.js',
-      froala_colors: '/assets/js/froala/plugins/colors.min.js',
-      froala_image: '/assets/js/froala/plugins/image.min.js',
-      froala_link: '/assets/js/froala/plugins/link.min.js',
-      froala_lists: '/assets/js/froala/plugins/lists.min.js',
-      froala_paragraph_format: '/assets/js/froala/plugins/paragraph_format.min.js',
-      froala_table: '/assets/js/froala/plugins/table.min.js',
-      froala_url: '/assets/js/froala/plugins/url.min.js',
-      froala_video: '/assets/js/froala/plugins/video.min.js',
-      froala_quote: '/assets/js/froala/plugins/quote.min.js',
-      froala_draggable: '/assets/js/froala/plugins/draggable.min.js',
-      froala_font_size: '/assets/js/froala/plugins/font_size.min.js',
-      froala_quick_insert: '/assets/js/froala/plugins/quick_insert.min.js',
-      froala_line_height: '/assets/js/froala/plugins/line_height.min.js'
+      froala_align: `${baseDir}js/plugins/align.min.js`,
+      froala_colors: `${baseDir}js/plugins/colors.min.js`,
+      froala_image: `${baseDir}js/plugins/image.min.js`,
+      froala_link: `${baseDir}js/plugins/link.min.js`,
+      froala_lists: `${baseDir}js/plugins/lists.min.js`,
+      froala_paragraph_format: `${baseDir}js/plugins/paragraph_format.min.js`,
+      froala_table: `${baseDir}js/plugins/table.min.js`,
+      froala_url: `${baseDir}js/plugins/url.min.js`,
+      froala_video: `${baseDir}js/plugins/video.min.js`,
+      froala_quote: `${baseDir}js/plugins/quote.min.js`,
+      froala_draggable: `${baseDir}js/plugins/draggable.min.js`,
+      froala_font_size: `${baseDir}js/plugins/font_size.min.js`,
+      froala_quick_insert: `${baseDir}js/plugins/quick_insert.min.js`,
+      froala_line_height: `${baseDir}js/plugins/line_height.min.js`
     });
 
     this._sourceLoader.loadResource('froala')
