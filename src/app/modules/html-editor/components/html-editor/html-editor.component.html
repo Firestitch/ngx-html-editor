@@ -1,20 +1,16 @@
 <fs-label-field>
   <fs-label *ngIf="config.label">{{config.label}}</fs-label>
-  <div class="fs-html-editor-default">
-    <ng-container *ngIf="initialized">
-      <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false">
-      </ng-container>
-    </ng-container>
-  
+  <div 
+      class="html-editor-container fs-html-editor-default" 
+      [ngClass]="{ 
+        initialized: initialized,
+        'init-on-click': config.initOnClick
+      }">  
+    <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>  
     <div #elRef></div>
   
     <div class="bottom-line"></div>
     <div class="disabled-line"></div>
-    <fs-html-renderer
-      *ngIf="!initialized"
-      [html]="html"
-      (click)="uninitializedClick($event)">
-    </fs-html-renderer>
   </div>
   
   <fs-label-message>

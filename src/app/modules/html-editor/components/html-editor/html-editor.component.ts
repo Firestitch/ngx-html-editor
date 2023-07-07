@@ -105,15 +105,11 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   public ngOnInit(): void {
     this.config = this.config || {};
     this.config.autofocus = this.config.autofocus !== false && !this.config.disabled;
-    this.initialized = !this.config.initOnClick;
     this._listenLazyInit();
   }
 
   public ngAfterViewInit() {
-    if (!this.config.initOnClick || !this.hasContent()) {
-      this.initialized = true;
-      this._initialize$.next();
-    }
+    this._initialize$.next();
   }
 
   public hasContent() {
@@ -158,36 +154,12 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       );
   }
 
-  public uninitializedClick(event: UIEvent): void {
-    if (!event.defaultPrevented) {
-      const target: any = event.target;
-      if (target && target.nodeName === 'A' && target.getAttribute('href')) {
-        const targetTarget = target.getAttribute('target');
-        target.setAttribute('target', '_blank');
-        setTimeout(() => {
-          if (targetTarget) {
-            target.setAttribute('target', targetTarget);
-          } else {
-            target.removeAttribute('target');
-          }
-        });
-      } else {
-        if (this.config.initClick) {
-          this.config.initClick(event);
-        }
-        this._initialize$.next();
-        this.initialized = true;
-      }
-    }
-  }
-
   public updateSize() {
     // Hack: To trigger the toolbar button size modes
     window.dispatchEvent(new Event('resize'));
   }
 
   public validate(control: AbstractControl): ValidationErrors | null {
-
     const err: any = {};
     if (this.config.maxLength && this._html) {
       const maxLength = this.config.maxLength;
@@ -269,6 +241,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     if (this.editor) {
       this.editor.destroy();
     }
+    
     this.initialized = false;
     this._cdRef.markForCheck();
     this.el.innerHTML = '';
@@ -488,6 +461,12 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       this._cdRef.markForCheck();
     });
 
+    this._editor.events.on('click', () => {
+      if(this.config.initOnClick && !this.initialized) {
+        this.initialized = true;
+        this._cdRef.markForCheck();
+      }
+    });
 
     fromEventPattern(
       (handler) => {
@@ -563,39 +542,9 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     if (this.el.querySelector('.fr-second-toolbar')) {
       this.el.querySelector('.fr-second-toolbar').remove();
     }
-
-    const selection = options.selection;
-
-    if (selection) {
-      const node: any = Array.from(this.el.querySelectorAll('.fr-element *')).find((node: any) => {
-        return selection.node === node.textContent;
-      });
-
-      if (node) {
-        const range = document.createRange();
-        const sel = window.getSelection();
-
-        range.setStart(this._getTextNode(node), selection.offset);
-        range.collapse(true)
-
-        sel.removeAllRanges();
-        sel.addRange(range);
-      } else if (this.config.autofocus) {
-        this.focus();
-      }
-    } else if (this.config.autofocus) {
+    
+    if (this.config.autofocus && !this.config.initOnClick) {
       this.focus();
-    }
-  }
-
-  private _getTextNode(node) {
-    if (node) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        return node;
-      }
-      if (node.childNodes) {
-        return this._getTextNode(node.childNodes[0]);
-      }
     }
   }
 }

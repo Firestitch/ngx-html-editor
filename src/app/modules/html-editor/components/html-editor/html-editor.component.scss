@@ -1,5 +1,4 @@
 :host {
-
   ::ng-deep {
     .fr-box.fr-basic {
       .fr-wrapper {
@@ -107,6 +106,12 @@
     .fr-view {
       ol, ul {
         list-style-position: unset;
+      }
+    }
+
+    .html-editor-container.init-on-click:not(.initialized) {
+      .fr-toolbar {
+        display: none;
       }
     }
   }
