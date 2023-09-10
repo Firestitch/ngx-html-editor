@@ -165,3 +165,7 @@ fs-html-renderer {
   }
 }
 
+// for cases when we have images uploading popup opened in Dialog
+.fr-popup {
+  left: 0 !important;
+}
