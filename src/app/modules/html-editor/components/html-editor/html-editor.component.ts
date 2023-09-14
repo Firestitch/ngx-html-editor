@@ -22,6 +22,7 @@ import {
   Validator
 } from '@angular/forms';
 
+import { guid } from '@firestitch/common';
 import { FileProcessor, FsFile, FsFileProcessConfig } from '@firestitch/file';
 
 import { BehaviorSubject, fromEventPattern, Observable, ReplaySubject, Subject } from 'rxjs';
@@ -70,6 +71,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   @Input() public hint: string;
 
   public initialized = false;
+  public readonly containerID = `fs-html-editor-${guid('xxx')}`;
 
   private _editor: any;
   private _html: string;
@@ -241,7 +243,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     if (this.editor) {
       this.editor.destroy();
     }
-    
+
     this.initialized = false;
     this._cdRef.markForCheck();
     this.el.innerHTML = '';
@@ -261,19 +263,19 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     .forEach((button) => {
       /*
         Svg Keys:
-        ["add", "advancedImageEditor", "alignCenter", "alignJustify", "alignLeft", "alignRight", 
-        "anchors", "back", "backgroundColor", "blockquote", "bold", "cellBackground", 
-        "cellBorderColor", "cellOptions", "cellStyle", "clearFormatting", "close", "codeView", 
-        "cogs", "columns", "editLink", "exitFullscreen", "fontAwesome", "fontFamily", 
-        "fontSize", "fullscreen", "help", "horizontalLine", "imageAltText", "imageCaption", 
-        "imageClass", "imageDisplay", "imageManager", "imageSize", "indent", "inlineClass", 
-        "inlineStyle", "insertEmbed", "insertFile", "insertImage", "insertLink", "insertMore", 
-        "insertTable", "insertVideo", "upload", "italic", "search", "lineHeight", "linkStyles", 
-        "mention", "more", "openLink", "orderedList", "outdent", "pageBreaker", 
-        "paragraphFormat", "paragraphMore", "paragraphStyle", "pdfExport", "print", 
+        ["add", "advancedImageEditor", "alignCenter", "alignJustify", "alignLeft", "alignRight",
+        "anchors", "back", "backgroundColor", "blockquote", "bold", "cellBackground",
+        "cellBorderColor", "cellOptions", "cellStyle", "clearFormatting", "close", "codeView",
+        "cogs", "columns", "editLink", "exitFullscreen", "fontAwesome", "fontFamily",
+        "fontSize", "fullscreen", "help", "horizontalLine", "imageAltText", "imageCaption",
+        "imageClass", "imageDisplay", "imageManager", "imageSize", "indent", "inlineClass",
+        "inlineStyle", "insertEmbed", "insertFile", "insertImage", "insertLink", "insertMore",
+        "insertTable", "insertVideo", "upload", "italic", "search", "lineHeight", "linkStyles",
+        "mention", "more", "openLink", "orderedList", "outdent", "pageBreaker",
+        "paragraphFormat", "paragraphMore", "paragraphStyle", "pdfExport", "print",
         "redo", "removeTable", "remove", "replaceImage", "row", "selectAll", "smile",
         "spellcheck", "star", "strikeThrough", "subscript", "superscript", "symbols", "tags",
-        "tableHeader", "tableStyle", "textColor", "textMore", "underline", "undo", "unlink", 
+        "tableHeader", "tableStyle", "textColor", "textMore", "underline", "undo", "unlink",
         "unorderedList", "verticalAlignBottom", "verticalAlignMiddle", "verticalAlignTop"]
       */
 
@@ -349,6 +351,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         imageDefaultWidth: 0,
         imageDefaultAlign: 'left',
         quickInsertEnabled: false,
+        scrollableContainer: `#${this.containerID}`,
         paragraphDefaultSelection: 'Format',
         videoUpload: false,
         imagePaste: !!config.image?.upload,
@@ -542,7 +545,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     if (this.el.querySelector('.fr-second-toolbar')) {
       this.el.querySelector('.fr-second-toolbar').remove();
     }
-    
+
     if (this.config.autofocus && !this.config.initOnClick) {
       this.focus();
     }
