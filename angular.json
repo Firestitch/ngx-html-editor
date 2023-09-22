@@ -26,7 +26,7 @@
                 "glob": "**/*",
                 "input": "node_modules/froala-editor/",
                 "output": "assets/froala/"
-              }
+              }            
             ],
             "styles": [
               "playground/styles.scss"
@@ -162,8 +162,8 @@
           "options": {
             "tsConfig": "src/tsconfig.lib.json",
             "project": "src/ng-package.json"
-          }
-        ,          "configurations": {
+          },
+            "configurations": {
             "production": {
               "tsConfig": "src/tsconfig.lib.prod.json"
             }
