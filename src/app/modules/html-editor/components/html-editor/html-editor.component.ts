@@ -63,12 +63,15 @@ import { FsFroalaLoaderService } from '../../services/froala-loader.service';
 export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   @HostBinding('class.focused') classFocused = false;
-  @HostBinding('class.disabled') classDisabled = false;
 
   @ViewChild('elRef') public elRef: ElementRef;
 
   @Input() public config: FsHtmlEditorConfig = {};
   @Input() public hint: string;
+
+  @Input()
+  @HostBinding('class.disabled')
+  public disabled = false;
 
   public initialized = false;
   public readonly containerID = `fs-html-editor-${guid('xxx')}`;
@@ -106,7 +109,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
   public ngOnInit(): void {
     this.config = this.config || {};
-    this.config.autofocus = this.config.autofocus !== false && !this.config.disabled;
+    this.config.autofocus = this.config.autofocus !== false && (!this.config.disabled || !this.disabled);
     this._listenLazyInit();
   }
 
@@ -196,7 +199,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   public disable() {
-    this.classDisabled = true;
+    this.disabled = true;
   }
 
   public setHtml(html) {
