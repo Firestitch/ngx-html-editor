@@ -2,7 +2,7 @@
   "name": "@firestitch/html-editor",
   "title": "HTML Editor",
   "description": "@firestitch/html-editor",
-  "version": "12.7.3",
+  "version": "12.7.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-html-editor"
