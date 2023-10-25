@@ -76,7 +76,7 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "crypto-js": "^3.3.0",
+    "crypto-js": "^4.2.0",
     "froala-editor": "^4.0.19",
     "tributejs": "^5.1.3"
   }
