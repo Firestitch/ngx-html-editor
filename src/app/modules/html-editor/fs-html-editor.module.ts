@@ -1,14 +1,14 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 
 import { FsLabelModule } from '@firestitch/label';
 import { FsSkeletonModule } from '@firestitch/skeleton';
 
-import { FsHtmlEditorComponent } from './components/html-editor/html-editor.component';
-import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
-import { FS_HTML_EDITOR_CONFIG, FS_HTML_EDITOR_DEFAULT_CONFIG } from './injects/config.inject';
-import { FroalaPlugin } from './enums/default-plugin.enum';
 import { FsHtmlRendererModule } from '../html-renderer/fs-html-renderer.module';
+import { FsHtmlEditorComponent } from './components/html-editor/html-editor.component';
+import { FroalaPlugin } from './enums/default-plugin.enum';
+import { FS_HTML_EDITOR_CONFIG, FS_HTML_EDITOR_DEFAULT_CONFIG } from './injects/config.inject';
+import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
 
 
 @NgModule({

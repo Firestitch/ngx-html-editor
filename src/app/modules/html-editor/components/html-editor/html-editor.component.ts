@@ -15,9 +15,11 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
+  ControlContainer,
   ControlValueAccessor,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
+  NgForm,
   ValidationErrors,
   Validator
 } from '@angular/forms';
@@ -30,11 +32,11 @@ import { distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUnti
 
 import { merge } from 'lodash-es';
 
-import { PluginButton } from './../../interfaces/plugin-button';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
+import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
 import { RichButtons } from './../../consts/rich-buttons.const';
 import { TextButtons } from './../../consts/text-buttons.const';
-import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
+import { PluginButton } from './../../interfaces/plugin-button';
 
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { Plugin } from './../../classes/plugin';
@@ -59,6 +61,13 @@ import { FsFroalaLoaderService } from '../../services/froala-loader.service';
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [
+    {
+      provide: ControlContainer,
+      deps: [[Optional, NgForm]],
+      useFactory: (ngForm: NgForm) => ngForm,
+    },
+  ],
 })
 export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
@@ -88,8 +97,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     private _fr: FsFroalaLoaderService,
   ) { }
 
-  public onChange = (data: any) => {}
-  public onTouched = () => {}
+  public onChange = (data: any) => { }
+  public onTouched = () => { }
 
   public get el(): any {
     return this.elRef.nativeElement;
@@ -263,39 +272,39 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
   private _initButtons(config: FsHtmlEditorConfig) {
     (config.buttons || [])
-    .forEach((button) => {
-      /*
-        Svg Keys:
-        ["add", "advancedImageEditor", "alignCenter", "alignJustify", "alignLeft", "alignRight",
-        "anchors", "back", "backgroundColor", "blockquote", "bold", "cellBackground",
-        "cellBorderColor", "cellOptions", "cellStyle", "clearFormatting", "close", "codeView",
-        "cogs", "columns", "editLink", "exitFullscreen", "fontAwesome", "fontFamily",
-        "fontSize", "fullscreen", "help", "horizontalLine", "imageAltText", "imageCaption",
-        "imageClass", "imageDisplay", "imageManager", "imageSize", "indent", "inlineClass",
-        "inlineStyle", "insertEmbed", "insertFile", "insertImage", "insertLink", "insertMore",
-        "insertTable", "insertVideo", "upload", "italic", "search", "lineHeight", "linkStyles",
-        "mention", "more", "openLink", "orderedList", "outdent", "pageBreaker",
-        "paragraphFormat", "paragraphMore", "paragraphStyle", "pdfExport", "print",
-        "redo", "removeTable", "remove", "replaceImage", "row", "selectAll", "smile",
-        "spellcheck", "star", "strikeThrough", "subscript", "superscript", "symbols", "tags",
-        "tableHeader", "tableStyle", "textColor", "textMore", "underline", "undo", "unlink",
-        "unorderedList", "verticalAlignBottom", "verticalAlignMiddle", "verticalAlignTop"]
-      */
+      .forEach((button) => {
+        /*
+          Svg Keys:
+          ["add", "advancedImageEditor", "alignCenter", "alignJustify", "alignLeft", "alignRight",
+          "anchors", "back", "backgroundColor", "blockquote", "bold", "cellBackground",
+          "cellBorderColor", "cellOptions", "cellStyle", "clearFormatting", "close", "codeView",
+          "cogs", "columns", "editLink", "exitFullscreen", "fontAwesome", "fontFamily",
+          "fontSize", "fullscreen", "help", "horizontalLine", "imageAltText", "imageCaption",
+          "imageClass", "imageDisplay", "imageManager", "imageSize", "indent", "inlineClass",
+          "inlineStyle", "insertEmbed", "insertFile", "insertImage", "insertLink", "insertMore",
+          "insertTable", "insertVideo", "upload", "italic", "search", "lineHeight", "linkStyles",
+          "mention", "more", "openLink", "orderedList", "outdent", "pageBreaker",
+          "paragraphFormat", "paragraphMore", "paragraphStyle", "pdfExport", "print",
+          "redo", "removeTable", "remove", "replaceImage", "row", "selectAll", "smile",
+          "spellcheck", "star", "strikeThrough", "subscript", "superscript", "symbols", "tags",
+          "tableHeader", "tableStyle", "textColor", "textMore", "underline", "undo", "unlink",
+          "unorderedList", "verticalAlignBottom", "verticalAlignMiddle", "verticalAlignTop"]
+        */
 
-      if(button.svgKey) {
-        this._fr.FroalaEditor.DefineIcon(button.name, { SVG_KEY: button.svgKey });
-      }
-
-      this._fr.FroalaEditor.RegisterCommand(button.name, {
-        title: button.title,
-        focus: button.focus ?? true,
-        undo: button.undo ?? true,
-        refreshAfterCallback: button.refreshAfterCallback ?? true,
-        callback: function () {
-          button.click(this);
+        if (button.svgKey) {
+          this._fr.FroalaEditor.DefineIcon(button.name, { SVG_KEY: button.svgKey });
         }
+
+        this._fr.FroalaEditor.RegisterCommand(button.name, {
+          title: button.title,
+          focus: button.focus ?? true,
+          undo: button.undo ?? true,
+          refreshAfterCallback: button.refreshAfterCallback ?? true,
+          callback: function () {
+            button.click(this);
+          }
+        });
       });
-    });
   }
 
   private _initPlugins(config) {
@@ -468,7 +477,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     });
 
     this._editor.events.on('click', () => {
-      if(this.config.initOnClick && !this.initialized) {
+      if (this.config.initOnClick && !this.initialized) {
         this.initialized = true;
         this._cdRef.markForCheck();
       }
@@ -478,7 +487,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       (handler) => {
         this._editor.events.on('contentChanged', handler);
       },
-      () => {}
+      () => { }
     )
       .pipe(
         startWith(this._html),
