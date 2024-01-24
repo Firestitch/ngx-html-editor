@@ -11,7 +11,7 @@ import {
   OnDestroy,
   OnInit,
   Optional,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -21,7 +21,7 @@ import {
   NG_VALUE_ACCESSOR,
   NgForm,
   ValidationErrors,
-  Validator
+  Validator,
 } from '@angular/forms';
 
 import { guid } from '@firestitch/common';
@@ -32,32 +32,31 @@ import { distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUnti
 
 import { merge } from 'lodash-es';
 
+import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
+import { FsFroalaLoaderService } from '../../services/froala-loader.service';
+
+import { Plugin } from './../../classes/plugin';
 import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
 import { RichButtons } from './../../consts/rich-buttons.const';
 import { TextButtons } from './../../consts/text-buttons.const';
 import { PluginButton } from './../../interfaces/plugin-button';
 
-import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
-import { Plugin } from './../../classes/plugin';
-
-import { FsFroalaLoaderService } from '../../services/froala-loader.service';
-
 
 @Component({
   selector: 'fs-html-editor',
-  templateUrl: 'html-editor.component.html',
-  styleUrls: ['html-editor.component.scss'],
+  templateUrl: './html-editor.component.html',
+  styleUrls: ['./html-editor.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FsHtmlEditorComponent),
-      multi: true
+      multi: true,
     },
     {
       provide: NG_VALIDATORS,
       useExisting: forwardRef(() => FsHtmlEditorComponent),
-      multi: true
+      multi: true,
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,7 +70,7 @@ import { FsFroalaLoaderService } from '../../services/froala-loader.service';
 })
 export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
-  @HostBinding('class.focused') classFocused = false;
+  @HostBinding('class.focused') public classFocused = false;
 
   @ViewChild('elRef') public elRef: ElementRef;
 
@@ -97,8 +96,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     private _fr: FsFroalaLoaderService,
   ) { }
 
-  public onChange = (data: any) => { }
-  public onTouched = () => { }
+  public onChange = (data: any) => { };
+  public onTouched = () => { };
 
   public get el(): any {
     return this.elRef.nativeElement;
@@ -118,7 +117,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
   public ngOnInit(): void {
     this.config = this.config || {};
-    this.config.autofocus = this.config.autofocus !== false && (!this.config.disabled || !this.disabled);
+    this.config.autofocus = this.config.autofocus && (!this.config.disabled || !this.disabled);
     this._listenLazyInit();
   }
 
@@ -134,6 +133,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     }
 
     el.innerHTML = this._html;
+
     return !!el.innerText.length;
   }
 
@@ -144,28 +144,6 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     this._editor = new this._fr.FroalaEditor(this.el, this._createOptions(), () => {
       this._froalaReady$.next({ config, options });
     });
-  }
-
-  private _processImageUpload(blob) {
-    const processor = new FileProcessor();
-    const file = new FsFile(blob);
-
-    const config: FsFileProcessConfig = {
-      orientate: true,
-      quality: this.config.image.quality,
-      format: this.config.image.format as any,
-      maxWidth: this.config.image.width,
-      maxHeight: this.config.image.height,
-      minWidth: this.config.image.minWidth,
-      minHeight: this.config.image.minHeight,
-    };
-
-    return processor.processFile(file, config)
-      .pipe(
-        switchMap((fsFile: FsFile) => {
-          return this.config.image.upload(fsFile.file)
-        }),
-      );
   }
 
   public updateSize() {
@@ -261,6 +239,28 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     this.el.innerHTML = '';
   }
 
+  private _processImageUpload(blob) {
+    const processor = new FileProcessor();
+    const file = new FsFile(blob);
+
+    const config: FsFileProcessConfig = {
+      orientate: true,
+      quality: this.config.image.quality,
+      format: this.config.image.format as any,
+      maxWidth: this.config.image.width,
+      maxHeight: this.config.image.height,
+      minWidth: this.config.image.minWidth,
+      minHeight: this.config.image.minHeight,
+    };
+
+    return processor.processFile(file, config)
+      .pipe(
+        switchMap((fsFile: FsFile) => {
+          return this.config.image.upload(fsFile.file);
+        }),
+      );
+  }
+
   private _createConfig(): FsHtmlEditorConfig {
     return merge({ froalaConfig: {} }, this._defaultConfig, this.config);
   }
@@ -300,9 +300,9 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
           focus: button.focus ?? true,
           undo: button.undo ?? true,
           refreshAfterCallback: button.refreshAfterCallback ?? true,
-          callback: function () {
+          callback() {
             button.click(this);
-          }
+          },
         });
       });
   }
@@ -312,6 +312,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
         plugin.editor = editor;
         plugin.initialize();
+
         return plugin;
       };
 
@@ -328,16 +329,16 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
           focus: button.focus,
           showOnMobile: button.showOnMobile,
           refreshAfterCallback: button.refreshAfterCallback,
-          callback: function () {
+          callback() {
             if (button.click) {
               button.click(this);
             }
           },
-          refresh: function (button) {
+          refresh(button) {
             if (button.refresh) {
               button.refresh(this, button);
             }
-          }
+          },
         });
       });
 
@@ -378,11 +379,11 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         },
         lineHeights: {
           Default: '',
-          '0.5': '0.5',
-          'Single': '1',
-          '1.15': '1.15',
-          '1.5': '1.5',
-          'Double': '2'
+          0.5: '0.5',
+          Single: '1',
+          1.15: '1.15',
+          1.5: '1.5',
+          Double: '2',
         },
         paragraphFormatSelection: true,
         toolbarButtonsXS: {
@@ -438,7 +439,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         filter((data) => !!data),
         tap(({ config, options }) => {
           this._setupFroala(config, options);
-        })
+        }),
       )
       .subscribe();
   }
@@ -487,7 +488,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       (handler) => {
         this._editor.events.on('contentChanged', handler);
       },
-      () => { }
+      () => { },
     )
       .pipe(
         startWith(this._html),
@@ -500,17 +501,18 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       });
 
     this._editor.events.on('paste.afterCleanup', (html) => {
-      var div = document.createElement('div');
+      const div = document.createElement('div');
       div.innerHTML = html;
       div.querySelectorAll('*')
         .forEach((el) => {
-          for (var i = 0; i < el.attributes.length; i++) {
+          for (let i = 0; i < el.attributes.length; i++) {
             const name = el.attributes[0].name;
             if (name !== 'href') {
               el.removeAttribute(name);
             }
           }
         });
+
       return div.innerHTML;
     });
 
