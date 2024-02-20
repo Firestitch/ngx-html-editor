@@ -1,31 +1,9 @@
 @use '@angular/material' as mat;
-@import '~@firestitch/component-tools/assets/playground.scss';
-@import '~@firestitch/message/styles';
-@import "~@firestitch/drawer/styles";
-@import "~@firestitch/form/styles";
-@import "~@firestitch/scrollbar/styles";
-@import '../src/app/styles.scss';
+@import '@firestitch/component-tools/assets/playground.scss';
+@import '@firestitch/message/styles';
+@import "@firestitch/drawer/styles";
+@import "@firestitch/form/styles";
+@import "@firestitch/dialog/styles";
+@import '../src/app/styles';
 
-//@import "~froala-editor/css/froala_editor.pkgd";
-//@import "~froala-editor/css/froala_style";
-@import "~@firestitch/skeleton/styles";
-
-//@include fs-form({});
 @include fs-drawer(mat.$blue-palette);
-@include fs-html-editor(mat.$blue-palette);
-
-h1 {
-  margin: 15px 0;
-}
-
-h2 {
-  margin: 10px 0;
-}
-
-h3 {
-  margin: 5px 0;
-}
-
-h4 {
-  margin: 5px 0;
-}
