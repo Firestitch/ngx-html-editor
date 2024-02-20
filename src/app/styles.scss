@@ -1,4 +1,4 @@
-@use 'node_modules/@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @mixin fs-html-editor($theme) {
   $primary: mat.define-palette($theme);
