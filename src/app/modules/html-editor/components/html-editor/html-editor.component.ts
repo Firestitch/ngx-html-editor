@@ -23,6 +23,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
 
 import { guid } from '@firestitch/common';
 import { FileProcessor, FsFile, FsFileProcessConfig } from '@firestitch/file';
@@ -88,10 +89,15 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   private _html: string;
   private _initialize$ = new ReplaySubject();
   private _froalaReady$ = new BehaviorSubject(null);
+  private _window: any = this._document.defaultView;
   private _destroy$ = new Subject();
 
   constructor(
-    @Optional() @Inject(FS_HTML_EDITOR_CONFIG) private _defaultConfig,
+    @Optional()
+    @Inject(FS_HTML_EDITOR_CONFIG)
+    private _defaultConfig,
+    @Inject(DOCUMENT)
+    private _document: Document,
     private _cdRef: ChangeDetectorRef,
     private _fr: FsFroalaLoaderService,
   ) { }
@@ -420,6 +426,10 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   private _listenLazyInit() {
+    // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
+    // to prevent conflicts with text-editor
+    this._window.define = null;
+
     this.froalaLoaded$
       .pipe(
         filter((ready) => ready),
