@@ -377,7 +377,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     const config = this._createConfig();
 
     const textButtons = [
-      ...config.prependToolbarTextButtons
+      ...(config.prependToolbarTextButtons || [])
         .map((item) => item.name),
       ...TextButtons,
     ];
