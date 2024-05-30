@@ -5,6 +5,7 @@ import { FsLabelModule } from '@firestitch/label';
 import { FsSkeletonModule } from '@firestitch/skeleton';
 
 import { FsHtmlRendererModule } from '../html-renderer/fs-html-renderer.module';
+
 import { FsHtmlEditorComponent } from './components/html-editor/html-editor.component';
 import { FroalaPlugin } from './enums/default-plugin.enum';
 import { FS_HTML_EDITOR_CONFIG, FS_HTML_EDITOR_DEFAULT_CONFIG } from './injects/config.inject';
@@ -27,7 +28,7 @@ import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
   ],
 })
 export class FsHtmlEditorModule {
-  static forRoot(config: FsHtmlEditorConfig = {}): ModuleWithProviders<FsHtmlEditorModule> {
+  public static forRoot(config: FsHtmlEditorConfig = {}): ModuleWithProviders<FsHtmlEditorModule> {
     return {
       ngModule: FsHtmlEditorModule,
       providers: [
@@ -35,9 +36,9 @@ export class FsHtmlEditorModule {
         {
           provide: FS_HTML_EDITOR_CONFIG,
           useFactory: FsHtmlEditorConfigFactory,
-          deps: [FS_HTML_EDITOR_DEFAULT_CONFIG]
-        }
-      ]
+          deps: [FS_HTML_EDITOR_DEFAULT_CONFIG],
+        },
+      ],
     };
   }
 }
@@ -59,6 +60,6 @@ export function FsHtmlEditorConfigFactory(config: FsHtmlEditorConfig) {
       FroalaPlugin.FontSize,
       FroalaPlugin.LineHeight,
     ],
-    ...config
+    ...config,
   };
 }

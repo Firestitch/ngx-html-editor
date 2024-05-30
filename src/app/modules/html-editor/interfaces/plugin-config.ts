@@ -1,6 +1,6 @@
-import { PluginButton } from './plugin-button';
+import { ToolbarButton } from './toolbar-button';
 
 export interface PluginConfig {
   name?: string;
-  buttons?: PluginButton[];
+  buttons?: ToolbarButton[];
 }

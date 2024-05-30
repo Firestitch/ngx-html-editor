@@ -1,12 +1,12 @@
 
 <form fsForm [submit]="save" [dirtySubmitButton]="false">
   <fs-html-editor
-    [(ngModel)]="html"
-    [config]="config"
-    [required]="true"
-    (ngModelChange)="change($event)"
-    [hint]="'Hint Text'"
-    name="html">
+      [(ngModel)]="html"
+      [config]="config"
+      [required]="true"
+      (ngModelChange)="change($event)"
+      [hint]="'Hint Text'"
+      name="html">
   </fs-html-editor>
   <div class="sticky" fxLayout="row wrap" fxLayoutGap="5px">
     <button mat-raised-button color="primary">Save</button>

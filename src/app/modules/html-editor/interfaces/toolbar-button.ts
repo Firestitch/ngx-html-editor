@@ -1,8 +1,10 @@
 
-export interface PluginButton {
+export interface ToolbarButton {
   name: string;
   title?: string;
   svgPath?: string;
+  svgKey?: string;
+  html?: string;
   undo?: boolean;
   tooltip?: string;
   focus?: boolean;

@@ -3,12 +3,14 @@ import { Observable } from 'rxjs';
 import { Plugin } from '../classes/plugin';
 import { FroalaPlugin } from '../enums/default-plugin.enum';
 
+import { ToolbarButton } from './toolbar-button';
+
 
 export interface FsHtmlEditorConfig {
   image?: FsHtmlEditorUploadConfig;
   label?: string;
   hint?: string;
-  change?: Function;
+  change?: (data?) => void;
   initOnClick?: boolean;
   initClick?: (event?: UIEvent) => void;
   placeholder?: string;
@@ -22,15 +24,8 @@ export interface FsHtmlEditorConfig {
   froalaConfig?: any;
   assetsJSPath?: string;
   assetsCSSPath?: string;
-  buttons?: {
-    name: string;
-    svgKey?: string;
-    title?: string;
-    focus?: boolean;
-    undo?: boolean;
-    refreshAfterCallback?: boolean;
-    click: (editor: any) => void;
-  }[];
+  prependToolbarTextButtons?: ToolbarButton[],
+  buttons?: ToolbarButton[];
 }
 
 export interface FsHtmlEditorUploadConfig {

@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -23,17 +24,19 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { DOCUMENT } from '@angular/common';
 
 import { guid } from '@firestitch/common';
 import { FileProcessor, FsFile, FsFileProcessConfig } from '@firestitch/file';
 
 import { BehaviorSubject, fromEventPattern, Observable, ReplaySubject, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap,
+} from 'rxjs/operators';
 
 import { merge } from 'lodash-es';
 
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
+import { ToolbarButton } from '../../interfaces';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
 import { FsFroalaLoaderService } from '../../services/froala-loader.service';
 
@@ -41,7 +44,6 @@ import { Plugin } from './../../classes/plugin';
 import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
 import { RichButtons } from './../../consts/rich-buttons.const';
 import { TextButtons } from './../../consts/text-buttons.const';
-import { PluginButton } from './../../interfaces/plugin-button';
 
 
 @Component({
@@ -69,7 +71,8 @@ import { PluginButton } from './../../interfaces/plugin-button';
     },
   ],
 })
-export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
+export class FsHtmlEditorComponent 
+implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   @HostBinding('class.focused') public classFocused = false;
 
@@ -84,6 +87,8 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
 
   public initialized = false;
   public readonly containerID = `fs-html-editor-${guid('xxx')}`;
+  public onTouched: () => void;
+  public onChange: (data: any) => void;
 
   private _editor: any;
   private _html: string;
@@ -101,9 +106,6 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
     private _cdRef: ChangeDetectorRef,
     private _fr: FsFroalaLoaderService,
   ) { }
-
-  public onChange = (data: any) => { };
-  public onTouched = () => { };
 
   public get el(): any {
     return this.elRef.nativeElement;
@@ -124,10 +126,10 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   public ngOnInit(): void {
     this.config = this.config || {};
     this.config.autofocus = this.config.autofocus && (!this.config.disabled || !this.disabled);
-    this._listenLazyInit();
   }
 
   public ngAfterViewInit() {
+    this._listenLazyInit();
     this._initialize$.next();
   }
 
@@ -214,6 +216,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       try {
         this.editor.html.set(this._html);
       } catch (e) {
+        //
       }
     }
 
@@ -313,7 +316,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       });
   }
 
-  private _initPlugins(config) {
+  private _initPlugins(config: FsHtmlEditorConfig) {
     (config.plugins || []).forEach((plugin: Plugin) => {
       this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
         plugin.editor = editor;
@@ -322,37 +325,62 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         return plugin;
       };
 
-      (plugin.config.buttons || []).forEach((button: PluginButton) => {
-        this._fr.FroalaEditor.DefineIcon(button.name, {
-          NAME: button.name,
-          PATH: button.svgPath,
+      ([
+        ...(plugin.config.buttons || []),
+        ...(config.prependToolbarTextButtons || []),
+      ])
+        .forEach((button: ToolbarButton) => {
+          this._defineButton(button);
         });
-
-        this._fr.FroalaEditor.RegisterCommand(button.name, {
-          icon: button.name,
-          title: button.tooltip,
-          undo: button.undo,
-          focus: button.focus,
-          showOnMobile: button.showOnMobile,
-          refreshAfterCallback: button.refreshAfterCallback,
-          callback() {
-            if (button.click) {
-              button.click(this);
-            }
-          },
-          refresh(button) {
-            if (button.refresh) {
-              button.refresh(this, button);
-            }
-          },
-        });
-      });
-
     });
+  }
+
+  private _defineButton(button: ToolbarButton) {
+    if(button.html) {
+      this._fr.FroalaEditor
+        .DefineIconTemplate(`${button.name}-template`, button.html);
+      this._fr.FroalaEditor
+        .DefineIcon(button.name, { 
+          NAME: `${button.name}-icon`,
+          template: `${button.name}-template`, 
+        });
+  
+    } else { 
+      this._fr.FroalaEditor.DefineIcon(button.name, {
+        NAME: button.name,
+        PATH: button.svgPath,
+      });
+    } 
+
+    this._fr.FroalaEditor.RegisterCommand(button.name, {
+      icon: button.name,
+      title: button.tooltip,
+      undo: button.undo,
+      focus: button.focus,
+      showOnMobile: button.showOnMobile,
+      refreshAfterCallback: button.refreshAfterCallback,
+      callback() {
+        if (button.click) {
+          button.click(this);
+        }
+      },
+      refresh(event) {
+        if (event.refresh) {
+          event.refresh(this, event);
+        }
+      },
+    });
+
   }
 
   private _createOptions() {
     const config = this._createConfig();
+
+    const textButtons = [
+      ...config.prependToolbarTextButtons
+        .map((item) => item.name),
+      ...TextButtons,
+    ];
 
     return merge(
       // For some reason editor store somewhere pointer on default config object and dublicate options each time on init
@@ -394,7 +422,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         paragraphFormatSelection: true,
         toolbarButtonsXS: {
           moreText: {
-            buttons: TextButtons,
+            buttons: textButtons,
             buttonsVisible: 1,
           },
           moreParagraph: {
@@ -408,7 +436,7 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
         },
         toolbarButtons: {
           moreText: {
-            buttons: TextButtons,
+            buttons: textButtons,
             buttonsVisible: 3,
           },
           moreParagraph: {
@@ -426,9 +454,6 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
   }
 
   private _listenLazyInit() {
-    // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
-    // to prevent conflicts with text-editor
-    this._window.define = null;
 
     this.froalaLoaded$
       .pipe(
@@ -498,7 +523,9 @@ export class FsHtmlEditorComponent implements OnInit, AfterViewInit, ControlValu
       (handler) => {
         this._editor.events.on('contentChanged', handler);
       },
-      () => { },
+      () => {
+        //
+      },
     )
       .pipe(
         startWith(this._html),

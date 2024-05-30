@@ -1,7 +1,7 @@
-import { Inject, Injectable, Optional } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, Optional } from '@angular/core';
 
-import { fsSourceLoader } from '@firestitch/common'
+import { fsSourceLoader } from '@firestitch/common';
 
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { concatMap, map, shareReplay, tap } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { FsHtmlEditorConfig } from '../interfaces/html-editor-config';
 })
 export class FsFroalaLoaderService {
 
-  private _FroalaEditor: unknown;
+  private _froalaEditor: any;
 
   private _froalaLoaded = new BehaviorSubject(false);
   private _froalaPluginsLoaded = new BehaviorSubject(false);
@@ -45,7 +45,7 @@ export class FsFroalaLoaderService {
   }
 
   public get FroalaEditor(): any {
-    return this._FroalaEditor;
+    return this._froalaEditor;
   }
 
   private _load() {
@@ -68,13 +68,13 @@ export class FsFroalaLoaderService {
       froala_draggable: `${baseDir}js/plugins/draggable.min.js`,
       froala_font_size: `${baseDir}js/plugins/font_size.min.js`,
       froala_quick_insert: `${baseDir}js/plugins/quick_insert.min.js`,
-      froala_line_height: `${baseDir}js/plugins/line_height.min.js`
+      froala_line_height: `${baseDir}js/plugins/line_height.min.js`,
     });
 
     this._sourceLoader.loadResource('froala')
       .pipe(
         tap(() => {
-          this._FroalaEditor = (window as any).FroalaEditor;
+          this._froalaEditor = (window as any).FroalaEditor;
           this._froalaDone();
         }),
         concatMap(() => {
