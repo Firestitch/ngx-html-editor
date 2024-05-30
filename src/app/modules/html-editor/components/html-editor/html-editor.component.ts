@@ -317,6 +317,11 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   }
 
   private _initPlugins(config: FsHtmlEditorConfig) {
+    (config.prependToolbarTextButtons || [])
+      .forEach((button: ToolbarButton) => {
+        this._defineButton(button);
+      });
+
     (config.plugins || []).forEach((plugin: Plugin) => {
       this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
         plugin.editor = editor;
@@ -325,10 +330,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
         return plugin;
       };
 
-      ([
-        ...(plugin.config.buttons || []),
-        ...(config.prependToolbarTextButtons || []),
-      ])
+      (plugin.config.buttons || [])
         .forEach((button: ToolbarButton) => {
           this._defineButton(button);
         });
