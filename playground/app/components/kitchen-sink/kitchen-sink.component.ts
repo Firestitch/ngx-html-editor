@@ -20,8 +20,8 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'kitchen-sink',
-  templateUrl: 'kitchen-sink.component.html',
-  styleUrls: ['kitchen-sink.component.scss'],
+  templateUrl: './kitchen-sink.component.html',
+  styleUrls: ['./kitchen-sink.component.scss'],
 })
 export class KitchenSinkComponent implements OnInit {
 
@@ -30,23 +30,19 @@ export class KitchenSinkComponent implements OnInit {
 
   public config: FsHtmlEditorConfig;
   public default = '<h1>This is 1st level heading</h1><p>This is a test paragraph.</p><h2>This is 2nd level heading</h2><p>This is a test paragraph.</p><h3>This is 3rd level heading</h3><p>This is a test paragraph.</p><h4>This is 4th level heading</h4><p>This is a test paragraph.</p><h1>Table</h1><table class="fr-alternate-rows" style="width: 100%;"><thead><tr><th>Heading 1</th><th>Heading 2&nbsp;</th><th>Heading 3</th></tr></thead><tbody><tr><td style="width: 33.3333%;">Text</td><td style="width: 33.3333%;">50</td><td style="width: 33.3333%;"><br></td></tr><tr><td style="width: 33.3333%;">Alt Text</td><td style="width: 33.3333%;">466</td><td style="width: 33.3333%;"><br></td></tr><tr><td style="width: 33.3333%;">Text</td><td style="width: 33.3333%;">9000</td><td style="width: 33.3333%;"><br></td></tr></tbody></table><h1>Blockquote</h1><blockquote>This is a block quotation containing a single paragraph. Well, not quite, since this is not <em>really</em> quoted text, but I hope you understand the point.After all, this page does not use HTML markup very normally anyway.</blockquote><h1>Code</h1><p class="code">function hello() {<br>&nbsp; alert("Hello");<br>}</p><h1>Lists</h1><p>This is a paragraph before an <strong>&nbsp;unnumbered&nbsp;</strong> list (ul).Note that the spacing between a paragraph and a list before or after that is hard to tune in a user style sheet.You can\'t guess which paragraphs are logically related to a list, e.g. as a "list header".</p><ul><li>One.</li><li>Two.</li><li>Three. Well, probably this list item should be longer. Note that for short items lists look better if they are compactly presented, whereas for long items, it would be better to have more vertical spacing between items.</li><li>Four. This is the last item in this list. Let us terminate the list now without making any more fuss about it.</li></ul><p><br></p><ol><li>One.</li><li>Two.</li><li>Three. Well, probably this list item should be longer so that it will probably wrap to the next line in rendering.</li><li>This is a paragraph before a <strong style="outline: 0px;">numbered</strong>list (ol). Note that the spacing between a paragraph and a list before or after that is hard to tune in a user style sheet. You can\'t guess which paragraphs are logically related to a list, e.g.as a "list header".<ol><li>One.</li><li>Two.</li><li>Three.Well, probably this list item should be longer.Note that if items are short, lists look better if they are compactly presented, whereas for long items, it would be better to have more vertical spacing between items.</li><li>Four. This is the last item in this list. Let us terminate the list now without making any more fuss about it.</li></ol></li></ol><h1>Styles</h1><ul><li><strong style="outline: 0px;">&amp; nbsp; bolded&nbsp;</strong>&nbsp;</li><li><u style="outline: 0px;">&nbsp;underlined&nbsp;</u></li><li><em style="outline: 0px;">&nbsp;italic&nbsp;</em></li><li><s style="outline: 0px;">&nbsp;strikethrough&nbsp;</s></li></ul><h1>Checklist</h1><ul class="checklist"><li>Do this</li><li class="checked">Do that<ul><li class="checked">Do something else</li><li class="checked">Do another thing</li></ul></li></ul><h1>Link</h1> <a href="https://en.wikipedia.org/wiki/Puppy">https://en.wikipedia.org/wiki/Puppy</a><br><img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg"><br><img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Cara_de_quem_caiu_do_caminh%C3%A3o..._%28cropped%29.jpg">';
-
-  //public default = `<ol><li>11111111111111111<ol><li>222222222222<ol><li>33333333333333333333</li></ol></li></ol></li></ol>`;
   public html = this.default;
   public width;
 
   constructor(
-    // private exampleComponent: FsExampleComponent,
-    private message: FsMessage,
     private _message: FsMessage,
     private _api: FsApi,
-    private renderer: Renderer2,
+    private _renderer: Renderer2,
   ) {
-    // exampleComponent.setConfigureComponent(KitchenSinkConfigureComponent, { config: this.config });
   }
 
   public ngOnInit() {
     this.config = {
+      hint: 'Hint text',
       buttons: [
         {
           name: 'pageBreak',
@@ -68,7 +64,7 @@ export class KitchenSinkComponent implements OnInit {
         },
       },
       disabled: false,
-      initOnClick: true,
+      initOnClick: false,
       initClick: (event: UIEvent) => {
         //event.preventDefault();
       },
@@ -168,7 +164,7 @@ export class KitchenSinkComponent implements OnInit {
 
   public updateSize() {
     this.width = this.width ? null : '600px';
-    this.renderer.setStyle(this.htmlEditorEl.nativeElement, 'width', this.width);
+    this._renderer.setStyle(this.htmlEditorEl.nativeElement, 'width', this.width);
     this.htmlEditor.updateSize();
   }
 
@@ -187,7 +183,7 @@ export class KitchenSinkComponent implements OnInit {
   public destroy() {
 
     if (!this.htmlEditor.hasContent()) {
-      this.message.error('Cannot destroy because there is no content');
+      this._message.error('Cannot destroy because there is no content');
     } else {
       this.htmlEditor.destroy();
     }

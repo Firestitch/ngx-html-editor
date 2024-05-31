@@ -79,7 +79,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   @ViewChild('elRef') public elRef: ElementRef;
 
   @Input() public config: FsHtmlEditorConfig = {};
-  @Input() public hint: string;
 
   @Input()
   @HostBinding('class.disabled')
