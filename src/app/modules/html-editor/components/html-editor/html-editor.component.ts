@@ -33,6 +33,7 @@ import {
   distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap,
 } from 'rxjs/operators';
 
+import * as FroalaEditor from 'froala-editor';
 import { merge } from 'lodash-es';
 
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
@@ -397,7 +398,12 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
         tooltips: false,
         wordPasteModal: false,
         imageDefaultWidth: 0,
+        paragraphStyles: {
+          class1: 'Class 1',
+          class2: 'Class 2',
+        },
         imageDefaultAlign: 'left',
+        fontFamilyDefaultSelection: 'Font Family',
         quickInsertEnabled: false,
         scrollableContainer: `#${this.containerID}`,
         paragraphDefaultSelection: 'Format',
@@ -449,7 +455,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
             buttonsVisible: 3,
           },
         },
-      },
+      } as Partial<FroalaEditor.FroalaOptions>,
       config.froalaConfig,
     );
   }
