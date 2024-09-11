@@ -3,9 +3,9 @@
 @mixin fs-html-editor($theme) {
   $primary: mat.define-palette($theme);
 
-  fs-html-editor.focused {
+  fs-html-editor.inited.focused {
     .outline-overlay {
-      border-color: mat.get-color-from-palette($primary);
+      border-color: mat.get-color-from-palette($primary) !important;
     }
 
     fs-label-field fs-label {

@@ -2,18 +2,7 @@
   position: relative;
   display: block;
 
-  &:not(.focused):not(.disabled):hover {
-    .outline-overlay {
-      border-color: #212121;
-    }
-  }
-  
-  ::ng-deep {
-
-    fs-label-field {
-      margin: .25em 0;
-    }
-
+  &.inited {
     .outline-overlay {      
       border: 1px solid transparent;
       position: absolute;
@@ -23,7 +12,7 @@
       top: -1px;
       border-width: 2px;
     }
-
+    
     .outline,
     .outline-overlay {
       border-radius: 5px;
@@ -41,15 +30,29 @@
         left: 11px;
         padding: 0 3px;
       }
-
-      .fr-wrapper {
-        border: none !important;
+    }    
+    
+    &:not(.focused):not(.disabled):hover {
+      .outline-overlay {
+        border-color: #212121;
       }
+    }
 
-      .fr-toolbar.fr-top {
-        background-color: transparent;
-        margin-top: 2px;
-      }
+  }
+  
+  ::ng-deep {
+
+    fs-label-field {
+      margin: .25em 0;
+    }
+
+    .fr-wrapper {
+      border: none !important;
+    }
+
+    .fr-toolbar.fr-top {
+      background-color: transparent !important;
+      margin-top: 2px;
     }
 
     .fr-box.fr-basic {

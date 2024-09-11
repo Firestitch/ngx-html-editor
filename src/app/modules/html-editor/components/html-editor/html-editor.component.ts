@@ -85,7 +85,9 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   @HostBinding('class.disabled')
   public disabled = false;
 
+  @HostBinding('class.inited')
   public initialized = false;
+
   public readonly containerID = `fs-html-editor-${guid('xxx')}`;
   public onTouched: () => void;
   public onChange: (data: any) => void;
@@ -94,7 +96,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   private _html: string;
   private _initialize$ = new ReplaySubject();
   private _froalaReady$ = new BehaviorSubject(null);
-  private _window: any = this._document.defaultView;
   private _destroy$ = new Subject();
 
   constructor(
@@ -126,6 +127,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   public ngOnInit(): void {
     this.config = this.config || {};
     this.config.autofocus = this.config.autofocus && (!this.config.disabled || !this.disabled);
+    this.initialized = !this.config.initOnClick;
   }
 
   public ngAfterViewInit() {
