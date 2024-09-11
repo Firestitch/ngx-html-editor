@@ -29,6 +29,7 @@
         position: absolute;
         left: 11px;
         padding: 0 3px;
+        z-index: 5;
       }
     }    
     
@@ -58,7 +59,7 @@
     }
 
     .fr-toolbar.fr-top {
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     .fr-box.fr-basic {
