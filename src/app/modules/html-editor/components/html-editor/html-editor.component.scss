@@ -1,5 +1,57 @@
 :host {
+  position: relative;
+  display: block;
+
+  &:not(.focused):not(.disabled):hover {
+    .outline-overlay {
+      border-color: #212121;
+    }
+  }
+  
   ::ng-deep {
+
+    fs-label-field {
+      margin: .25em 0;
+    }
+
+    .outline-overlay {      
+      border: 1px solid transparent;
+      position: absolute;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      top: -1px;
+      border-width: 2px;
+    }
+
+    .outline,
+    .outline-overlay {
+      border-radius: 5px;
+    }
+
+    .outline {
+      border: 1px solid #E0E0E0;
+      position: relative;
+      padding: 0 .75em;
+
+      fs-label {
+        background: #fff;
+        top: -5px;
+        position: absolute;
+        left: 11px;
+        padding: 0 3px;
+      }
+
+      .fr-wrapper {
+        border: none !important;
+      }
+
+      .fr-toolbar.fr-top {
+        background-color: transparent;
+        margin-top: 2px;
+      }
+    }
+
     .fr-box.fr-basic {
       .fr-wrapper {
         border: 0;
@@ -125,10 +177,6 @@
         border: none;
       }
     }
-
-    .disabled-line {
-      display: block;
-    }
   }
 }
 
@@ -139,45 +187,6 @@
 
   .fr-video-by-url-layer .fr-checkbox-line {
     display: none;
-  }
-}
-
-.disabled-line {
-  display: none;
-  position: absolute;
-  bottom: -1px;
-  z-index: 1;
-  background-image: linear-gradient(90deg,rgba(0,0,0,.42) 0,rgba(0,0,0,.42) 33%,transparent 0);
-  background-size: 4px 100%;
-  background-repeat: repeat-x;
-  height: 1px;
-  width: 100%;
-}
-
-.bottom-line {
-  opacity: 0;
-  transform-origin: 50%;
-  transform: scaleX(0.5);
-  transition: background-color 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-  width: 100%;
-  border-bottom: 2px solid #949494;
-  position: absolute;
-  bottom: -1px;
-  z-index: 1;
-}
-
-:host {
-  position: relative;
-  display: block;
-
-  &.focused {
-    .bottom-line {
-      opacity: 1;
-      display: block;
-      transform: scaleX(1);
-      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.1s cubic-bezier(0.25, 0.8, 0.25, 1),
-        background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
   }
 }
 

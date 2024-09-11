@@ -9,6 +9,17 @@ fieldset {
 }
 
 :host ::ng-deep {
+
+  .send-test-button {
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      margin-right: 5px;
+    }
+  }
+  
   .mention {
     background: #CAD9E4;
     padding: 2px 3px;
@@ -32,22 +43,6 @@ fieldset {
       content: "Page Break";
       color: #aeaeae;
       font-size: 85%;
-    }
-  }
-}
-
-
-
-:host {
-  ::ng-deep {
-    .send-test-button {
-      padding: 0 10px;
-      display: flex;
-      align-items: center;
-
-      mat-icon {
-        margin-right: 5px;
-      }
     }
   }
 }

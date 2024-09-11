@@ -4,8 +4,12 @@
   $primary: mat.define-palette($theme);
 
   fs-html-editor.focused {
-    .bottom-line {
+    .outline-overlay {
       border-color: mat.get-color-from-palette($primary);
+    }
+
+    fs-label-field fs-label {
+      color: mat.get-color-from-palette($primary);
     }
   }
 }
