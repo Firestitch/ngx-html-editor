@@ -2,7 +2,7 @@
   position: relative;
   display: block;
 
-  &.inited {
+  &.initialized {
     .outline-overlay {      
       border: 1px solid transparent;
       position: absolute;
@@ -37,7 +37,14 @@
         border-color: #212121;
       }
     }
+  }
 
+  &:not(.initialized) {
+    ::ng-deep {
+      .fr-toolbar {
+        display: none;
+      }
+    }
   }
   
   ::ng-deep {
@@ -51,8 +58,7 @@
     }
 
     .fr-toolbar.fr-top {
-      background-color: transparent !important;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .fr-box.fr-basic {
@@ -161,12 +167,6 @@
     .fr-view {
       ol, ul {
         list-style-position: unset;
-      }
-    }
-
-    .html-editor-container.init-on-click:not(.initialized) {
-      .fr-toolbar {
-        display: none;
       }
     }
   }

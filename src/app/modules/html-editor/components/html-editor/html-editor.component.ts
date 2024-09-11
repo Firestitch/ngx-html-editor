@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -85,7 +84,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   @HostBinding('class.disabled')
   public disabled = false;
 
-  @HostBinding('class.inited')
+  @HostBinding('class.initialized')
   public initialized = false;
 
   public readonly containerID = `fs-html-editor-${guid('xxx')}`;
@@ -102,8 +101,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     @Optional()
     @Inject(FS_HTML_EDITOR_CONFIG)
     private _defaultConfig,
-    @Inject(DOCUMENT)
-    private _document: Document,
     private _cdRef: ChangeDetectorRef,
     private _fr: FsFroalaLoaderService,
   ) { }
@@ -145,6 +142,10 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     el.innerHTML = this._html;
 
     return !!el.innerText.length;
+  }
+
+  public uninitialize() {
+    this.initialized = false;
   }
 
   public initialize(options: any = {}) {
@@ -247,7 +248,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
     this.initialized = false;
     this._cdRef.markForCheck();
-    this.el.innerHTML = '';
   }
 
   private _processImageUpload(blob) {
@@ -463,7 +463,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   }
 
   private _listenLazyInit() {
-
     this.froalaLoaded$
       .pipe(
         filter((ready) => ready),

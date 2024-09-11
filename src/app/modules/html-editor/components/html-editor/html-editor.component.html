@@ -6,7 +6,6 @@
         class="html-editor-container fs-html-editor-default"
         [id]="containerID"
         [ngClass]="{
-          initialized: initialized,
           'init-on-click': config.initOnClick
         }">
       <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>

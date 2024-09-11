@@ -3,7 +3,7 @@
 @mixin fs-html-editor($theme) {
   $primary: mat.define-palette($theme);
 
-  fs-html-editor.inited.focused {
+  fs-html-editor.initialized.focused {
     .outline-overlay {
       border-color: mat.get-color-from-palette($primary) !important;
     }

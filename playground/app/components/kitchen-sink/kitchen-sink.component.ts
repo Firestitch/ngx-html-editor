@@ -182,8 +182,11 @@ export class KitchenSinkComponent implements OnInit {
     this.htmlEditor.disable();
   };
 
-  public destroy() {
+  public unitialize() {
+    this.htmlEditor.uninitialize();
+  }
 
+  public destroy() {
     if (!this.htmlEditor.hasContent()) {
       this._message.error('Cannot destroy because there is no content');
     } else {
