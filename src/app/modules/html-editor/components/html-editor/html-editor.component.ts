@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ContentChild,
   ElementRef,
   forwardRef,
   HostBinding,
@@ -11,6 +12,7 @@ import {
   OnDestroy,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -27,6 +29,7 @@ import {
 import { guid } from '@firestitch/common';
 import { FileProcessor, FsFile, FsFileProcessConfig } from '@firestitch/file';
 
+
 import { BehaviorSubject, fromEventPattern, Observable, ReplaySubject, Subject } from 'rxjs';
 import {
   distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap,
@@ -35,6 +38,7 @@ import {
 import * as FroalaEditor from 'froala-editor';
 import { merge } from 'lodash-es';
 
+import { FsHtmlEditorContainerDirective } from '../../directives';
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { ToolbarButton } from '../../interfaces';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
@@ -73,6 +77,9 @@ import { TextButtons } from './../../consts/text-buttons.const';
 })
 export class FsHtmlEditorComponent 
 implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
+
+  @ContentChild(FsHtmlEditorContainerDirective, { read: TemplateRef })
+  public htmlEditorContainer: TemplateRef<any>;
 
   @HostBinding('class.focused') public classFocused = false;
 

@@ -7,6 +7,7 @@ import { FsSkeletonModule } from '@firestitch/skeleton';
 import { FsHtmlRendererModule } from '../html-renderer/fs-html-renderer.module';
 
 import { FsHtmlEditorComponent } from './components/html-editor/html-editor.component';
+import { FsHtmlEditorContainerDirective } from './directives';
 import { FroalaPlugin } from './enums/default-plugin.enum';
 import { FS_HTML_EDITOR_CONFIG, FS_HTML_EDITOR_DEFAULT_CONFIG } from './injects/config.inject';
 import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
@@ -22,9 +23,11 @@ import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
   ],
   exports: [
     FsHtmlEditorComponent,
+    FsHtmlEditorContainerDirective,
   ],
   declarations: [
     FsHtmlEditorComponent,
+    FsHtmlEditorContainerDirective,
   ],
 })
 export class FsHtmlEditorModule {
