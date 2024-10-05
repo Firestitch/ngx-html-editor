@@ -136,7 +136,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   public ngAfterViewInit() {
     this._listenLazyInit();
-    this._initialize$.next();
+    this._initialize$.next(null);
   }
 
   public hasContent() {
@@ -243,7 +243,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   public ngOnDestroy() {
     this._initialize$.complete();
-    this._destroy$.next();
+    this._destroy$.next(null);
     this._destroy$.complete();
     this.destroy();
   }
