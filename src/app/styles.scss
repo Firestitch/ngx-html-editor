@@ -1,15 +1,15 @@
 @use '@angular/material' as mat;
 
 @mixin fs-html-editor($theme) {
-  $primary: mat.define-palette($theme);
+  $primary: mat.m2-define-palette($theme);
 
   fs-html-editor.initialized.focused {
     .outline-overlay {
-      border-color: mat.get-color-from-palette($primary) !important;
+      border-color: mat.m2-get-color-from-palette($primary) !important;
     }
 
     fs-label-field fs-label {
-      color: mat.get-color-from-palette($primary);
+      color: mat.m2-get-color-from-palette($primary);
     }
   }
 }

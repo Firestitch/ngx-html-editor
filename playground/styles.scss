@@ -6,5 +6,5 @@
 @import "@firestitch/dialog/styles";
 @import '../src/app/styles';
 
-@include fs-drawer(mat.$blue-palette);
-@include fs-html-editor(mat.$blue-palette);
+@include fs-drawer(mat.$m2-blue-palette);
+@include fs-html-editor(mat.$m2-blue-palette);
