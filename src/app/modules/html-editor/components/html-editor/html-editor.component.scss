@@ -11,10 +11,13 @@
   }
   
   ::ng-deep {
-
     fs-label-field {
       .field-wrap {
         padding-top: 7px !important;
+      }
+
+      .field-content {
+        overflow: hidden;
       }
     }
 
