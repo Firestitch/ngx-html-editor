@@ -4,7 +4,9 @@
 @import "@firestitch/drawer/styles";
 @import "@firestitch/form/styles";
 @import "@firestitch/dialog/styles";
+@import "@firestitch/label/styles";
 @import '../src/app/styles';
 
 @include fs-drawer(mat.$m2-blue-palette);
+@include fs-label(mat.$m2-blue-palette);
 @include fs-html-editor(mat.$m2-blue-palette);

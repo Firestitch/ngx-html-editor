@@ -1,29 +1,73 @@
-
-<form fsForm [submit]="save" [dirtySubmitButton]="false">
+<form
+    fsForm
+    [submit]="save"
+    [dirtySubmitButton]="false">
   <fs-html-editor
       [(ngModel)]="html"
       [config]="config"
       [required]="true"
       (ngModelChange)="change($event)"
       name="html">
-    <ng-template fsHtmlEditorContainer let-template="template">
+    <ng-template
+        fsHtmlEditorContainer
+        let-template="template">
       <ng-container [ngTemplateOutlet]="template"></ng-container>
     </ng-template>
   </fs-html-editor>
-  <div class="sticky" fxLayout="row wrap" fxLayoutGap="5px">
-    <button mat-raised-button color="primary">Save</button>
-    <button mat-raised-button type="button" (click)="clear()">Clear</button>
-    <button mat-raised-button type="button" (click)="setHtml()">Set HTML</button>
-    <button mat-raised-button type="button" (click)="focus()">Focus</button>
-    <button mat-raised-button type="button" (click)="updateSize()">Simulate {{(width ? 'Full' : '600px')}} Width</button>
-    <button mat-raised-button type="button" (click)="disable()">Disable</button>
-    <button mat-raised-button type="button" (click)="destroy()">Destroy</button>
-    <button mat-raised-button type="button" (click)="unitialize()">Unitialize</button>
+  <div class="sticky">
+    <button
+        mat-raised-button
+        color="primary">
+      Save
+    </button>
+    <button
+        mat-raised-button
+        type="button"
+        (click)="clear()">
+      Clear
+    </button>
+    <button
+        mat-raised-button
+        type="button"
+        (click)="setHtml()">
+      Set HTML
+    </button>
+    <button
+        mat-raised-button
+        type="button"
+        (click)="focus()">
+      Focus
+    </button>
+    <button
+        mat-raised-button
+        type="button"
+        (click)="updateSize()">
+      Simulate {{ (width ? 'Full' : '600px') }} Width
+    </button>
+    <button
+        mat-raised-button
+        type="button"
+        (click)="disable()">
+      Disable
+    </button>
+    <button
+        mat-raised-button
+        type="button"
+        (click)="destroy()">
+      Destroy
+    </button>
+    <button
+        mat-raised-button
+        type="button"
+        (click)="unitialize()">
+      Unitialize
+    </button>
   </div>
-
   <ng-container *ngIf="html">
     <fieldset>
-      <legend>HTML</legend>
+      <legend>
+        HTML
+      </legend>
       <fs-html-renderer [html]="html"></fs-html-renderer>
     </fieldset>
   </ng-container>

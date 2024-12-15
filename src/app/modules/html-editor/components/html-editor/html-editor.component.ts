@@ -16,7 +16,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  AbstractControl,
   ControlContainer,
   ControlValueAccessor,
   NG_VALIDATORS,
@@ -169,7 +168,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     window.dispatchEvent(new Event('resize'));
   }
 
-  public validate(control: AbstractControl): ValidationErrors | null {
+  public validate(): ValidationErrors | null {
     const err: any = {};
     if (this.config.maxLength && this._html) {
       const maxLength = this.config.maxLength;
@@ -205,10 +204,15 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   public disable() {
     this.disabled = true;
+    this._cdRef.markForCheck();
   }
 
   public setHtml(html) {
     this.writeValue(html);
+  }
+
+  public setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   public writeValue(html: string): void {

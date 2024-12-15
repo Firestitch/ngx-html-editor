@@ -1,29 +1,33 @@
-<fs-label-field>
-  <div class="outline">
-    <div class="outline-overlay"></div>
-    <fs-label *ngIf="config.label">{{config.label}}</fs-label>
-    <ng-container *ngIf="htmlEditorContainer; else htmlEditorContainerTmpl">
-      <ng-container 
-        [ngTemplateOutlet]="htmlEditorContainer" 
-        [ngTemplateOutletContext]="{ template: htmlEditorContainerTmpl }">
-      </ng-container>
+<fs-label-field
+    [outline]="true"
+    [hoverable]="true"
+    [disabled]="disabled"
+    [focused]="classFocused">
+  <fs-label *ngIf="config.label">
+    {{ config.label }}
+  </fs-label>
+  <ng-container *ngIf="htmlEditorContainer; else htmlEditorContainerTmpl">
+    <ng-container
+      [ngTemplateOutlet]="htmlEditorContainer"
+      [ngTemplateOutletContext]="{ template: htmlEditorContainerTmpl }">
     </ng-container>
-    <ng-template #htmlEditorContainerTmpl>
-      <div
-          class="html-editor-container fs-html-editor-default"
-          [id]="containerID"
-          [ngClass]="{
+  </ng-container>
+  <ng-template #htmlEditorContainerTmpl>
+    <div
+        class="html-editor-container fs-html-editor-default"
+        [id]="containerID"
+        [ngClass]="{
             'init-on-click': config.initOnClick
           }">
-        <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
-        <div #elRef></div>
-      </div>
-    </ng-template>
-  </div>
-
+      <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
+      <div #elRef></div>
+    </div>
+  </ng-template>
   <fs-label-message>
     <div class="fs-form-message">
-      <div class="fs-form-hint">{{config.hint}}</div>
+      <div class="fs-form-hint">
+        {{ config.hint }}
+      </div>
     </div>
   </fs-label-message>
 </fs-label-field>

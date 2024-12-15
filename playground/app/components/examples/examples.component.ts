@@ -1,25 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
-import { environment } from 'playground/environments/environment';
 
+import { environment } from 'playground/environments/environment';
 
 import { DialogComponent } from '../dialog';
 
 
 @Component({
-  templateUrl: 'examples.component.html'
+  templateUrl: './examples.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExamplesComponent implements OnInit {
+export class ExamplesComponent {
   public config = environment;
 
   constructor(
     private _dialog: MatDialog,
   ) { }
-
-  public ngOnInit(): void {
-
-  }
 
   public openDialog(): void {
     this._dialog.open(DialogComponent, {
