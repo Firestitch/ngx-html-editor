@@ -152,6 +152,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   public uninitialize() {
     this.initialized = false;
+    this._cdRef.markForCheck();
   }
 
   public initialize(options: any = {}) {
