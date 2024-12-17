@@ -12,12 +12,26 @@
   
   ::ng-deep {
     fs-label-field {
-      &.init-on-click:not(.initialized) {
-        cursor: pointer;
+      &:not(.initialized) {
+        &.init-on-click {
+          cursor: pointer;
+        }
+
+        .fr-view > *:first-child {
+          margin-top: 0;
+        }
+
+        &.outline {
+          .outline-overlay{
+            display: none;
+          }
+        }
       }
 
-      &.outline .field-wrap {
-        padding-top: 4px;
+      &.initialized {
+        &.outline .field-wrap {
+          padding-top: 4px;
+        }
       }
 
       .field-content {
