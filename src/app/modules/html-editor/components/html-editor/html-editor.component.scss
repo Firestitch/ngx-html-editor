@@ -21,15 +21,15 @@
           margin-top: 0;
         }
 
-        &.outline {
-          .outline-overlay{
+        &.appearance-outline {
+          .outline-overlay {
             display: none;
           }
         }
       }
 
       &.initialized {
-        &.outline .field-wrap {
+        &.appearance-outline .field-wrap {
           padding-top: 4px;
         }
       }
