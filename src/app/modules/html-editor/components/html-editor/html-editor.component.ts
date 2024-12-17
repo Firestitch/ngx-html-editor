@@ -100,13 +100,16 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   private _editor: any;
   private _html: string;
   private _initialize$ = new ReplaySubject();
-  private _froalaReady$ = new BehaviorSubject(null);
+  private _froalaReady$ = new BehaviorSubject<{ 
+    config: FsHtmlEditorConfig, 
+    options: any 
+  }>(null);
   private _destroy$ = new Subject();
 
   constructor(
     @Optional()
     @Inject(FS_HTML_EDITOR_CONFIG)
-    private _defaultConfig,
+    private _defaultConfig: FsHtmlEditorConfig,
     private _cdRef: ChangeDetectorRef,
     private _fr: FsFroalaLoaderService,
   ) { }
@@ -230,7 +233,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     if (this.editor && this.editor.html) {
       try {
         this.editor.html.set(this._html);
-      } catch (e) {
+      } catch {
         //
       }
     }
@@ -492,8 +495,8 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
         }),
         switchMap(() => this._froalaReady$),
         filter((data) => !!data),
-        tap(({ config, options }) => {
-          this._setupFroala(config, options);
+        tap(({ config }) => {
+          this._setupFroala(config);
         }),
       )
       .subscribe();
@@ -507,7 +510,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     }
   }
 
-  private _setupFroala(config: FsHtmlEditorConfig, options: any): void {
+  private _setupFroala(config: FsHtmlEditorConfig): void {
     this._cdRef.markForCheck();
 
     this.setHtml(this._html);

@@ -1,12 +1,15 @@
 @use '@angular/material' as mat;
+@use "@firestitch/style/styles" as fs-style;
+
 @import '@firestitch/component-tools/assets/playground.scss';
 @import '@firestitch/message/styles';
 @import "@firestitch/drawer/styles";
 @import "@firestitch/form/styles";
-@import "@firestitch/dialog/styles";
 @import "@firestitch/label/styles";
+@import "@firestitch/dialog/styles";
 @import '../src/app/styles';
 
+@include fs-style.core();
 @include fs-drawer(mat.$m2-blue-palette);
 @include fs-label(mat.$m2-blue-palette);
 @include fs-html-editor(mat.$m2-blue-palette);

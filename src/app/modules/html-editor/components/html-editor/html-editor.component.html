@@ -1,11 +1,16 @@
 <fs-label-field
-    [outline]="initialized"
+    [outline]="true"
     [hoverable]="true"
     [disabled]="disabled"
-    [focused]="classFocused">
-  <fs-label *ngIf="config.label">
-    {{ config.label }}
-  </fs-label>
+    [ngClass]="{
+      'init-on-click': config.initOnClick,
+      'initialized': initialized
+    }">
+  @if (config.label) {
+    <fs-label>
+      {{ config.label }}
+    </fs-label>
+  }
   <ng-container *ngIf="htmlEditorContainer; else htmlEditorContainerTmpl">
     <ng-container
       [ngTemplateOutlet]="htmlEditorContainer"
@@ -15,10 +20,7 @@
   <ng-template #htmlEditorContainerTmpl>
     <div
         class="html-editor-container fs-html-editor-default"
-        [id]="containerID"
-        [ngClass]="{
-            'init-on-click': config.initOnClick
-          }">
+        [id]="containerID">
       <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
       <div #elRef></div>
     </div>

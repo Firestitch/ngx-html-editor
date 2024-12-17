@@ -12,8 +12,12 @@
   
   ::ng-deep {
     fs-label-field {
-      .field-wrap {
-        padding-top: 7px !important;
+      &.init-on-click:not(.initialized) {
+        cursor: pointer;
+      }
+
+      &.outline .field-wrap {
+        padding-top: 4px;
       }
 
       .field-content {
@@ -75,7 +79,6 @@
 
       .fr-btn-grp {
         margin: 0 20px 0 0;
-        //position: relative;
 
         &:nth-child(1):after,
         &:nth-child(2):after {
