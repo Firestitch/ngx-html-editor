@@ -20,6 +20,7 @@ export interface FsHtmlEditorConfig {
   activationKey?: any;
   tooltip?: string;
   plugins?: Plugin[];
+  padless?: boolean;
   froalaPlugins?: FroalaPlugin[];
   froalaConfig?: any;
   assetsJSPath?: string;

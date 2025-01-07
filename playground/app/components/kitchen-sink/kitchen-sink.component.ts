@@ -50,6 +50,7 @@ export class KitchenSinkComponent implements OnInit {
 
   public ngOnInit() {
     this.config = {
+      padless: true,
       hint: 'Hint text',
       buttons: [
         {
