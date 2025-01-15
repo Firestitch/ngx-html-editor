@@ -77,7 +77,7 @@ export class KitchenSinkComponent implements OnInit {
       initClick: () => {
         //event.preventDefault();
       },
-      placeholder: 'You Placeholder...',
+      placeholder: 'Placeholder...',
       label: 'Html Editor',
       image: {
         upload: (file: Blob) => {
