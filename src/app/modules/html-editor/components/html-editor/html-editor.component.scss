@@ -77,10 +77,15 @@
     .fr-toolbar-open .fr-more-toolbar {
       display: block;
     }
-    .fr-more-toolbar {
-      display: none;
+
+    .fr-more-toolbar{ 
+      flex-wrap: wrap !important;
+      height: auto !important;
+
+      &:not(.fr-expanded) {
+        display: none !important;
+      }
     }
-    ///
 
     .fr-toolbar.fr-top {
       position: sticky;
