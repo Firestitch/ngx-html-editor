@@ -86,13 +86,6 @@ fs-html-renderer {
   li {
     margin: 5px 0;
     margin-left: 40px;
-
-    &::before {
-      content: ' ';
-      position: absolute;
-      display: list-item;
-      white-space: nowrap;
-    }
   }
 
   ol, ul {

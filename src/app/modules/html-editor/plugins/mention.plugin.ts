@@ -1,11 +1,11 @@
+import { guid } from '@firestitch/common';
+
 import { debounce } from 'lodash-es';
 import Tribute, { TributeItem } from 'tributejs';
 
-import { MentionPluginConfig } from './configs/mention-plugin.config';
-
 import { Plugin } from '../classes/plugin';
 
-import { guid } from '@firestitch/common';
+import { MentionPluginConfig } from './configs/mention-plugin.config';
 
 
 export class MentionPlugin extends Plugin {
@@ -15,7 +15,7 @@ export class MentionPlugin extends Plugin {
   private _tribute;
   private _guid = guid();
 
-  public constructor(public config: MentionPluginConfig) {
+  constructor(public config: MentionPluginConfig) {
     super();
     this.config = {
       ...config,
@@ -27,43 +27,43 @@ export class MentionPlugin extends Plugin {
           click: (editor) => {
             this._closeAll();
             this._tribute.showMenuForCollection(editor.el);
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
 
     this._tribute = new Tribute({
-        values: debounce(this._loadValues.bind(this), 200),
-        searchOpts: {
-          pre: '',
-          post: '',
-          skip: true
-        },
-        containerClass: `fs-html-editor-mention-container ${this.config.containerClass || ''}`,
-        itemClass: `fs-html-editor-mention-menu-item ${this.config.menuItemClass || ''}`,
-        trigger: this.config.trigger,
-        allowSpaces: true,
-        menuItemTemplate: (item: TributeItem<any>) => {
-          return this.config.menuItemTemplate(item.original);
-        },
-        selectTemplate: (item: TributeItem<any>) => {
-          const template = this.config.selectedTemplate(item.original);
+      values: debounce(this._loadValues.bind(this), 200),
+      searchOpts: {
+        pre: '',
+        post: '',
+        skip: true,
+      },
+      containerClass: `fs-html-editor-mention-container ${this.config.containerClass || ''}`,
+      itemClass: `fs-html-editor-mention-menu-item ${this.config.menuItemClass || ''}`,
+      trigger: this.config.trigger,
+      allowSpaces: true,
+      menuItemTemplate: (item: TributeItem<any>) => {
+        return this.config.menuItemTemplate(item.original);
+      },
+      selectTemplate: (item: TributeItem<any>) => {
+        const template = this.config.selectedTemplate(item.original);
 
-          let p = document.createElement('p');
-          p.innerHTML = template;
+        const p = document.createElement('p');
+        p.innerHTML = template;
 
-          let node = p.firstElementChild;
-          if (!node) {
-            node = document.createElement('span');
-            node.innerHTML = template;
-          }
+        let node = p.firstElementChild;
+        if (!node) {
+          node = document.createElement('span');
+          node.innerHTML = template;
+        }
 
-          node.setAttribute('contenteditable', 'false');
-          node.classList.add('fr-deletable');
+        node.setAttribute('contenteditable', 'false');
+        node.classList.add('fr-deletable');
 
-          return node.outerHTML;
-        },
-      });
+        return node.outerHTML;
+      },
+    });
 
     MentionPlugin._tributes.push(this._tribute);
   }
@@ -77,7 +77,7 @@ export class MentionPlugin extends Plugin {
     }, true);
 
     
-    this.editor.el.addEventListener("tribute-replaced", this.selected);
+    this.editor.el.addEventListener('tribute-replaced', this.selected);
   }
 
   public selected = (event) => {
@@ -86,10 +86,10 @@ export class MentionPlugin extends Plugin {
         this.config.selected(event.detail.item.original);
       }
     }
-  }
+  };
 
   public destroy() {
-    this.editor.el.removeEventListener("tribute-replaced", this.selected);
+    this.editor.el.removeEventListener('tribute-replaced', this.selected);
   }
 
   private _closeAll() {
@@ -102,9 +102,10 @@ export class MentionPlugin extends Plugin {
 
   private _loadValues(keyword, cb) {
     MentionPlugin._currentGuid = this._guid;
+
     return this.config.fetch(keyword)
-              .subscribe((data) => {
-                cb(data);
-              });
+      .subscribe((data) => {
+        cb(data);
+      });
   }
 }

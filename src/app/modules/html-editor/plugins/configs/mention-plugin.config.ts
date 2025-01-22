@@ -1,5 +1,6 @@
-import { PluginConfig } from './../../interfaces/plugin-config';
 import { Observable } from 'rxjs';
+
+import { PluginConfig } from './../../interfaces/plugin-config';
 
 export interface MentionPluginConfig extends PluginConfig {
   trigger?: string;

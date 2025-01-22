@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { FsApiModule } from '@firestitch/api';
 
+import { MatDialogModule } from '@angular/material/dialog';
+
+import { FsApiModule } from '@firestitch/api';
 import { FsDialogModule } from '@firestitch/dialog';
 import { FsExampleModule } from '@firestitch/example';
 import { FsFormModule } from '@firestitch/form';
@@ -14,6 +14,8 @@ import { FsHtmlEditorModule, FsHtmlRendererModule } from '@firestitch/html-edito
 import { FsLabelModule } from '@firestitch/label';
 import { FsMessageModule } from '@firestitch/message';
 import { FsScrollbarModule } from '@firestitch/scrollbar';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import {
@@ -57,7 +59,7 @@ const routes: Routes = [
     ExamplesComponent,
     KitchenSinkComponent,
     DialogComponent,
-    KitchenSinkConfigureComponent
+    KitchenSinkConfigureComponent,
   ],
 })
 export class PlaygroundModule {
