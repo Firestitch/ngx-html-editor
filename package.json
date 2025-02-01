@@ -75,7 +75,7 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "froala-editor": "^4.2.1",
+    "froala-editor": "^4.4.0",
     "tributejs": "^5.1.3"
   }
 }
