@@ -114,6 +114,10 @@ export class KitchenSinkComponent implements OnInit {
             return `<span data-mention="account" data-account-id="${account.id}" data-ref="${guid('xxxxxxxx')}">@${account.name}</span>`;
           },
           fetch: (keyword) => {
+            if(keyword.length > 5) {
+              return of([]);
+            }
+
             return this._api.get(`${this.apiUrl}dummy`, { keyword })
               .pipe(
                 map((response) => response.objects),

@@ -520,10 +520,8 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       this.disable();
     }
 
-    if (config.froalaConfig.events) {
-      if (config.froalaConfig.events.initialized) {
-        config.froalaConfig.events.initialized();
-      }
+    if (config.initialized) {
+      config.initialized();
     }
 
     this._editor.events.on('focus', () => {
