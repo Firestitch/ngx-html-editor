@@ -412,6 +412,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
         linkAlwaysBlank: true,
         tabSpaces: 2,
         toolbarSticky: false,
+        listAdvancedTypes: false,
         typingTimer: 250,
         tooltips: false,
         wordPasteModal: false,

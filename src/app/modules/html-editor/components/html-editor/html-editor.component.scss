@@ -78,7 +78,7 @@
       display: block;
     }
 
-    .fr-more-toolbar{ 
+    .fr-more-toolbar { 
       flex-wrap: wrap !important;
       height: auto !important;
 
@@ -155,9 +155,44 @@
     }
 
     .fr-view {
-      ol, ul {
-        list-style-position: unset;
+
+      li {
+        display: block;
+        
+        &::before {
+          margin-right: 5px;
+          margin-left: -40px;
+          width: 40px;
+          display: inline-block;
+          text-align: right;
+        }
       }
+
+      ol > li {
+        counter-increment: listNumbering;
+        list-style: none;
+        
+        &:before {
+          content: counter(listNumbering) '.';
+        }
+
+        &:first-child {
+          counter-reset: listNumbering;
+        }
+      }
+
+      ul > li {
+        list-style: none;
+        
+        &:before {
+          content: '•';
+        }
+      }
+
+
+      // ol, ul {
+      //   list-style-position: unset;
+      // }
     }
   }
 
@@ -181,9 +216,7 @@
   .fr-video-by-url-layer .fr-checkbox-line {
     display: none;
   }
-}
 
-::ng-deep {
   .fs-html-editor-mention-container {
     position: absolute;
     top: 0;
