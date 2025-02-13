@@ -158,6 +158,11 @@
     .fr-view {
       word-break: break-word;
 
+      // SP-T4274 - Unwanted scrollbar is shown in the task drawer
+      .fr-element img {
+        box-sizing: border-box;
+      }
+
       li {
         display: block;
         
@@ -190,11 +195,6 @@
           content: '•';
         }
       }
-
-
-      // ol, ul {
-      //   list-style-position: unset;
-      // }
     }
   }
 
