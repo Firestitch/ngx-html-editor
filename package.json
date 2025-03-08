@@ -2,7 +2,7 @@
   "name": "@firestitch/html-editor",
   "title": "HTML Editor",
   "description": "@firestitch/html-editor",
-  "version": "18.0.26",
+  "version": "18.0.27",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-html-editor"
@@ -75,7 +75,7 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "froala-editor": "^4.4.0",
+    "froala-editor": "4.4.0",
     "tributejs": "^5.1.3"
   }
 }
