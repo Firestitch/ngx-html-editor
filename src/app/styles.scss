@@ -62,6 +62,10 @@ fs-html-renderer {
       background: #ececec;
       text-align: center;
     }
+
+    td.fr-highlighted {
+      border: 1px double red;
+    }
   }
 
   blockquote {

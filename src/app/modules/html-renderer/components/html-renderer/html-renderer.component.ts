@@ -1,5 +1,7 @@
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ChangeDetectionStrategy, Component, Input, ChangeDetectorRef } from '@angular/core';
+
+import { FsFroalaLoaderService } from '../../../html-editor/services/froala-loader.service';
 
 
 @Component({
@@ -17,9 +19,11 @@ export class FsHtmlRendererComponent {
 
   public trustedHtml: SafeHtml;
 
-  public constructor(
+  constructor(
     private sanitized: DomSanitizer,
     private _cdRef: ChangeDetectorRef,
+    // Initial service call to load Froala css
+    private _fr: FsFroalaLoaderService,
   ) { }
 
 }
