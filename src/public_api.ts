@@ -22,5 +22,6 @@ export { MentionPlugin } from './app/modules/html-editor/plugins/mention.plugin'
 export { RealtimePlugin } from './app/modules/html-editor/plugins/realtime.plugin';
 export { ScreenRecordPlugin } from './app/modules/html-editor/plugins/screen-record.plugin';
 
+export { Plugin } from './app/modules/html-editor/classes/plugin';
 export { FsHtmlEditorContainerDirective } from './app/modules/html-editor/directives';
 
