@@ -1,6 +1,6 @@
 export const RichButtons = [
-  'table',
-  'image',
-  'link',
-  'video',
+  'insertTable',
+  'insertImage',
+  'insertLink',
+  'insertVideo',
 ];

@@ -52,27 +52,6 @@ export class KitchenSinkComponent implements OnInit {
     this.config = {
       padless: true,
       hint: 'Hint text',
-      buttons: [
-        {
-          name: 'pageBreak',
-          svgKey: 'pageBreaker',
-          title: 'Insert Page Break',
-          click: (editor) => {
-            editor.html.insert('<div contenteditable="false" class="page-break"></div>', true);
-          },
-        },
-      ],
-      // froalaConfig: {
-      //   toolbarButtons: merge(
-      //     ToolbarButtons, 
-      //     { 
-      //       moreRich: {
-      //         buttons: [ 
-      //           'pageBreak',
-      //         ],
-      //       },
-      //     }),
-      // },
       disabled: false,
       initOnClick: true,
       initClick: () => {
@@ -149,15 +128,33 @@ export class KitchenSinkComponent implements OnInit {
           },
         }),
       ],
-      prependToolbarTextButtons: [
-        {
-          name: 'send',
-          html: '<div class="send-test-button"><mat-icon class="material-icons">send</mat-icon>Send Test</div>',
-          click: () => {
-            console.log('Send clicked');
-          },
+      toolbars: {
+        text: {
+          prepend: [
+            {
+              name: 'send',
+              html: '<div class="send-test-button"><mat-icon class="material-icons">send</mat-icon>Send Test</div>',
+              click: () => {
+                console.log('Send clicked');
+              },
+            },
+          ],
         },
-      ],
+        rich: {
+          prepend: [
+            'relateMention',
+            'accountMention',
+            {
+              name: 'pageBreak',
+              html: '<div class="send-test-button"><mat-icon class="material-icons">settings</mat-icon></div>',
+              title: 'Insert Page Break',
+              click: (editor) => {
+                editor.html.insert('<div contenteditable="false" class="page-break"></div>', true);
+              },
+            },
+          ],
+        },
+      },
     };
   }
 

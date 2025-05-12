@@ -28,9 +28,19 @@ export interface FsHtmlEditorConfig {
   froalaConfig?:  Partial<FroalaEditor.FroalaOptions>;
   assetsJSPath?: string;
   assetsCSSPath?: string;
-  prependToolbarTextButtons?: ToolbarButton[],
   buttons?: ToolbarButton[];
   initialized?: () => void;
+  toolbars?: {
+    text?: {
+      prepend?: (string | ToolbarButton)[];
+    },
+    paragraph?: {
+      prepend?: (string | ToolbarButton)[];
+    },
+    rich?: {
+      prepend?: (string | ToolbarButton)[];
+    },
+  }
 }
 
 export interface FsHtmlEditorUploadConfig {

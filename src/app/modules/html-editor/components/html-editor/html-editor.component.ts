@@ -34,10 +34,10 @@ import {
   distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap,
 } from 'rxjs/operators';
 
-import FroalaEditor, { FroalaOptions } from 'froala-editor';
+import { FroalaOptions } from 'froala-editor';
 import { merge } from 'lodash-es';
 
-import { ToolbarButtons, ToolbarXsButtons } from '../../consts';
+import { ParagraphButtons, RichButtons, ToolbarButtons, ToolbarXsButtons } from '../../consts';
 import { FsHtmlEditorContainerDirective } from '../../directives';
 import { FroalaPlugin } from '../../enums/default-plugin.enum';
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
@@ -165,7 +165,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
     const froalaOptions = this._createOptions();
     
-    this._editor = new FroalaEditor(this.el, froalaOptions, () => {
+    this._editor = new this._fr.FroalaEditor(this.el, froalaOptions, () => {
       this._froalaReady$.next({ config, options });
     });
   }
@@ -321,10 +321,10 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
         */
 
         if (button.svgKey) {
-          FroalaEditor.DefineIcon(button.name, { SVG_KEY: button.svgKey });
+          this._fr.FroalaEditor.DefineIcon(button.name, { SVG_KEY: button.svgKey });
         }
 
-        FroalaEditor.RegisterCommand(button.name, {
+        this._fr.FroalaEditor.RegisterCommand(button.name, {
           title: button.title,
           focus: button.focus ?? true,
           undo: button.undo ?? true,
@@ -336,14 +336,21 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       });
   }
 
-  private _initPlugins(config: FsHtmlEditorConfig) {
-    (config.prependToolbarTextButtons || [])
+  private _initToolbarButtons(buttons) {
+    (buttons || [])
+      .filter((button) => typeof button !== 'string')
       .forEach((button: ToolbarButton) => {
         this._defineButton(button);
       });
+  }
+
+  private _initPlugins(config: FsHtmlEditorConfig) {
+    this._initToolbarButtons(config.toolbars?.text?.prepend);
+    this._initToolbarButtons(config.toolbars?.paragraph?.prepend);
+    this._initToolbarButtons(config.toolbars?.rich?.prepend);
 
     (config.plugins || []).forEach((plugin: Plugin) => {
-      FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
+      this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
         plugin.editor = editor;
         plugin.initialize();
 
@@ -359,22 +366,22 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   private _defineButton(button: ToolbarButton) {
     if(button.html) {
-      FroalaEditor
+      this._fr.FroalaEditor
         .DefineIconTemplate(`${button.name}-template`, button.html);
-      FroalaEditor
+      this._fr.FroalaEditor
         .DefineIcon(button.name, { 
           NAME: `${button.name}-icon`,
           template: `${button.name}-template`, 
         });
   
     } else { 
-      FroalaEditor.DefineIcon(button.name, {
+      this._fr.FroalaEditor.DefineIcon(button.name, {
         NAME: button.name,
         PATH: button.svgPath,
       });
     } 
 
-    FroalaEditor.RegisterCommand(button.name, {
+    this._fr.FroalaEditor.RegisterCommand(button.name, {
       icon: button.name,
       title: button.tooltip,
       undo: button.undo,
@@ -395,16 +402,36 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   }
 
+  private _buttonsToNames(buttons) {
+    return (buttons || [])
+      .map((item) => {
+        return typeof item === 'string' ? item : item.name;
+      });
+  }
+
   private _createOptions() {
     const config = this._createConfig();
 
-    const buttons = [
-      ...(config.prependToolbarTextButtons || [])
-        .map((item) => item.name),
+    const moreText = [
+      ...this._buttonsToNames(config.toolbars?.text?.prepend),
       ...TextButtons,
     ];
+    
+    const moreParagraph = [
+      ...this._buttonsToNames(config.toolbars?.paragraph?.prepend),
+      ...ParagraphButtons,
+    ];
+    
+    const moreRich = [
+      ...this._buttonsToNames(config.toolbars?.rich?.prepend),
+      ...RichButtons,
+    ];
 
-    const toolbarButtons = merge(ToolbarButtons, { moreText: { buttons } } );
+    const toolbarButtons = merge(ToolbarButtons, { 
+      moreText: { buttons: moreText },
+      moreParagraph: { buttons: moreParagraph },
+      moreRich: { buttons: moreRich },
+    });
 
     const froalaOptions: Partial<FroalaOptions> = {
       shortcutsEnabled: ['show', 'bold', 'italic', 'underline', 'indent', 'outdent', 'undo', 'redo', 'insertImage', 'createLink'],
