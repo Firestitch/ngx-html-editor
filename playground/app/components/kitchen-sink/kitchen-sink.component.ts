@@ -128,7 +128,7 @@ export class KitchenSinkComponent implements OnInit {
           },
         }),
       ],
-      toolbars: {
+      toolbar: {
         text: {
           prepend: [
             {

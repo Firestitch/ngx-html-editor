@@ -39,7 +39,6 @@ import { merge } from 'lodash-es';
 
 import { ParagraphButtons, RichButtons, ToolbarButtons, ToolbarXsButtons } from '../../consts';
 import { FsHtmlEditorContainerDirective } from '../../directives';
-import { FroalaPlugin } from '../../enums/default-plugin.enum';
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { ToolbarButton } from '../../interfaces';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
@@ -345,23 +344,24 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   }
 
   private _initPlugins(config: FsHtmlEditorConfig) {
-    this._initToolbarButtons(config.toolbars?.text?.prepend);
-    this._initToolbarButtons(config.toolbars?.paragraph?.prepend);
-    this._initToolbarButtons(config.toolbars?.rich?.prepend);
+    this._initToolbarButtons(config.toolbar?.text?.prepend);
+    this._initToolbarButtons(config.toolbar?.paragraph?.prepend);
+    this._initToolbarButtons(config.toolbar?.rich?.prepend);
 
-    (config.plugins || []).forEach((plugin: Plugin) => {
-      this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
-        plugin.editor = editor;
-        plugin.initialize();
+    (config.plugins || [])
+      .forEach((plugin: Plugin) => {
+        this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
+          plugin.editor = editor;
+          plugin.initialize();
 
-        return plugin;
-      };
+          return plugin;
+        };
 
-      (plugin.config.buttons || [])
-        .forEach((button: ToolbarButton) => {
-          this._defineButton(button);
-        });
-    });
+        (plugin.config.buttons || [])
+          .forEach((button: ToolbarButton) => {
+            this._defineButton(button);
+          });
+      });
   }
 
   private _defineButton(button: ToolbarButton) {
@@ -413,17 +413,17 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     const config = this._createConfig();
 
     const moreText = [
-      ...this._buttonsToNames(config.toolbars?.text?.prepend),
+      ...this._buttonsToNames(config.toolbar?.text?.prepend),
       ...TextButtons,
     ];
     
     const moreParagraph = [
-      ...this._buttonsToNames(config.toolbars?.paragraph?.prepend),
+      ...this._buttonsToNames(config.toolbar?.paragraph?.prepend),
       ...ParagraphButtons,
     ];
     
     const moreRich = [
-      ...this._buttonsToNames(config.toolbars?.rich?.prepend),
+      ...this._buttonsToNames(config.toolbar?.rich?.prepend),
       ...RichButtons,
     ];
 
@@ -484,20 +484,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       {},
       froalaOptions,
       config.froalaConfig,
-      { 
-        pluginsEnabled: [
-          FroalaPlugin.Align,
-          FroalaPlugin.Colors,
-          FroalaPlugin.Image,
-          FroalaPlugin.Link,
-          FroalaPlugin.Lists,
-          FroalaPlugin.ParagraphFormat,
-          FroalaPlugin.Quote,
-          FroalaPlugin.Table,
-          FroalaPlugin.Url,
-          FroalaPlugin.Video,
-        ], 
-      },
     );
 
     return options;

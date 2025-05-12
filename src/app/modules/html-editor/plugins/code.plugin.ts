@@ -5,7 +5,7 @@ import { PluginConfig } from './../interfaces/plugin-config';
 
 export class CodePlugin extends Plugin {
 
-  public constructor(public config: PluginConfig = { name: 'code' }) {
+  constructor(public config: PluginConfig = { name: 'code' }) {
     super();
     this.config = {
       ...config,
@@ -20,11 +20,11 @@ export class CodePlugin extends Plugin {
             if (codeEl) {
               codeEl.classList.remove('code');
             } else {
-              editor.html.insert('<p class="code">' + editor.selection.get().toString().replace(/\n{1,}/g,'<br>') + '</p>');
+              editor.html.insert(`<p class="code">${  editor.selection.get().toString().replace(/\n{1,}/g,'<br>')  }</p>`);
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   }
 
@@ -52,6 +52,7 @@ export class CodePlugin extends Plugin {
           }
 
           this.editor.html.insert(br);
+
           return false;
         }
       }

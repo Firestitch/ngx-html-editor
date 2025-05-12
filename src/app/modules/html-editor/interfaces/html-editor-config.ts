@@ -30,7 +30,7 @@ export interface FsHtmlEditorConfig {
   assetsCSSPath?: string;
   buttons?: ToolbarButton[];
   initialized?: () => void;
-  toolbars?: {
+  toolbar?: {
     text?: {
       prepend?: (string | ToolbarButton)[];
     },
