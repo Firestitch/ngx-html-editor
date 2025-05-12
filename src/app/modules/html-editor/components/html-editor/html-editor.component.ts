@@ -427,11 +427,14 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       ...RichButtons,
     ];
 
-    const toolbarButtons = merge(ToolbarButtons, { 
-      moreText: { buttons: moreText },
-      moreParagraph: { buttons: moreParagraph },
-      moreRich: { buttons: moreRich },
-    });
+    const toolbarButtons = merge(
+      {},
+      ToolbarButtons, 
+      { 
+        moreText: { buttons: moreText },
+        moreParagraph: { buttons: moreParagraph },
+        moreRich: { buttons: moreRich },
+      });
 
     const froalaOptions: Partial<FroalaOptions> = {
       shortcutsEnabled: ['show', 'bold', 'italic', 'underline', 'indent', 'outdent', 'undo', 'redo', 'insertImage', 'createLink'],
