@@ -5,5 +5,5 @@ export const ParagraphButtons = [
   'checklist',
   'indent',
   'outdent',
-  'lineHeight'
+  'lineHeight',
 ];

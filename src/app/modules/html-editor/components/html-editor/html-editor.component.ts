@@ -34,7 +34,7 @@ import {
   distinctUntilChanged, filter, map, skip, startWith, switchMap, takeUntil, tap,
 } from 'rxjs/operators';
 
-import * as FroalaEditor from 'froala-editor';
+import FroalaEditor, { FroalaOptions } from 'froala-editor';
 import { merge } from 'lodash-es';
 
 import { FsHtmlEditorContainerDirective } from '../../directives';
@@ -162,7 +162,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     const config = this._createConfig();
     this._initPlugins(config);
     this._initButtons(config);
-    this._editor = new this._fr.FroalaEditor(this.el, this._createOptions(), () => {
+    this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
       this._froalaReady$.next({ config, options });
     });
   }
@@ -318,10 +318,10 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
         */
 
         if (button.svgKey) {
-          this._fr.FroalaEditor.DefineIcon(button.name, { SVG_KEY: button.svgKey });
+          FroalaEditor.DefineIcon(button.name, { SVG_KEY: button.svgKey });
         }
 
-        this._fr.FroalaEditor.RegisterCommand(button.name, {
+        FroalaEditor.RegisterCommand(button.name, {
           title: button.title,
           focus: button.focus ?? true,
           undo: button.undo ?? true,
@@ -340,7 +340,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       });
 
     (config.plugins || []).forEach((plugin: Plugin) => {
-      this._fr.FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
+      FroalaEditor.PLUGINS[plugin.config.name] = function (editor) {
         plugin.editor = editor;
         plugin.initialize();
 
@@ -356,22 +356,22 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   private _defineButton(button: ToolbarButton) {
     if(button.html) {
-      this._fr.FroalaEditor
+      FroalaEditor
         .DefineIconTemplate(`${button.name}-template`, button.html);
-      this._fr.FroalaEditor
+      FroalaEditor
         .DefineIcon(button.name, { 
           NAME: `${button.name}-icon`,
           template: `${button.name}-template`, 
         });
   
     } else { 
-      this._fr.FroalaEditor.DefineIcon(button.name, {
+      FroalaEditor.DefineIcon(button.name, {
         NAME: button.name,
         PATH: button.svgPath,
       });
     } 
 
-    this._fr.FroalaEditor.RegisterCommand(button.name, {
+    FroalaEditor.RegisterCommand(button.name, {
       icon: button.name,
       title: button.tooltip,
       undo: button.undo,
@@ -474,7 +474,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
             buttonsVisible: 3,
           },
         },
-      } as Partial<FroalaEditor.FroalaOptions>,
+      } as Partial<FroalaOptions>,
       config.froalaConfig,
     );
   }

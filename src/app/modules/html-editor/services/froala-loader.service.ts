@@ -6,6 +6,7 @@ import { fsSourceLoader } from '@firestitch/common';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { concatMap, map, shareReplay, tap } from 'rxjs/operators';
 
+
 import { FS_HTML_EDITOR_CONFIG } from '../injects/config.inject';
 import { FsHtmlEditorConfig } from '../interfaces/html-editor-config';
 
@@ -14,8 +15,6 @@ import { FsHtmlEditorConfig } from '../interfaces/html-editor-config';
   providedIn: 'root',
 })
 export class FsFroalaLoaderService {
-
-  private _froalaEditor: any;
 
   private _froalaLoaded = new BehaviorSubject(false);
   private _froalaPluginsLoaded = new BehaviorSubject(false);
@@ -44,10 +43,6 @@ export class FsFroalaLoaderService {
     return this._loaded$;
   }
 
-  public get FroalaEditor(): any {
-    return this._froalaEditor;
-  }
-
   private _load() {
     const baseDir = '/assets/froala/';
     this._sourceLoader.registerResources({
@@ -74,7 +69,6 @@ export class FsFroalaLoaderService {
     this._sourceLoader.loadResource('froala')
       .pipe(
         tap(() => {
-          this._froalaEditor = (window as any).FroalaEditor;
           this._froalaDone();
         }),
         concatMap(() => {
