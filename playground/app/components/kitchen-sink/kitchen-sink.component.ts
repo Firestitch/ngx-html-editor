@@ -11,7 +11,6 @@ import {
   FsHtmlEditorConfig,
   MentionPlugin,
   RealtimePlugin,
-  RichButtons,
   ScreenRecordPlugin,
 } from '@firestitch/html-editor';
 import { FsMessage } from '@firestitch/message';
@@ -63,16 +62,17 @@ export class KitchenSinkComponent implements OnInit {
           },
         },
       ],
-      froalaConfig: {
-        toolbarButtons: {
-          moreRich: {
-            buttons: [ 
-              'pageBreak',
-              ...RichButtons,
-            ],
-          },
-        },
-      },
+      // froalaConfig: {
+      //   toolbarButtons: merge(
+      //     ToolbarButtons, 
+      //     { 
+      //       moreRich: {
+      //         buttons: [ 
+      //           'pageBreak',
+      //         ],
+      //       },
+      //     }),
+      // },
       disabled: false,
       initOnClick: true,
       initClick: () => {

@@ -6,7 +6,6 @@ import { fsSourceLoader } from '@firestitch/common';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { concatMap, map, shareReplay, tap } from 'rxjs/operators';
 
-
 import { FS_HTML_EDITOR_CONFIG } from '../injects/config.inject';
 import { FsHtmlEditorConfig } from '../interfaces/html-editor-config';
 

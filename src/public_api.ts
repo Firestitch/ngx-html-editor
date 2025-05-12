@@ -6,9 +6,7 @@ export { FsHtmlRendererComponent } from './app/modules/html-renderer/components/
 
 export { FS_HTML_EDITOR_CONFIG } from './app/modules/html-editor/injects/config.inject';
 
-export { ParagraphButtons } from './app/modules/html-editor/consts/paragraph-buttons.const';
-export { RichButtons } from './app/modules/html-editor/consts/rich-buttons.const';
-export { TextButtons } from './app/modules/html-editor/consts/text-buttons.const';
+export * from './app/modules/html-editor/consts';
 
 export { FsHtmlEditorConfig } from './app/modules/html-editor/interfaces/html-editor-config';
 export { PluginConfig } from './app/modules/html-editor/interfaces/plugin-config';

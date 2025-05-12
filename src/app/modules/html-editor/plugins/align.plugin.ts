@@ -1,9 +1,10 @@
-import { PluginConfig } from './../interfaces/plugin-config';
 import { Plugin } from '../classes/plugin';
+
+import { PluginConfig } from './../interfaces/plugin-config';
 
 export class AlignPlugin extends Plugin {
 
-  public constructor(public config: PluginConfig = { name: 'align' }) {
+  constructor(public config: PluginConfig = { name: 'align' }) {
     super();
   }
 

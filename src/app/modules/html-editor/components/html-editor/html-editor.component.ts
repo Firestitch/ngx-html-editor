@@ -37,15 +37,15 @@ import {
 import FroalaEditor, { FroalaOptions } from 'froala-editor';
 import { merge } from 'lodash-es';
 
+import { ToolbarButtons, ToolbarXsButtons } from '../../consts';
 import { FsHtmlEditorContainerDirective } from '../../directives';
+import { FroalaPlugin } from '../../enums/default-plugin.enum';
 import { FS_HTML_EDITOR_CONFIG } from '../../injects/config.inject';
 import { ToolbarButton } from '../../interfaces';
 import { FsHtmlEditorConfig } from '../../interfaces/html-editor-config';
 import { FsFroalaLoaderService } from '../../services/froala-loader.service';
 
 import { Plugin } from './../../classes/plugin';
-import { ParagraphButtons } from './../../consts/paragraph-buttons.const';
-import { RichButtons } from './../../consts/rich-buttons.const';
 import { TextButtons } from './../../consts/text-buttons.const';
 
 
@@ -162,7 +162,10 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     const config = this._createConfig();
     this._initPlugins(config);
     this._initButtons(config);
-    this._editor = new FroalaEditor(this.el, this._createOptions(), () => {
+
+    const froalaOptions = this._createOptions();
+    
+    this._editor = new FroalaEditor(this.el, froalaOptions, () => {
       this._froalaReady$.next({ config, options });
     });
   }
@@ -395,88 +398,82 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   private _createOptions() {
     const config = this._createConfig();
 
-    const textButtons = [
+    const buttons = [
       ...(config.prependToolbarTextButtons || [])
         .map((item) => item.name),
       ...TextButtons,
     ];
 
-    return merge(
+    const toolbarButtons = merge(ToolbarButtons, { moreText: { buttons } } );
+
+    const froalaOptions: Partial<FroalaOptions> = {
+      shortcutsEnabled: ['show', 'bold', 'italic', 'underline', 'indent', 'outdent', 'undo', 'redo', 'insertImage', 'createLink'],
+      key: config.activationKey,
+      placeholderText: config.placeholder,
+      linkAlwaysBlank: true,
+      tabSpaces: 2,
+      toolbarSticky: false,
+      listAdvancedTypes: false,
+      typingTimer: 250,
+      tooltips: false,
+      wordPasteModal: false,
+      imageDefaultWidth: 0,
+      paragraphStyles: {
+        class1: 'Class 1',
+        class2: 'Class 2',
+      },
+      imageDefaultAlign: 'left',
+      fontFamilyDefaultSelection: 'Font Family',
+      quickInsertEnabled: false,
+      scrollableContainer: `#${this.containerID}`,
+      paragraphDefaultSelection: 'Format',
+      videoUpload: false,
+      imagePaste: !!config.image?.upload,
+      imageUpload: !!config.image?.upload,
+      paragraphFormat: {
+        N: 'Normal',
+        H1: 'Heading 1',
+        H2: 'Heading 2',
+        H3: 'Heading 3',
+        H4: 'Heading 4',
+        BLOCKQUOTE: 'Quote',
+      },
+      lineHeights: {
+        Default: '',
+        0.5: '0.5',
+        Single: '1',
+        1.15: '1.15',
+        1.5: '1.5',
+        Double: '2',
+      },
+      paragraphFormatSelection: true,
+      toolbarButtons,
+      toolbarButtonsXS: ToolbarXsButtons,
+    };
+
+    const options = merge(
       // For some reason editor store somewhere pointer on default config object and dublicate options each time on init
       // Extra merge level fixed this problem and allow to init config properly without legacy data
       {},
-      {
-        shortcutsEnabled: ['show', 'bold', 'italic', 'underline', 'indent', 'outdent', 'undo', 'redo', 'insertImage', 'createLink'],
-        key: config.activationKey,
-        placeholderText: config.placeholder,
-        linkAlwaysBlank: true,
-        tabSpaces: 2,
-        toolbarSticky: false,
-        listAdvancedTypes: false,
-        typingTimer: 250,
-        tooltips: false,
-        wordPasteModal: false,
-        imageDefaultWidth: 0,
-        paragraphStyles: {
-          class1: 'Class 1',
-          class2: 'Class 2',
-        },
-        imageDefaultAlign: 'left',
-        fontFamilyDefaultSelection: 'Font Family',
-        quickInsertEnabled: false,
-        scrollableContainer: `#${this.containerID}`,
-        paragraphDefaultSelection: 'Format',
-        videoUpload: false,
-        imagePaste: !!config.image?.upload,
-        imageUpload: !!config.image?.upload,
-        paragraphFormat: {
-          N: 'Normal',
-          H1: 'Heading 1',
-          H2: 'Heading 2',
-          H3: 'Heading 3',
-          H4: 'Heading 4',
-          BLOCKQUOTE: 'Quote',
-        },
-        lineHeights: {
-          Default: '',
-          0.5: '0.5',
-          Single: '1',
-          1.15: '1.15',
-          1.5: '1.5',
-          Double: '2',
-        },
-        paragraphFormatSelection: true,
-        toolbarButtonsXS: {
-          moreText: {
-            buttons: textButtons,
-            buttonsVisible: 1,
-          },
-          moreParagraph: {
-            buttons: ParagraphButtons,
-            buttonsVisible: 2,
-          },
-          moreRich: {
-            buttons: RichButtons,
-            buttonsVisible: 0,
-          },
-        },
-        toolbarButtons: {
-          moreText: {
-            buttons: textButtons,
-            buttonsVisible: 3,
-          },
-          moreParagraph: {
-            buttons: ParagraphButtons,
-            buttonsVisible: 5,
-          },
-          moreRich: {
-            buttons: RichButtons,
-            buttonsVisible: 3,
-          },
-        },
-      } as Partial<FroalaOptions>,
+      froalaOptions,
       config.froalaConfig,
+      { 
+        pluginsEnabled: [
+          FroalaPlugin.Align,
+          FroalaPlugin.Colors,
+          FroalaPlugin.Image,
+          FroalaPlugin.Link,
+          FroalaPlugin.Lists,
+          FroalaPlugin.ParagraphFormat,
+          FroalaPlugin.Quote,
+          FroalaPlugin.Table,
+          FroalaPlugin.Url,
+          FroalaPlugin.Video,
+        ], 
+      },
     );
+
+    return options;
   }
 
   private _listenLazyInit() {
