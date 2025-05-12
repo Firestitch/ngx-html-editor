@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 
-import * as FroalaEditor from 'froala-editor';
+import { FroalaOptions } from 'froala-editor';
 
 import { Plugin } from '../classes/plugin';
 import { FroalaPlugin } from '../enums/default-plugin.enum';
@@ -25,7 +25,7 @@ export interface FsHtmlEditorConfig {
   plugins?: Plugin[];
   padless?: boolean;
   froalaPlugins?: FroalaPlugin[];
-  froalaConfig?:  Partial<FroalaEditor.FroalaOptions>;
+  froalaConfig?:  Partial<FroalaOptions>;
   assetsJSPath?: string;
   assetsCSSPath?: string;
   buttons?: ToolbarButton[];
