@@ -1,9 +1,14 @@
 @use '@angular/material' as mat;
 
 @mixin fs-html-editor($theme) {
- 
+
 }
 
+.fs-html-editor-in-dialog {
+  [mat-dialog-content] {
+    min-height: 390px;
+  }
+}
 
 fs-html-editor {
   position: relative;
