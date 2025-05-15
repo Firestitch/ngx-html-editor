@@ -9,7 +9,7 @@
       }
     }
   }
-  
+
   ::ng-deep {
     fs-label-field {
       &:not(.initialized) {
@@ -62,7 +62,7 @@
         color: inherit;
         font-size: inherit;
         line-height: inherit;
-        min-height: auto;
+        min-height: 140px;
       }
     }
 
@@ -78,7 +78,7 @@
       display: block;
     }
 
-    .fr-more-toolbar { 
+    .fr-more-toolbar {
       flex-wrap: wrap !important;
       height: auto !important;
 
@@ -165,7 +165,7 @@
 
       li {
         display: block;
-        
+
         &::before {
           margin-right: 5px;
           margin-left: -40px;
@@ -178,7 +178,7 @@
       ol > li {
         counter-increment: listNumbering;
         list-style: none;
-        
+
         &:before {
           content: counter(listNumbering) '.';
         }
@@ -190,7 +190,7 @@
 
       ul > li {
         list-style: none;
-        
+
         &:before {
           content: '•';
         }
