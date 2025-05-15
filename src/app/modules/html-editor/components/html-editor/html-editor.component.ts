@@ -7,6 +7,7 @@ import {
   ElementRef,
   forwardRef,
   HostBinding,
+  inject,
   Inject,
   Input,
   OnDestroy,
@@ -24,6 +25,9 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
+
+import { MatDialogRef } from '@angular/material/dialog';
 
 import { guid } from '@firestitch/common';
 import { FileProcessor, FsFile, FsFileProcessConfig } from '@firestitch/file';
@@ -73,7 +77,7 @@ import { TextButtons } from './../../consts/text-buttons.const';
     },
   ],
 })
-export class FsHtmlEditorComponent 
+export class FsHtmlEditorComponent
 implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   @ContentChild(FsHtmlEditorContainerDirective, { read: TemplateRef })
@@ -96,12 +100,15 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   public onTouched: () => void;
   public onChange: (data: any) => void;
 
+  private _dialogRef: MatDialogRef<unknown> = inject(MatDialogRef, {optional: true});
+  private _documentRef: Document = inject(DOCUMENT)
+
   private _editor: any;
   private _html: string;
   private _initialize$ = new ReplaySubject();
-  private _froalaReady$ = new BehaviorSubject<{ 
-    config: FsHtmlEditorConfig, 
-    options: any 
+  private _froalaReady$ = new BehaviorSubject<{
+    config: FsHtmlEditorConfig,
+    options: any
   }>(null);
   private _destroy$ = new Subject();
 
@@ -163,7 +170,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     this._initButtons(config);
 
     const froalaOptions = this._createOptions();
-    
+
     this._editor = new this._fr.FroalaEditor(this.el, froalaOptions, () => {
       this._froalaReady$.next({ config, options });
     });
@@ -369,17 +376,17 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       this._fr.FroalaEditor
         .DefineIconTemplate(`${button.name}-template`, button.html);
       this._fr.FroalaEditor
-        .DefineIcon(button.name, { 
+        .DefineIcon(button.name, {
           NAME: `${button.name}-icon`,
-          template: `${button.name}-template`, 
+          template: `${button.name}-template`,
         });
-  
-    } else { 
+
+    } else {
       this._fr.FroalaEditor.DefineIcon(button.name, {
         NAME: button.name,
         PATH: button.svgPath,
       });
-    } 
+    }
 
     this._fr.FroalaEditor.RegisterCommand(button.name, {
       icon: button.name,
@@ -416,12 +423,12 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       ...this._buttonsToNames(config.toolbar?.text?.prepend),
       ...TextButtons,
     ];
-    
+
     const moreParagraph = [
       ...this._buttonsToNames(config.toolbar?.paragraph?.prepend),
       ...ParagraphButtons,
     ];
-    
+
     const moreRich = [
       ...this._buttonsToNames(config.toolbar?.rich?.prepend),
       ...RichButtons,
@@ -429,8 +436,8 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
     const toolbarButtons = merge(
       {},
-      ToolbarButtons, 
-      { 
+      ToolbarButtons,
+      {
         moreText: { buttons: moreText },
         moreParagraph: { buttons: moreParagraph },
         moreRich: { buttons: moreRich },
@@ -538,6 +545,10 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       config.initialized();
     }
 
+    if (this._dialogRef) {
+      this._setMinimalHeight();
+    }
+
     this._editor.events.on('focus', () => {
       this.classFocused = true;
       this._cdRef.markForCheck();
@@ -636,5 +647,12 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     if (this.config.autofocus && !this.config.initOnClick) {
       this.focus();
     }
+  }
+
+  private _setMinimalHeight(): void {
+    const matDialogContainer: HTMLElement = this._documentRef
+      .querySelector(`#${this._dialogRef.id}`);
+
+    matDialogContainer.classList.add('fs-html-editor-in-dialog');
   }
 }
