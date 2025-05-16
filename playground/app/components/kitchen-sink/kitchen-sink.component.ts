@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy, Component, ElementRef, OnInit, Renderer2, ViewChild,
 } from '@angular/core';
 
+import { MatDialog } from '@angular/material/dialog';
+
 import { FsApi } from '@firestitch/api';
 import { guid } from '@firestitch/common';
 import {
@@ -17,6 +19,8 @@ import { FsMessage } from '@firestitch/message';
 
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { DialogComponent } from '../dialog/dialog.component';
 
 
 @Component({
@@ -45,6 +49,7 @@ export class KitchenSinkComponent implements OnInit {
     private _message: FsMessage,
     private _api: FsApi,
     private _renderer: Renderer2,
+    private _dialog: MatDialog,
   ) {
   }
 
@@ -166,6 +171,10 @@ export class KitchenSinkComponent implements OnInit {
 
   public change(content) {
     console.log('Change', content);
+  }
+
+  public openInDialog() {
+    this._dialog.open(DialogComponent);
   }
 
   public clear = () => {

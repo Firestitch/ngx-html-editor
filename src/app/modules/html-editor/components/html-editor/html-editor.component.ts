@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -25,7 +26,6 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import { DOCUMENT } from '@angular/common';
 
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -100,8 +100,8 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
   public onTouched: () => void;
   public onChange: (data: any) => void;
 
-  private _dialogRef: MatDialogRef<unknown> = inject(MatDialogRef, {optional: true});
-  private _documentRef: Document = inject(DOCUMENT)
+  private _dialogRef: MatDialogRef<unknown> = inject(MatDialogRef, { optional: true });
+  private _documentRef: Document = inject(DOCUMENT);
 
   private _editor: any;
   private _html: string;
@@ -134,6 +134,10 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   public get froalaLoaded$(): Observable<boolean> {
     return this._fr.loaded$;
+  }
+
+  public get dialogRef(): MatDialogRef<unknown> {
+    return this._dialogRef;
   }
 
   public ngOnInit(): void {
@@ -448,6 +452,9 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       key: config.activationKey,
       placeholderText: config.placeholder,
       linkAlwaysBlank: true,
+      linkInsertButtons: [],
+      linkEditButtons: ['linkOpen', 'linkEdit', 'linkRemove'],  
+      linkMultipleStyles: false,
       tabSpaces: 2,
       toolbarSticky: false,
       listAdvancedTypes: false,
@@ -543,10 +550,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
     if (config.initialized) {
       config.initialized();
-    }
-
-    if (this._dialogRef) {
-      this._setMinimalHeight();
     }
 
     this._editor.events.on('focus', () => {
@@ -647,12 +650,5 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     if (this.config.autofocus && !this.config.initOnClick) {
       this.focus();
     }
-  }
-
-  private _setMinimalHeight(): void {
-    const matDialogContainer: HTMLElement = this._documentRef
-      .querySelector(`#${this._dialogRef.id}`);
-
-    matDialogContainer.classList.add('fs-html-editor-in-dialog');
   }
 }

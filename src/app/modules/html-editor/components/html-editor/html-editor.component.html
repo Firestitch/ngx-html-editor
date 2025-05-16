@@ -4,10 +4,9 @@
     [showOutline]="initialized"
     [disabled]="disabled"
     [padless]="config.padless"
-    [ngClass]="{
-      'init-on-click': config.initOnClick,
-      'initialized': initialized
-    }">
+    [class.dialog]="!!dialogRef"
+    [class.init-on-click]="config.initOnClick"
+    [class.initialized]="initialized">
   @if (config.label) {
     <fs-label>
       {{ config.label }}

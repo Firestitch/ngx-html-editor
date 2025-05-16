@@ -34,6 +34,12 @@
           padding-bottom: 4px;
         }
       }
+
+      &.dialog {
+        .html-editor-container {
+          min-height: 300px;
+        }
+      }
     }
 
     .fr-wrapper {
@@ -213,6 +219,22 @@
 ::ng-deep {
   .fr-popup {
     z-index: 1001 !important;
+
+    .fr-layer {
+      margin: 0 15px !important;
+
+      &.fr-image-upload-layer {
+        margin: 12px !important;
+      }
+    }
+
+    .fr-input-line {
+      padding-bottom: 0 !important;
+
+      input {
+        border-radius: 4px !important;
+      }
+    }
   }
 
   .fr-video-by-url-layer .fr-checkbox-line {
