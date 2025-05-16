@@ -455,6 +455,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       linkInsertButtons: [],
       linkEditButtons: ['linkOpen', 'linkEdit', 'linkRemove'],  
       linkMultipleStyles: false,
+      heightMin: this._dialogRef ? 200 : 0,
       tabSpaces: 2,
       toolbarSticky: false,
       listAdvancedTypes: false,
