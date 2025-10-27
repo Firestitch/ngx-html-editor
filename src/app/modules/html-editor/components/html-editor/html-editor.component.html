@@ -1,26 +1,33 @@
 <fs-label-field
-    [appearance]="'outline'"
-    [hoverable]="true"
-    [showOutline]="initialized"
-    [disabled]="disabled"
-    [padless]="config.padless"
-    [class.init-on-click]="config.initOnClick"
-    [class.initialized]="initialized">
+  [appearance]="'outline'"
+  [hoverable]="true"
+  [showOutline]="initialized"
+  [disabled]="disabled"
+  [padless]="config.padless"
+  [class.init-on-click]="config.initOnClick"
+  [class.initialized]="initialized">
   @if (config.label) {
     <fs-label>
       {{ config.label }}
     </fs-label>
   }
-  <ng-container *ngIf="htmlEditorContainer; else htmlEditorContainerTmpl">
+  @if (htmlEditorContainer) {
     <ng-container
       [ngTemplateOutlet]="htmlEditorContainer"
       [ngTemplateOutletContext]="{ template: htmlEditorContainerTmpl }">
     </ng-container>
-  </ng-container>
+  } @else {
+    <div
+      class="html-editor-container fs-html-editor-default"
+      [id]="containerID">
+      <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
+      <div #elRef></div>
+    </div>
+  }
   <ng-template #htmlEditorContainerTmpl>
     <div
-        class="html-editor-container fs-html-editor-default"
-        [id]="containerID">
+      class="html-editor-container fs-html-editor-default"
+      [id]="containerID">
       <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
       <div #elRef></div>
     </div>
