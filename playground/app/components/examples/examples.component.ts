@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 
@@ -16,11 +16,9 @@ import { KitchenSinkComponent } from '../kitchen-sink/kitchen-sink.component';
     imports: [FsExampleModule, KitchenSinkComponent],
 })
 export class ExamplesComponent {
-  public config = environment;
+  private _dialog = inject(MatDialog);
 
-  constructor(
-    private _dialog: MatDialog,
-  ) { }
+  public config = environment;
 
   public openDialog(): void {
     this._dialog.open(DialogComponent, {

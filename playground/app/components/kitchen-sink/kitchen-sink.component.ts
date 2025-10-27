@@ -1,6 +1,4 @@
-import {
-  ChangeDetectionStrategy, Component, ElementRef, OnInit, Renderer2, ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, Renderer2, ViewChild, inject } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 
@@ -47,6 +45,11 @@ import { FsHtmlRendererComponent } from '../../../../src/app/modules/html-render
     ],
 })
 export class KitchenSinkComponent implements OnInit {
+  private _message = inject(FsMessage);
+  private _api = inject(FsApi);
+  private _renderer = inject(Renderer2);
+  private _dialog = inject(MatDialog);
+
 
   @ViewChild(FsHtmlEditorComponent) 
   public htmlEditor: FsHtmlEditorComponent;
@@ -61,14 +64,6 @@ export class KitchenSinkComponent implements OnInit {
   public apiUrl = 'https://specify.firestitch.dev/api/';
   public html = this.default;
   public width;
-
-  constructor(
-    private _message: FsMessage,
-    private _api: FsApi,
-    private _renderer: Renderer2,
-    private _dialog: MatDialog,
-  ) {
-  }
 
   public ngOnInit() {
     this.config = {

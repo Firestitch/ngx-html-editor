@@ -1,22 +1,5 @@
 import { DOCUMENT, NgTemplateOutlet, AsyncPipe } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  ElementRef,
-  forwardRef,
-  HostBinding,
-  inject,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, HostBinding, inject, Input, OnDestroy, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import {
   ControlContainer,
   ControlValueAccessor,
@@ -88,6 +71,10 @@ import { FsSkeletonModule } from '@firestitch/skeleton';
 })
 export class FsHtmlEditorComponent
 implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
+  private _defaultConfig = inject<FsHtmlEditorConfig>(FS_HTML_EDITOR_CONFIG, { optional: true });
+  private _cdRef = inject(ChangeDetectorRef);
+  private _fr = inject(FsFroalaLoaderService);
+
 
   @ContentChild(FsHtmlEditorContainerDirective, { read: TemplateRef })
   public htmlEditorContainer: TemplateRef<any>;
@@ -120,14 +107,6 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
     options: any
   }>(null);
   private _destroy$ = new Subject();
-
-  constructor(
-    @Optional()
-    @Inject(FS_HTML_EDITOR_CONFIG)
-    private _defaultConfig: FsHtmlEditorConfig,
-    private _cdRef: ChangeDetectorRef,
-    private _fr: FsFroalaLoaderService,
-  ) { }
 
   public get el(): any {
     return this.elRef.nativeElement;

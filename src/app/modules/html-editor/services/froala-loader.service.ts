@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { fsSourceLoader } from '@firestitch/common';
 
@@ -15,6 +15,9 @@ import { FsHtmlEditorConfig } from '../interfaces/html-editor-config';
   providedIn: 'root',
 })
 export class FsFroalaLoaderService {
+  private _defaultConfig = inject<FsHtmlEditorConfig>(FS_HTML_EDITOR_CONFIG, { optional: true });
+  private _document = inject<Document>(DOCUMENT);
+
 
   private _froalaLoaded = new BehaviorSubject(false);
   private _froalaPluginsLoaded = new BehaviorSubject(false);
@@ -33,13 +36,7 @@ export class FsFroalaLoaderService {
       shareReplay(1),
     );
 
-  constructor(
-    @Optional()
-    @Inject(FS_HTML_EDITOR_CONFIG)
-    private _defaultConfig: FsHtmlEditorConfig,
-    @Inject(DOCUMENT)
-    private _document: Document,
-  ) {
+  constructor() {
     this._sourceLoader.setDocument(this._document);
     this._load();
   }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { FsFroalaLoaderService } from '../../../html-editor/services/froala-loader.service';
@@ -12,6 +12,10 @@ import { FsFroalaLoaderService } from '../../../html-editor/services/froala-load
     standalone: true,
 })
 export class FsHtmlRendererComponent {
+  private sanitized = inject(DomSanitizer);
+  private _cdRef = inject(ChangeDetectorRef);
+  private _fr = inject(FsFroalaLoaderService);
+
 
   @Input('html') public set setHtml(html) {
     this.trustedHtml = this.sanitized.bypassSecurityTrustHtml(html || '');
@@ -19,12 +23,5 @@ export class FsHtmlRendererComponent {
   }
 
   public trustedHtml: SafeHtml;
-
-  constructor(
-    private sanitized: DomSanitizer,
-    private _cdRef: ChangeDetectorRef,
-    // Initial service call to load Froala css
-    private _fr: FsFroalaLoaderService,
-  ) { }
 
 }
