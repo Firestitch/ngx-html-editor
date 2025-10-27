@@ -38,7 +38,7 @@ export class FsHtmlEditorModule {
         { provide: FS_HTML_EDITOR_DEFAULT_CONFIG, useValue: config },
         {
           provide: FS_HTML_EDITOR_CONFIG,
-          useFactory: FsHtmlEditorConfigFactory,
+          useFactory: htmlEditorConfigFactory,
           deps: [FS_HTML_EDITOR_DEFAULT_CONFIG],
         },
       ],
@@ -46,7 +46,7 @@ export class FsHtmlEditorModule {
   }
 }
 
-export function FsHtmlEditorConfigFactory(config: FsHtmlEditorConfig) {
+export function htmlEditorConfigFactory(config: FsHtmlEditorConfig) {
   return {
     froalaPlugins: [
       FroalaPlugin.Align,

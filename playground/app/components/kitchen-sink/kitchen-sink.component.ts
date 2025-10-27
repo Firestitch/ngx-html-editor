@@ -58,7 +58,7 @@ export class KitchenSinkComponent implements OnInit {
       padless: true,
       hint: 'Hint text',
       disabled: false,
-      initOnClick: true,
+      initOnClick: false,
       initClick: () => {
         //event.preventDefault();
       },

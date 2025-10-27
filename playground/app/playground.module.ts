@@ -37,7 +37,7 @@ const routes: Routes = [
     BrowserModule,
     MatDialogModule,
     FsHtmlEditorModule.forRoot({
-      activationKey: 'DUA2yE1G2E1A5B5B3pZGCTRSAPJWTLPLZHTQQe1JGZxC4B3A3C2B5A1C2E4F1A1==',
+      activationKey: '2J1B10dD7F6F5A3F3I3cWHNGGDTCWHId1Eb1Oc1Yh1b2Ld1POkE3D3F3C9A4E5A3G3B2G2==',
       froalaConfig: {},
     }),
     FsHtmlRendererModule,
