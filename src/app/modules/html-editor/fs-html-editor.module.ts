@@ -4,7 +4,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FsLabelModule } from '@firestitch/label';
 import { FsSkeletonModule } from '@firestitch/skeleton';
 
-import { FsHtmlRendererModule } from '../html-renderer/fs-html-renderer.module';
+
 
 import { FsHtmlEditorComponent } from './components/html-editor/html-editor.component';
 import { FsHtmlEditorContainerDirective } from './directives';
@@ -14,21 +14,17 @@ import { FsHtmlEditorConfig } from './interfaces/html-editor-config';
 
 
 @NgModule({
-  imports: [
+    imports: [
     CommonModule,
-
     FsSkeletonModule,
     FsLabelModule,
-    FsHtmlRendererModule,
-  ],
-  exports: [
     FsHtmlEditorComponent,
     FsHtmlEditorContainerDirective,
-  ],
-  declarations: [
-    FsHtmlEditorComponent,
-    FsHtmlEditorContainerDirective,
-  ],
+],
+    exports: [
+        FsHtmlEditorComponent,
+        FsHtmlEditorContainerDirective,
+    ],
 })
 export class FsHtmlEditorModule {
   public static forRoot(config: FsHtmlEditorConfig = {}): ModuleWithProviders<FsHtmlEditorModule> {

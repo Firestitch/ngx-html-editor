@@ -1,6 +1,9 @@
 import { Directive, TemplateRef } from '@angular/core';
 
-@Directive({ selector: '[fsHtmlEditorContainer]' })
+@Directive({
+    selector: '[fsHtmlEditorContainer]',
+    standalone: true
+})
 export class FsHtmlEditorContainerDirective {
   public static ngTemplateContextGuard(
     dir: FsHtmlEditorContainerDirective,

@@ -21,13 +21,30 @@ import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { DialogComponent } from '../dialog/dialog.component';
+import { FormsModule } from '@angular/forms';
+import { FsFormModule } from '@firestitch/form';
+import { FsHtmlEditorComponent as FsHtmlEditorComponent_1 } from '../../../../src/app/modules/html-editor/components/html-editor/html-editor.component';
+import { FsHtmlEditorContainerDirective } from '../../../../src/app/modules/html-editor/directives/html-editor-container.directive';
+import { NgTemplateOutlet } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { FsHtmlRendererComponent } from '../../../../src/app/modules/html-renderer/components/html-renderer/html-renderer.component';
 
 
 @Component({
-  selector: 'kitchen-sink',
-  templateUrl: './kitchen-sink.component.html',
-  styleUrls: ['./kitchen-sink.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'kitchen-sink',
+    templateUrl: './kitchen-sink.component.html',
+    styleUrls: ['./kitchen-sink.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        FsFormModule,
+        FsHtmlEditorComponent_1,
+        FsHtmlEditorContainerDirective,
+        NgTemplateOutlet,
+        MatButton,
+        FsHtmlRendererComponent,
+    ],
 })
 export class KitchenSinkComponent implements OnInit {
 

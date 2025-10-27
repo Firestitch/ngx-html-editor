@@ -5,11 +5,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'playground/environments/environment';
 
 import { DialogComponent } from '../dialog';
+import { FsExampleModule } from '@firestitch/example';
+import { KitchenSinkComponent } from '../kitchen-sink/kitchen-sink.component';
 
 
 @Component({
-  templateUrl: './examples.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './examples.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [FsExampleModule, KitchenSinkComponent],
 })
 export class ExamplesComponent {
   public config = environment;

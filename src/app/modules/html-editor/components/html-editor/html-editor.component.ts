@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -50,32 +50,41 @@ import { FsFroalaLoaderService } from '../../services/froala-loader.service';
 
 import { Plugin } from './../../classes/plugin';
 import { TextButtons } from './../../consts/text-buttons.const';
+import { FsLabelModule } from '@firestitch/label';
+import { FsSkeletonModule } from '@firestitch/skeleton';
 
 
 @Component({
-  selector: 'fs-html-editor',
-  templateUrl: './html-editor.component.html',
-  styleUrls: ['./html-editor.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FsHtmlEditorComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => FsHtmlEditorComponent),
-      multi: true,
-    },
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [
-    {
-      provide: ControlContainer,
-      deps: [[Optional, NgForm]],
-      useFactory: (ngForm: NgForm) => ngForm,
-    },
-  ],
+    selector: 'fs-html-editor',
+    templateUrl: './html-editor.component.html',
+    styleUrls: ['./html-editor.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => FsHtmlEditorComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => FsHtmlEditorComponent),
+            multi: true,
+        },
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    viewProviders: [
+        {
+            provide: ControlContainer,
+            deps: [[Optional, NgForm]],
+            useFactory: (ngForm: NgForm) => ngForm,
+        },
+    ],
+    standalone: true,
+    imports: [
+        FsLabelModule,
+        NgTemplateOutlet,
+        FsSkeletonModule,
+        AsyncPipe,
+    ],
 })
 export class FsHtmlEditorComponent
 implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {

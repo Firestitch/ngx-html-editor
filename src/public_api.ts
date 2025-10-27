@@ -1,5 +1,5 @@
 export { FsHtmlEditorModule } from './app/modules/html-editor/fs-html-editor.module';
-export { FsHtmlRendererModule } from './app/modules/html-renderer/fs-html-renderer.module';
+
 
 export { FsHtmlEditorComponent } from './app/modules/html-editor/components/html-editor/html-editor.component';
 export { FsHtmlRendererComponent } from './app/modules/html-renderer/components/html-renderer/html-renderer.component';

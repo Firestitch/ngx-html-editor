@@ -5,10 +5,11 @@ import { FsFroalaLoaderService } from '../../../html-editor/services/froala-load
 
 
 @Component({
-  selector: 'fs-html-renderer',
-  templateUrl: 'html-renderer.component.html',
-  styleUrls: ['html-renderer.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'fs-html-renderer',
+    templateUrl: 'html-renderer.component.html',
+    styleUrls: ['html-renderer.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class FsHtmlRendererComponent {
 
