@@ -175,17 +175,37 @@
         }
       }
 
+      ol {
+        counter-reset: listNumbering;
+      }
+
       ol > li {
         counter-increment: listNumbering;
         list-style: none;
 
         &:before {
-          content: counter(listNumbering) '.';
+          content: counter(listNumbering, decimal) '.';
         }
+      }
 
-        &:first-child {
-          counter-reset: listNumbering;
-        }
+      ol ol > li:before {
+        content: counter(listNumbering, lower-alpha) '.' !important;
+      }
+
+      ol ol ol > li:before {
+        content: counter(listNumbering, decimal) '.' !important;
+      }
+
+      ol ol ol ol > li:before {
+        content: counter(listNumbering, lower-alpha) '.' !important;
+      }
+
+      ol ol ol ol ol > li:before {
+        content: counter(listNumbering, decimal) '.' !important;
+      }
+
+      ol ol ol ol ol ol > li:before {
+        content: counter(listNumbering, lower-alpha) '.' !important;
       }
 
       ul > li {

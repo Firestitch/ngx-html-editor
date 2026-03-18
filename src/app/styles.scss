@@ -96,13 +96,13 @@ fs-html-renderer {
     ol {
       list-style-type: lower-alpha;
       ol {
-        list-style-type: lower-roman;
+        list-style-type: decimal;
         ol {
-          list-style-type: decimal;
+          list-style-type: lower-alpha;
           ol {
-            list-style-type: lower-alpha;
+            list-style-type: decimal;
             ol {
-              list-style-type: lower-roman;
+              list-style-type: lower-alpha;
             }
           }
         }
