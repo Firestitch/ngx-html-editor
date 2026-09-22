@@ -37,6 +37,12 @@ import { FsLabelModule } from '@firestitch/label';
 import { FsSkeletonModule } from '@firestitch/skeleton';
 
 
+// Froala options that are whole lists or menus: a caller's value replaces the
+// default rather than being merged into it.
+const REPLACED_OPTIONS = [
+  'toolbarButtons', 'toolbarButtonsXS', 'paragraphFormat', 'fontFamily', 'fontSize', 'lineHeights', 'colorsText',
+];
+
 @Component({
     selector: 'fs-html-editor',
     templateUrl: './html-editor.component.html',
@@ -91,6 +97,11 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
 
   @HostBinding('class.initialized')
   public initialized = false;
+
+  @HostBinding('class.floating')
+  public get floating(): boolean {
+    return !!this.config?.floating;
+  }
 
   public readonly containerID = `fs-html-editor-${guid('xxx')}`;
   public onTouched: () => void;
@@ -327,8 +338,9 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
           focus: button.focus ?? true,
           undo: button.undo ?? true,
           refreshAfterCallback: button.refreshAfterCallback ?? true,
-          callback() {
-            button.click(this);
+          ...this._dropdown(button),
+          callback(command, value) {
+            button.click(this, value);
           },
         });
       });
@@ -387,9 +399,10 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       focus: button.focus,
       showOnMobile: button.showOnMobile,
       refreshAfterCallback: button.refreshAfterCallback,
-      callback() {
+      ...this._dropdown(button),
+      callback(command, value) {
         if (button.click) {
-          button.click(this);
+          button.click(this, value);
         }
       },
       refresh(event) {
@@ -399,6 +412,13 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       },
     });
 
+  }
+
+  // A button with options registers as a Froala dropdown of those choices.
+  private _dropdown(button: ToolbarButton): Record<string, unknown> {
+    return button.options
+      ? { type: 'dropdown', options: button.options }
+      : {};
   }
 
   private _buttonsToNames(buttons) {
@@ -482,6 +502,7 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       paragraphFormatSelection: true,
       toolbarButtons,
       toolbarButtonsXS: ToolbarXsButtons,
+      ...(config.floating ? this._floatingOptions() : {}),
     };
 
     const options = merge(
@@ -492,7 +513,29 @@ implements OnInit, AfterViewInit, ControlValueAccessor, Validator, OnDestroy {
       config.froalaConfig,
     );
 
+    // A list the caller spells out REPLACES the default one. merge() would fold
+    // it into the default index by index (arrays) or key by key (menus),
+    // leaving default buttons and menu entries the caller never asked for.
+    REPLACED_OPTIONS
+      .filter((name) => config.froalaConfig?.[name] !== undefined)
+      .forEach((name) => options[name] = config.froalaConfig[name]);
+
     return options;
+  }
+
+  // Froala's inline toolbar, shown whenever the editor has focus (not only over
+  // a selection) so formatting can be picked before typing. It is attached to
+  // the body rather than the editor's own container: a floating editor often
+  // sits inside a scaled or clipped surface (a zoomed canvas), and a toolbar
+  // inside that would be scaled and clipped with it.
+  private _floatingOptions(): Partial<FroalaOptions> {
+    return {
+      toolbarInline: true,
+      toolbarVisibleWithoutSelection: true,
+      scrollableContainer: 'body',
+      heightMin: 0,
+      charCounterCount: false,
+    };
   }
 
   private _listenLazyInit() {

@@ -24,6 +24,11 @@ export interface FsHtmlEditorConfig {
   tooltip?: string;
   plugins?: Plugin[];
   padless?: boolean;
+  // Floating: no fixed toolbar and no frame. The toolbar pops up over the text
+  // while it is being edited (Froala's inline toolbar), so the editor can sit in
+  // place of the content it edits — a text box on a canvas. Pair it with no
+  // `label` so no form field is drawn around it.
+  floating?: boolean;
   froalaPlugins?: FroalaPlugin[];
   froalaConfig?:  Partial<FroalaOptions>;
   assetsJSPath?: string;

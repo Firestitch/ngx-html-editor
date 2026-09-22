@@ -1,0 +1,52 @@
+.actions {
+  margin-bottom: 16px;
+}
+
+// Clips like a real design surface would, so the example shows the toolbar
+// escaping the canvas (it is attached to the body, not the editor).
+.viewport {
+  overflow: hidden;
+  background: #e9ecef;
+  padding: 24px;
+}
+
+.canvas {
+  position: relative;
+  width: 800px;
+  max-width: 100%;
+  height: 450px;
+  transform-origin: top left;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: #fff;
+  font-family: Georgia, serif;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .25);
+}
+
+.text-box {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  outline: 1px dashed transparent;
+
+  &:hover {
+    outline-color: rgba(255, 255, 255, .5);
+  }
+}
+
+.title {
+  top: 64px;
+  font-size: 48px;
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+.body {
+  top: 180px;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+fieldset {
+  margin-top: 16px;
+  white-space: normal;
+}

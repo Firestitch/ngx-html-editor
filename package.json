@@ -2,7 +2,7 @@
   "name": "@firestitch/html-editor",
   "title": "HTML Editor",
   "description": "@firestitch/html-editor",
-  "version": "18.0.42",
+  "version": "18.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-html-editor"
@@ -45,7 +45,7 @@
     "@firestitch/autocomplete-chips": "^18.0.35",
     "@firestitch/clear": "^18.0.10",
     "@firestitch/common": "^18.0.1",
-    "@firestitch/component-tools": "^18.0.16",
+    "@firestitch/component-tools": "^18.0.18",
     "@firestitch/core": "^18.0.1",
     "@firestitch/date": "^18.0.1",
     "@firestitch/datepicker": "^18.0.6",

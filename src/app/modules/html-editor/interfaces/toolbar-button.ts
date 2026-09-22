@@ -10,6 +10,9 @@ export interface ToolbarButton {
   focus?: boolean;
   showOnMobile?: boolean;
   refreshAfterCallback?: boolean;
-  click?: (editor) => void;
+  // Makes the button a dropdown of these choices (value → label); click
+  // receives the chosen value.
+  options?: Record<string, string>;
+  click?: (editor, value?: string) => void;
   refresh?: (editor, button) => void;
 }

@@ -1,42 +1,45 @@
-<fs-label-field
-  [appearance]="'outline'"
-  [hoverable]="true"
-  [showOutline]="initialized"
-  [disabled]="disabled"
-  [padless]="config.padless"
-  [class.init-on-click]="config.initOnClick"
-  [class.initialized]="initialized">
-  @if (config.label) {
+<!-- The label field (outline, label, hint) only frames an editor that has a
+     label. Without one the editor renders bare — e.g. floating on a canvas,
+     where it has to read as the text itself rather than as a form field. -->
+@if (config.label) {
+  <fs-label-field
+    [appearance]="'outline'"
+    [hoverable]="true"
+    [showOutline]="initialized"
+    [disabled]="disabled"
+    [padless]="config.padless"
+    [class.init-on-click]="config.initOnClick"
+    [class.initialized]="initialized">
     <fs-label>
       {{ config.label }}
     </fs-label>
-  }
+    <ng-container [ngTemplateOutlet]="editorTmpl"></ng-container>
+    <fs-label-message>
+      <div class="fs-form-message">
+        <div class="fs-form-hint">
+          {{ config.hint }}
+        </div>
+      </div>
+    </fs-label-message>
+  </fs-label-field>
+} @else {
+  <ng-container [ngTemplateOutlet]="editorTmpl"></ng-container>
+}
+<ng-template #editorTmpl>
   @if (htmlEditorContainer) {
     <ng-container
       [ngTemplateOutlet]="htmlEditorContainer"
       [ngTemplateOutletContext]="{ template: htmlEditorContainerTmpl }">
     </ng-container>
   } @else {
-    <div
-      class="html-editor-container fs-html-editor-default"
-      [id]="containerID">
-      <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
-      <div #elRef></div>
-    </div>
+    <ng-container [ngTemplateOutlet]="htmlEditorContainerTmpl"></ng-container>
   }
-  <ng-template #htmlEditorContainerTmpl>
-    <div
-      class="html-editor-container fs-html-editor-default"
-      [id]="containerID">
-      <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
-      <div #elRef></div>
-    </div>
-  </ng-template>
-  <fs-label-message>
-    <div class="fs-form-message">
-      <div class="fs-form-hint">
-        {{ config.hint }}
-      </div>
-    </div>
-  </fs-label-message>
-</fs-label-field>
+</ng-template>
+<ng-template #htmlEditorContainerTmpl>
+  <div
+    class="html-editor-container fs-html-editor-default"
+    [id]="containerID">
+    <ng-container *fsSkeleton="(froalaLoaded$ | async) !== false"></ng-container>
+    <div #elRef></div>
+  </div>
+</ng-template>

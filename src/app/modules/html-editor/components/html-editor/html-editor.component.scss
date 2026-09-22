@@ -293,3 +293,27 @@
   }
 }
 
+// Floating: the editor IS the content — no frame, no padding, and the text
+// takes its typography from wherever it is placed.
+:host(.floating) {
+  ::ng-deep {
+    .html-editor-container,
+    .fr-box,
+    .fr-wrapper {
+      height: 100%;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .fr-element {
+      min-height: 100%;
+      padding: 0 !important;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      color: inherit;
+      overflow: visible;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<div class="actions">
+  <button
+      mat-raised-button
+      type="button"
+      (click)="toggleZoom()">
+    Zoom {{ zoom === 1 ? '75%' : '100%' }}
+  </button>
+</div>
+<div class="viewport">
+  <div
+      class="canvas"
+      [style.transform]="'scale(' + zoom + ')'">
+    <fs-html-editor
+        class="text-box title"
+        [(ngModel)]="title"
+        [config]="titleConfig"
+        name="title">
+    </fs-html-editor>
+    <fs-html-editor
+        class="text-box body"
+        [(ngModel)]="body"
+        [config]="bodyConfig"
+        name="body">
+    </fs-html-editor>
+  </div>
+</div>
+<fieldset>
+  <legend>
+    HTML
+  </legend>
+  <fs-html-renderer [html]="title"></fs-html-renderer>
+  <fs-html-renderer [html]="body"></fs-html-renderer>
+</fieldset>

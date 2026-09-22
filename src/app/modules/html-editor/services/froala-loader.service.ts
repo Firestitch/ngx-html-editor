@@ -64,6 +64,7 @@ export class FsFroalaLoaderService {
       froala_quote: `${baseDir}js/plugins/quote.min.js`,
       froala_draggable: `${baseDir}js/plugins/draggable.min.js`,
       froala_font_size: `${baseDir}js/plugins/font_size.min.js`,
+      froala_font_family: `${baseDir}js/plugins/font_family.min.js`,
       froala_quick_insert: `${baseDir}js/plugins/quick_insert.min.js`,
       froala_line_height: `${baseDir}js/plugins/line_height.min.js`,
     });
