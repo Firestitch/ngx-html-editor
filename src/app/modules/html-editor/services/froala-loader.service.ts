@@ -3,101 +3,72 @@ import { Injectable, inject } from '@angular/core';
 
 import { fsSourceLoader } from '@firestitch/common';
 
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { concatMap, map, shareReplay, tap } from 'rxjs/operators';
+import { Observable, defer, forkJoin } from 'rxjs';
+import { concatMap, defaultIfEmpty, map, shareReplay, startWith, tap } from 'rxjs/operators';
 
 
 import { FS_HTML_EDITOR_CONFIG } from '../injects/config.inject';
 import { FsHtmlEditorConfig } from '../interfaces/html-editor-config';
 
 
+// Where the app copies the package's assets/froala (README)
+const FROALA_DIR = '/assets/froala/';
+
+
 @Injectable({
   providedIn: 'root',
 })
 export class FsFroalaLoaderService {
-  private _defaultConfig = inject<FsHtmlEditorConfig>(FS_HTML_EDITOR_CONFIG, { optional: true });
+  private _config = inject<FsHtmlEditorConfig>(FS_HTML_EDITOR_CONFIG, { optional: true });
   private _document = inject<Document>(DOCUMENT);
-
-
-  private _froalaLoaded = new BehaviorSubject(false);
-  private _froalaPluginsLoaded = new BehaviorSubject(false);
-  private _sourceLoader = fsSourceLoader;
   private _froalaEditor: any;
 
-  public get FroalaEditor() {
-    return this._froalaEditor;
-  }
-  
-  private _loaded$ = combineLatest([this._froalaLoaded, this._froalaPluginsLoaded])
+  // Froala's stylesheet carries the content styles (.fr-view) as well as the editor's
+  private _styles$ = defer(() => fsSourceLoader.loadStyles(`${FROALA_DIR}css/froala_editor.pkgd.min.css`))
     .pipe(
-      map(([FroalaReady, pluginsRead]) => {
-        return pluginsRead && FroalaReady;
-      }),
+      shareReplay(1),
+    );
+
+  // Fetched once, when the first editor asks: nothing of the editor loads for the renderer
+  private _loaded$ = defer(() => forkJoin([this._styles$, fsSourceLoader.loadJs(`${FROALA_DIR}js/froala_editor.min.js`)]))
+    .pipe(
+      tap(() => this._froalaEditor = (window as any).FroalaEditor),
+      concatMap(() => this._plugins$()),
+      map(() => true),
+      startWith(false),
       shareReplay(1),
     );
 
   constructor() {
-    this._sourceLoader.setDocument(this._document);
-    this._load();
+    this._init();
   }
 
+  public get FroalaEditor() {
+    return this._froalaEditor;
+  }
+
+  /** The editor: Froala's stylesheet, script and plugins */
   public get loaded$(): Observable<boolean> {
     return this._loaded$;
   }
 
-  private _load() {
-    const baseDir = '/assets/froala/';
-    this._sourceLoader.registerResources({
-      froala: [
-        `${baseDir}js/froala_editor.min.js`,
-        `${baseDir}css/froala_editor.pkgd.min.css`,
-      ],
-      froala_align: `${baseDir}js/plugins/align.min.js`,
-      froala_colors: `${baseDir}js/plugins/colors.min.js`,
-      froala_image: `${baseDir}js/plugins/image.min.js`,
-      froala_link: `${baseDir}js/plugins/link.min.js`,
-      froala_lists: `${baseDir}js/plugins/lists.min.js`,
-      froala_paragraph_format: `${baseDir}js/plugins/paragraph_format.min.js`,
-      froala_table: `${baseDir}js/plugins/table.min.js`,
-      froala_url: `${baseDir}js/plugins/url.min.js`,
-      froala_video: `${baseDir}js/plugins/video.min.js`,
-      froala_quote: `${baseDir}js/plugins/quote.min.js`,
-      froala_draggable: `${baseDir}js/plugins/draggable.min.js`,
-      froala_font_size: `${baseDir}js/plugins/font_size.min.js`,
-      froala_font_family: `${baseDir}js/plugins/font_family.min.js`,
-      froala_quick_insert: `${baseDir}js/plugins/quick_insert.min.js`,
-      froala_line_height: `${baseDir}js/plugins/line_height.min.js`,
-    });
+  /** The renderer: the stylesheet only, as it shows Froala's HTML without editing it */
+  public loadStyles(): Observable<unknown> {
+    return this._styles$;
+  }
 
-    this._sourceLoader.loadResource('froala')
+  private _init(): void {
+    fsSourceLoader.setDocument(this._document);
+  }
+
+  // Each plugin registers itself on the FroalaEditor already loaded, so they load side by side.
+  // A plugin's FroalaPlugin value is its file's name
+  private _plugins$(): Observable<unknown> {
+    return forkJoin(this._config.froalaPlugins
+      .map((plugin) => fsSourceLoader.loadJs(`${FROALA_DIR}js/plugins/${plugin}.min.js`)))
       .pipe(
-        tap(() => {
-          this._froalaEditor = (window as any).FroalaEditor;
-          this._froalaDone();
-        }),
-        concatMap(() => {
-          return this._loadPlugins();
-        }),
-        tap(() => {
-          this._froalaPluginsDone();
-        }),
-      )
-      .subscribe();
-  }
-
-  private _loadPlugins(): Observable<unknown> {
-    const resources = this._defaultConfig
-      .froalaPlugins
-      .map((pluginName) => `froala_${pluginName}`);
-
-    return this._sourceLoader.loadResources(resources);
-  }
-
-  private _froalaDone() {
-    this._froalaLoaded.next(true);
-  }
-
-  private _froalaPluginsDone() {
-    this._froalaPluginsLoaded.next(true);
+        // No plugins configured: the editor is ready all the same
+        defaultIfEmpty(null),
+      );
   }
 }
